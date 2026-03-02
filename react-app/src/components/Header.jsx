@@ -1,4 +1,6 @@
 
+import Navbar from './Navbar.jsx'
+
 function Header(){
 
     return (
