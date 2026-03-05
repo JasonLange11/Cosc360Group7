@@ -1,0 +1,27 @@
+
+.header {
+    /* Keeps the header in place at the top while users scroll dowen the screen*/
+    position: sticky;
+    top: 0;
+    z-index: 1000; /* Ensures that the header is the top element */
+
+    width: 100%;
+    height: 6vh;   /* 6% of the screen height */
+
+    background-color: #674ea7;
+    color: black;
+    border-color: #333333;
+    border: 1px solid;
+
+    padding: 0.5rem 1rem;
+    box-sizing: border-box;
+
+    display: flex;
+    align-items: center;   /* vertically center text */
+    justify-content: space-between;
+}
+
+.header h1 {
+    margin: 0;
+    font-size: 2rem;
+}
