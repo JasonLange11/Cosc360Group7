@@ -9,7 +9,6 @@ function SearchBar() {
                 <input
                     type="text"
                     placeholder="search"
-                    aria-label="Search events"
                 />
                 <button type="submit">Search</button>
             </form>

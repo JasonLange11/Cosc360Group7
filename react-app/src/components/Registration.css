@@ -1,0 +1,127 @@
+.page-shell {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.registration-card {
+  width: min(720px, 100%);
+  background: #b6a5d7;
+  border: 2px solid #5d4f86;
+  padding: 12px;
+}
+
+.brand-banner {
+  background: #6a4fb0;
+  border: 2px solid #53437e;
+  margin-bottom: 12px;
+  padding: 10px 14px;
+}
+
+.brand-banner h1 {
+  margin: 0;
+  font-size: clamp(1.7rem, 4vw, 2.8rem);
+  font-weight: 500;
+  letter-spacing: 0.4px;
+  color: #2f244f;
+}
+
+.form-card {
+  background: #f5f5f5;
+  border: 2px solid #53437e;
+  padding: 18px 14px 14px;
+}
+
+.field-section + .field-section {
+  margin-top: 14px;
+}
+
+.field-label {
+  margin: 0 0 6px;
+  font-size: 1.7rem;
+  color: #222;
+}
+
+.input-row,
+.nickname-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.form-card input[type='email'],
+.form-card input[type='password'],
+.form-card input[type='text'] {
+  border: none;
+  border-bottom: 2px solid #595959;
+  background: transparent;
+  padding: 6px 0 4px;
+  font-size: 1.6rem;
+  color: #2b2b2b;
+}
+
+.form-card input:focus {
+  outline: none;
+  border-bottom-color: #3b2a67;
+}
+
+.form-card input::placeholder {
+  color: #2f2f2f;
+  opacity: 1;
+}
+
+.terms-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 1.2rem;
+  color: #222;
+  white-space: nowrap;
+}
+
+.terms-label input[type='checkbox'] {
+  margin: 0;
+}
+
+.signup-button {
+  margin-top: 10px;
+  border: 1px solid #4f4273;
+  background: #b6a5d7;
+  color: #2f244f;
+  padding: 4px 10px;
+  font-size: 1.4rem;
+  cursor: pointer;
+}
+
+.signup-button:hover {
+  background: #a48ecf;
+}
+
+.tagline {
+  margin: 8px 0 0;
+  width: min(420px, 100%);
+  line-height: 1.2;
+  font-size: 1.7rem;
+  color: #222;
+}
+
+@media (max-width: 680px) {
+  .field-label {
+    font-size: 1.4rem;
+  }
+
+  .input-row,
+  .nickname-row {
+    grid-template-columns: 1fr;
+  }
+
+  .terms-label {
+    white-space: normal;
+  }
+
+  .tagline {
+    font-size: 1.3rem;
+  }
+}
