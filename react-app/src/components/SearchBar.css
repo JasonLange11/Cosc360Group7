@@ -1,0 +1,40 @@
+.searchSection {
+    width: 100%;
+    max-width: 65rem;
+    margin: 1rem auto;
+    padding: 1rem;
+
+    background-color: #f3f3f3;
+    border: 1px solid #333333;
+    box-sizing: border-box;
+}
+
+.searchSection h2 {
+    font-size: 2rem;
+    color: #333333;
+}
+
+.searchForm {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.searchForm input {
+    flex: 1;
+    border: 1px solid #333333;
+    border-radius: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    font-size: 1.5rem;
+    box-sizing: border-box;
+}
+
+.searchForm button {
+    border: 1px solid #333333;
+    border-radius: 0.5rem;
+    padding: 0.5rem 0.9rem;
+    font-size: 1.5rem;
+    cursor: pointer;
+
+    background-color: #674ea7;
+    color: black;
+}
