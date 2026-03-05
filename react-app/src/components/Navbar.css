@@ -1,0 +1,17 @@
+
+.headerNav ul{
+    display: flex;
+    list-style: none;
+    justify-content: flex-end;
+    gap: 2rem;
+    padding: 0;
+    margin: 0;
+}
+
+.headerNav ul li{
+   font-size: 1.5rem;
+}
+
+.headerNav i {
+    margin-right: 0.25rem; /* space between icon and text */
+}

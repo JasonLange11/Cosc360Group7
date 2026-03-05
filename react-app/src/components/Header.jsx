@@ -1,10 +1,11 @@
 
 import Navbar from './Navbar.jsx'
+import './Header.css'
 
 function Header(){
 
     return (
-        <header>
+        <header className="header">
             <h1>
                 TouchGrassEvents
             </h1>
