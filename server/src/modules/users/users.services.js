@@ -1,5 +1,9 @@
-import { getAllUsers } from "./users.repository.js";
+import { getAllUsers, createUser } from "./users.repository.js";
 
-export function fetchUsers() {
+export async function fetchUsers() {
   return getAllUsers();
+}
+
+export async function registerUser(userData) {
+  return createUser(userData);
 }

@@ -1,11 +1,13 @@
+import "dotenv/config";
 import express from "express";
 import cors from "cors";
+import mongoose from "mongoose";
 import swaggerUi from "swagger-ui-express";
 import swaggerJSDoc from "swagger-jsdoc";
 import usersRouter from "./modules/users/users.routes.js";
 
 const app = express();
-const PORT = 3001;
+const PORT = process.env.PORT || 3001;
 
 const swaggerOptions = {
   definition: {
@@ -31,7 +33,21 @@ app.get("/", (req, res) => {
 app.use("/api/users", usersRouter);
 app.use("/docs", swaggerUi.serve, swaggerUi.setup(specs));
 
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
-  console.log(`Server docs running on http://localhost:${PORT}/docs`);
+
+async function startServer(){
+  if(!process.env.MONGODB_URI){
+    throw new Error("MONGODB_URI is not set");
+  }
+
+  await mongoose.connect(process.env.MONGODB_URI);
+
+  app.listen(PORT, () => {
+    console.log(`Server running on http://localhost:${PORT}`);
+    console.log(`Server docs running on http://localhost:${PORT}/docs`);
+  });
+}
+
+startServer().catch((error) => {
+  console.error("Failed to start server: ", error);
+  process.exit(1);
 });

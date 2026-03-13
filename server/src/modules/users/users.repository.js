@@ -1,5 +1,9 @@
-import users from "../../data/users.json" with { type: "json" };
+import { User } from "./users.model.js";
 
-export function getAllUsers() {
-  return users;
+export async function getAllUsers() {
+  return User.find().lean();
+}
+
+export async function createUser(userData) {
+  return User.create(userData);
 }
