@@ -1,8 +1,25 @@
 import './Login.css'
 import {Link} from 'react-router-dom'
 import { HeaderWithoutNav } from '../../components/Header'
+import { useState } from 'react'
+import {loginUser} from '../../lib/api' 
 
 export default function Login() {
+
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+
+    async function handleSubmit(event){
+        event.preventDefault();
+
+        try{
+            const result = await loginUser({email, password});
+            console.log('Logged in: ', result)
+        }catch (error){
+            console.error(error.message);
+        }
+    }
+
     return (
         <div className="login-shell">
 
@@ -10,7 +27,7 @@ export default function Login() {
                 <div className="login-header">
                     <HeaderWithoutNav />
                 </div>
-                <form className="login-form">
+                <form className="login-form" onSubmit={handleSubmit}>
                     <section className="login-field-section">
                         <label className="login-field-label" htmlFor="login-email">
                             Email
@@ -19,6 +36,8 @@ export default function Login() {
                             id="login-email"
                             className="login-input"
                             type="email"
+                            value={email}
+                            onChange={(event) => setEmail(event.target.value)}
                             placeholder="Enter your email"
                             required
                         />
@@ -32,6 +51,8 @@ export default function Login() {
                             id="login-password"
                             className="login-input"
                             type="password"
+                            value={password}
+                            onChange={(event) => setPassword(event.target.value)}
                             placeholder="Enter your password"
                             required
                         />
