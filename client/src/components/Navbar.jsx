@@ -5,6 +5,7 @@
 */
 import './Navbar.css'
 import '@fortawesome/fontawesome-free/css/all.min.css';
+import { NavLink} from 'react-router-dom'
 
 function Navbar(){
     return(
@@ -23,8 +24,10 @@ function Navbar(){
                     Admin Panel
                 </li>
                 <li>
-                    <i className="fa-regular fa-circle-user"></i>
-                    Login
+                    <NavLink to='/login'>
+                        <i className="fa-regular fa-circle-user"></i>
+                        Login
+                    </NavLink>
                 </li>
             </ul>
         </nav>
