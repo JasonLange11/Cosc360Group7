@@ -1,4 +1,5 @@
 import './Registration.css'
+import {HeaderWithoutNav} from '../../components/Header.jsx'
 
 function Registration() {
   const handleSubmit = (event) => {
@@ -7,9 +8,11 @@ function Registration() {
 
   return (
     <div className="page-shell">
-      <main className="registration-card">
-        
 
+      <main className="registration-card">
+      <div className="registration-header">
+        <HeaderWithoutNav />
+      </div>
         <form className="form-card" onSubmit={handleSubmit}>
           <section className="field-section">
             <p className="field-label">Email</p>
