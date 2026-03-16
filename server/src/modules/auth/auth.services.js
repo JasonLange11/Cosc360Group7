@@ -1,15 +1,37 @@
 
 import bcrypt from 'bcrypt';
-import { createUser, findUserByEmail } from '../users/users.repository.js';
+import jwt from 'jsonwebtoken';
+import { createUser, findUserByEmail, findUserById } from '../users/users.repository.js';
 
 const SALT_ROUNDS = 10;
+const TOKEN_TTL = '7d';
+
+function getJwtSecret() {
+    return process.env.JWT_SECRET || 'development-only-change-me';
+}
 
 function toSafeUser(user){
     return{
         id: user._id,
         email: user.email,
         name: user.name,
+        isAdmin: Boolean(user.isAdmin),
     }
+}
+
+function createAuthResponse(user) {
+    const safeUser = toSafeUser(user);
+    const token = jwt.sign(
+        {
+            sub: safeUser.id.toString(),
+            email: safeUser.email,
+            isAdmin: safeUser.isAdmin,
+        },
+        getJwtSecret(),
+        { expiresIn: TOKEN_TTL },
+    );
+
+    return { token, user: safeUser };
 }
 
 export async function registerUser({email, password, name}){
@@ -27,7 +49,7 @@ export async function registerUser({email, password, name}){
 
     const user = await createUser({email, password: hashedPassword, name});
 
-    return toSafeUser(user);
+    return createAuthResponse(user);
 }
 
 export async function loginUser({email, password}){
@@ -50,6 +72,20 @@ export async function loginUser({email, password}){
         throw new Error('Invalid email or password');
     }
 
-    return toSafeUser(user);
-    
+    return createAuthResponse(user);
+}
+
+export async function getCurrentUserFromToken(token) {
+    try {
+        const payload = jwt.verify(token, getJwtSecret());
+        const user = await findUserById(payload.sub);
+
+        if (!user) {
+            throw new Error('Invalid or expired token');
+        }
+
+        return toSafeUser(user);
+    } catch {
+        throw new Error('Invalid or expired token');
+    }
 }
