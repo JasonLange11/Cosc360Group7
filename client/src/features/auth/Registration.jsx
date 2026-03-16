@@ -2,6 +2,7 @@ import './Registration.css'
 import { HeaderWithoutNav } from '../../components/Header.jsx'
 import { useState} from 'react'
 import { registerUser } from '../../lib/auth.js'
+import { useNavigate } from 'react-router-dom'
 
 // TODO: Need to make a good css look for formError. Should probably be a error next to the signup button.
 
@@ -19,6 +20,7 @@ function Registration() {
 
   const emailsMatch = email.trim() === verifyEmail.trim();
   const passwordsMatch = password.trim() === verifyPassword.trim();
+  const navigate = useNavigate();
   
   async function handleSubmit(event) {
     event.preventDefault();
@@ -37,6 +39,7 @@ function Registration() {
     try{
       const result = await registerUser({email, password, name});
       console.log('Registered: ', result)
+      navigate('/');
 
     }catch(error){
       setFormError(error.message);

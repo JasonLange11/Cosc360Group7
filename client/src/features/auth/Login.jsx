@@ -1,14 +1,17 @@
 import './Login.css'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { HeaderWithoutNav } from '../../components/Header'
 import { useState } from 'react'
 import { loginUser } from '../../lib/auth' 
+import { useAuth } from '../../context/AuthContext.jsx'
 
 export default function Login() {
 
+    const { completeLogin } = useAuth()
+    const navigate = useNavigate();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-     const [formError, setFormError] = useState("");
+    const [formError, setFormError] = useState("");
 
     async function handleSubmit(event){
         event.preventDefault();
@@ -16,9 +19,11 @@ export default function Login() {
 
         try{
             const result = await loginUser({email, password});
-            console.log('Logged in: ', result)
+
+            completeLogin(result);
+            navigate('/');
         }catch (error){
-            setFormError('Invalid email or password');
+            setFormError(error.message || 'Invalid email or password');
             console.error(error.message);
         }
     }
