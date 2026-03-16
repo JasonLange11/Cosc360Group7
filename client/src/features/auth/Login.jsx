@@ -1,8 +1,8 @@
 import './Login.css'
-import {Link} from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { HeaderWithoutNav } from '../../components/Header'
 import { useState } from 'react'
-import {loginUser} from '../../lib/api' 
+import { loginUser } from '../../lib/auth' 
 
 export default function Login() {
 

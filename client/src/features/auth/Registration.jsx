@@ -1,9 +1,46 @@
 import './Registration.css'
-import {HeaderWithoutNav} from '../../components/Header.jsx'
+import { HeaderWithoutNav } from '../../components/Header.jsx'
+import { useState} from 'react'
+import { registerUser } from '../../lib/auth.js'
+
+// TODO: Need to make a good css look for formError. Should probably be a error next to the signup button.
 
 function Registration() {
-  const handleSubmit = (event) => {
-    event.preventDefault()
+  
+  const [email, setEmail] = useState("");
+  const [verifyEmail, setVerifyEmail] = useState("");
+
+  const [password, setPassword] = useState("");
+  const [verifyPassword, setVerifyPassword] = useState("");
+
+  const [nickName, setNickName] = useState("");
+
+  const [formError, setFormError] = useState("");
+
+  const emailsMatch = email.trim() === verifyEmail.trim();
+  const passwordsMatch = password.trim() === verifyPassword.trim();
+  
+  async function handleSubmit(event) {
+    event.preventDefault();
+
+    if(!emailsMatch){
+      setFormError('Emails do not match');
+      return;
+    }
+
+    if(!passwordsMatch){
+      setFormError('Passwords do not match');
+      return;
+    }
+    
+    try{
+      const result = await registerUser({email, password, nickName});
+      console.log('Registered: ', result)
+
+    }catch(error){
+      console.log(error.message);
+    }
+    
   }
 
   return (
@@ -17,23 +54,41 @@ function Registration() {
           <section className="field-section">
             <p className="field-label">Email</p>
             <div className="input-row">
-              <input type="email" placeholder="Enter your email" />
-              <input type="email" placeholder="Re-Enter your email" />
+              <input type="email" 
+              placeholder="Enter your email"
+              value={email}
+              onChange={(event) => setEmail(event.target.value)} 
+              required/>
+              <input type="email" 
+              placeholder="Re-Enter your email"
+              value={verifyEmail}
+              onChange={(event) => setVerifyEmail(event.target.value)}
+              required />
             </div>
           </section>
 
           <section className="field-section">
             <p className="field-label">Password</p>
             <div className="input-row">
-              <input type="password" placeholder="Enter your password" />
-              <input type="password" placeholder="Re-Enter your password" />
+              <input type="password" 
+              placeholder="Enter your password"
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
+              required />
+              <input type="password" 
+              placeholder="Re-Enter your password"
+              value={verifyPassword}
+              onChange={(event) => setVerifyPassword(event.target.value)} />
             </div>
           </section>
 
           <section className="field-section">
             <p className="field-label">Nickname</p>
             <div className="nickname-row">
-              <input type="text" placeholder="Enter your nickname" />
+              <input type="text" 
+              placeholder="Enter your nickname"
+              value={nickName}
+              onChange={(event) => setNickName(event.target.value)} />
               <label className="terms-label">
                 <input type="checkbox" />I agree to the Terms of Service
               </label>
@@ -43,6 +98,8 @@ function Registration() {
           <button type="submit" className="signup-button">
             SignUp
           </button>
+
+          <span>{formError}</span>
 
           <p className="tagline">TouchGrassEvents: Find events. Get out. Touch grass.</p>
         </form>
