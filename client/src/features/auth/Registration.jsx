@@ -13,7 +13,7 @@ function Registration() {
   const [password, setPassword] = useState("");
   const [verifyPassword, setVerifyPassword] = useState("");
 
-  const [nickName, setNickName] = useState("");
+  const [name, setName] = useState("");
 
   const [formError, setFormError] = useState("");
 
@@ -22,6 +22,7 @@ function Registration() {
   
   async function handleSubmit(event) {
     event.preventDefault();
+    setFormError('');
 
     if(!emailsMatch){
       setFormError('Emails do not match');
@@ -34,11 +35,11 @@ function Registration() {
     }
     
     try{
-      const result = await registerUser({email, password, nickName});
+      const result = await registerUser({email, password, name});
       console.log('Registered: ', result)
 
     }catch(error){
-      console.log(error.message);
+      setFormError(error.message);
     }
     
   }
@@ -87,8 +88,9 @@ function Registration() {
             <div className="nickname-row">
               <input type="text" 
               placeholder="Enter your nickname"
-              value={nickName}
-              onChange={(event) => setNickName(event.target.value)} />
+              value={name}
+              onChange={(event) => setName(event.target.value)}
+              required />
               <label className="terms-label">
                 <input type="checkbox" />I agree to the Terms of Service
               </label>

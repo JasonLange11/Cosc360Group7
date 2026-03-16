@@ -8,14 +8,17 @@ export default function Login() {
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+     const [formError, setFormError] = useState("");
 
     async function handleSubmit(event){
         event.preventDefault();
+        setFormError('');
 
         try{
             const result = await loginUser({email, password});
             console.log('Logged in: ', result)
         }catch (error){
+            setFormError('Invalid email or password');
             console.error(error.message);
         }
     }
@@ -62,6 +65,9 @@ export default function Login() {
                         <input type="checkbox" />
                         <span>Remember Me</span>
                     </label>
+
+                    <br></br>
+                    <span>{formError}</span>
 
                     <section className="login-button-section">
                         <button type="submit" className="login-button login-button-primary">
