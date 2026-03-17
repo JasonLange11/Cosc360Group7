@@ -1,13 +1,19 @@
 .page-shell {
   min-height: 100vh;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 24px;
+  flex-direction: column;
+  align-items: stretch;
+  padding: 0 24px 24px;
+}
+
+.registration-header {
+  width: min(720px, 100%);
+  margin: 0 auto;
 }
 
 .registration-card {
   width: min(720px, 100%);
+  margin: 24px auto 0;
   background: #b6a5d7;
   border: 2px solid #5d4f86;
   padding: 12px;

@@ -7,3 +7,11 @@ export async function getAllUsers() {
 export async function createUser(userData) {
   return User.create(userData);
 }
+
+export async function findUserByEmail(email){
+  return User.findOne({email});
+}
+
+export async function findUserById(userId) {
+  return User.findById(userId);
+}

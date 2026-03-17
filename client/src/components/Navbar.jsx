@@ -5,27 +5,104 @@
 */
 import './Navbar.css'
 import '@fortawesome/fontawesome-free/css/all.min.css';
+import { useEffect, useRef, useState } from 'react'
+import { NavLink} from 'react-router-dom'
+import { useAuth } from '../context/AuthContext.jsx'
 
 function Navbar(){
+    const { currentUser, logout } = useAuth()
+    const [isMenuOpen, setIsMenuOpen] = useState(false)
+    const menuRef = useRef(null)
+
+    useEffect(() => {
+        function handleWindowClick(event) {
+            if (menuRef.current && !menuRef.current.contains(event.target)) {
+                setIsMenuOpen(false)
+            }
+        }
+
+        function handleEscape(event) {
+            if (event.key === 'Escape') {
+                setIsMenuOpen(false)
+            }
+        }
+
+        window.addEventListener('mousedown', handleWindowClick)
+        window.addEventListener('keydown', handleEscape)
+
+        return () => {
+            window.removeEventListener('mousedown', handleWindowClick)
+            window.removeEventListener('keydown', handleEscape)
+        }
+    }, [])
+
+    function handleMenuToggle() {
+        setIsMenuOpen((isOpen) => !isOpen)
+    }
+
+    function handleLogoutClick() {
+        setIsMenuOpen(false)
+        logout()
+    }
+
     return(
         <nav className="headerNav">
             <ul>
-                <li>
-                    <i className="fa-solid fa-calendar-plus"></i>
-                    Create
-                </li>
-                <li>
-                    <i className="fa-solid fa-users"></i>
-                    Group
-                </li>
-                <li>
-                    <i className="fa-solid fa-crown"></i>
-                    Admin Panel
-                </li>
-                <li>
-                    <i className="fa-regular fa-circle-user"></i>
-                    Login
-                </li>
+                {currentUser ? (
+                    <>  
+                        {!currentUser.isAdmin ? (
+                        <li>
+                            <i className="fa-solid fa-calendar-plus"></i>
+                            Create
+                        </li>
+                        ) : null}      
+                        {!currentUser.isAdmin ? (
+                            <li>
+                                <i className="fa-solid fa-users"></i>
+                                Group
+                            </li>
+                        ) : null}   
+                        {currentUser.isAdmin ? (
+                            <li>
+                                <i className="fa-solid fa-crown"></i>
+                                Admin Panel
+                            </li>
+                        ) : null}
+                        <li className="nav-account-menu" ref={menuRef}>
+                            <button
+                                type="button"
+                                className="nav-button nav-account-button"
+                                onClick={handleMenuToggle}
+                                aria-expanded={isMenuOpen}
+                                aria-haspopup="menu"
+                            >
+                                <span>
+                                    <i className="fa-regular fa-circle-user"></i>
+                                    {currentUser.name}
+                                </span>
+                                <i className={`fa-solid ${isMenuOpen ? 'fa-chevron-up' : 'fa-chevron-down'}`}></i>
+                            </button>
+
+                            {isMenuOpen ? (
+                                <div className="nav-dropdown" role="menu">
+                                    <button type="button" className="nav-dropdown-item" disabled>
+                                        Settings
+                                    </button>
+                                    <button type="button" className="nav-dropdown-item" onClick={handleLogoutClick}>
+                                        Logout
+                                    </button>
+                                </div>
+                            ) : null}
+                        </li>
+                    </>
+                ) : (
+                    <li>
+                        <NavLink to='/login'>
+                            <i className="fa-regular fa-circle-user"></i>
+                            Login
+                        </NavLink>
+                    </li>
+                )}
             </ul>
         </nav>
     );

@@ -2,7 +2,7 @@
 import Navbar from './Navbar.jsx'
 import './Header.css'
 
-function Header(){
+export default function Header(){
 
     return (
         <header className="header">
@@ -14,4 +14,13 @@ function Header(){
     );
 }
 
-export default Header;
+export function HeaderWithoutNav(){
+
+    return (
+        <header className="header">
+            <h1>
+                TouchGrassEvents
+            </h1>
+        </header>
+    );
+}
