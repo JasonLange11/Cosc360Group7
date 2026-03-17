@@ -19,3 +19,8 @@ Group 7
 - cd server
 - npm install
 - npm run dev
+
+## Start up Docker Container for Database
+- Stay in the project root folder
+- Make sure Docker Desktop is running
+- docker compose up -d
