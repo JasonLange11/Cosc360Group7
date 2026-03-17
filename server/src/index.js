@@ -6,6 +6,7 @@ import swaggerUi from "swagger-ui-express";
 import swaggerJSDoc from "swagger-jsdoc";
 import usersRouter from "./modules/users/users.routes.js";
 import authRouter from "./modules/auth/auth.routes.js";
+import eventsRouter from "./modules/events/events.routes.js";
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -19,7 +20,7 @@ const swaggerOptions = {
       description: "Backend API documentation"
     }
   },
-  apis: ["./src/modules/users/*.js", "./src/modules/auth/*.js", "./src/index.js"]
+  apis: ["./src/modules/users/*.js", "./src/modules/auth/*.js", "./src/modules/events/*.js", "./src/index.js"]
 };
 
 const specs = swaggerJSDoc(swaggerOptions);
@@ -33,6 +34,7 @@ app.get("/", (req, res) => {
 
 app.use("/api/users", usersRouter);
 app.use("/api/auth", authRouter)
+app.use("/api/events", eventsRouter)
 app.use("/docs", swaggerUi.serve, swaggerUi.setup(specs));
 
 
