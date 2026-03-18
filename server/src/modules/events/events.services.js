@@ -21,6 +21,15 @@ export async function createUserEvent(user, eventData) {
     throw new Error("Authentication required");
   }
 
+  /*
+   Might change this so admins can, but just want to 
+   keep accounts seperate for now. Admins can edit 
+   events still if they need to edit someones event.
+  */
+  if(user.isAdmin){
+    throw new Error("Admins can not create events");
+  }
+
   const event = await createEvent({
     ...eventData,
     userId: user.id,

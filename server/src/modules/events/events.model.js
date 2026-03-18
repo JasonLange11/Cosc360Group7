@@ -9,9 +9,14 @@ const eventSchema = new mongoose.Schema(
       index: true,
     },
     bannerImage: {
-      type: String,
+      type: mongoose.Schema.Types.Mixed,
       required: true,
-      trim: true,
+      validate: {
+        validator(value) {
+          return typeof value === "string" || Buffer.isBuffer(value);
+        },
+        message: "bannerImage must be a string URL or binary Buffer",
+      },
     },
     title: {
       type: String,
