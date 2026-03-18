@@ -28,6 +28,6 @@ if desired.  If so, do the following instead.
 - npm run dev
 
 
-#### Seed Data into the Database
+#### Seed Data into the Database (Note: THIS WILL REMOVE ALL DATA IN THE DATABASE BEFORE SEEDING THE DATA)
 - cd server
 - npm run seed
