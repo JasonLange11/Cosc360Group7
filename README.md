@@ -26,3 +26,8 @@ if desired.  If so, do the following instead.
 - cd server
 - npm install
 - npm run dev
+
+
+#### Seed Data into the Database
+- cd server
+- npm run seed
