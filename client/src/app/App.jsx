@@ -1,4 +1,5 @@
 
+import { useState } from 'react'
 import './App.css'
 import Header from '../components/Header'
 import SearchBar from '../components/SearchBar'
@@ -11,13 +12,18 @@ import Signup from '../features/auth/Registration'
 import { useAuth } from '../context/AuthContext.jsx'
 
 function HomePage() {
+  const [searchTerm, setSearchTerm] = useState('')
+
+  const handleSearch = (term) => {
+    setSearchTerm(term)
+  }
 
   return (
     <>
       <Header />
-      <SearchBar />
+      <SearchBar onSearch={handleSearch} />
       <Sidebar />
-      <EventsList />
+      <EventsList searchTerm={searchTerm} />
       <Footer />
     </>
   )

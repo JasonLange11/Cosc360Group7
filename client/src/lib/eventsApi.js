@@ -7,6 +7,15 @@ export async function getEvents() {
 }
 
 
+// Search events by term
+export async function searchEvents(searchTerm) {
+  return apiRequest('/api/events/search', {
+    method: 'POST',
+    body: JSON.stringify({ searchTerm }),
+  });
+}
+
+
 // Fetch a specific event by ID
 export async function getEventById(eventId) {
   return apiRequest(`/api/events/${eventId}`);

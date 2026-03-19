@@ -4,6 +4,7 @@ import {
   fetchEventById,
   fetchEvents,
   fetchMyEvents,
+  filterEvents,
   removeEvent,
 } from "./events.services.js";
 
@@ -30,6 +31,17 @@ export async function getEvents(req, res) {
   } catch (error) {
     const status = getErrorStatus(error.message);
     res.status(status).json({ message: error.message || "Failed to load events" });
+  }
+}
+
+export async function searchEvents(req, res) {
+  try {
+    const searchTerm = String(req.body.searchTerm || "");
+    const events = await filterEvents(searchTerm);
+    res.status(200).json(events);
+  } catch (error) {
+    const status = getErrorStatus(error.message);
+    res.status(status).json({ message: error.message || "Failed to search events" });
   }
 }
 
