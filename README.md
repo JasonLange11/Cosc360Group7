@@ -7,6 +7,7 @@ Group 7
 - docker compose up -d
 
 ## Optional seed the project data
+### Note that running this will delete your local DB
 - in project root folder
 - npm run seed --prefix server
 
@@ -30,8 +31,3 @@ if desired.  If so, do the following instead.
 - cd server
 - npm install
 - npm run dev
-
-
-#### Seed Data into the Database (Note: THIS WILL REMOVE ALL DATA IN THE DATABASE BEFORE SEEDING THE DATA)
-- cd server
-- npm run seed
