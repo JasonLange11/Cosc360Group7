@@ -6,6 +6,11 @@ Group 7
 - Make sure Docker Desktop is running
 - docker compose up -d
 
+## Optional seed the project data
+### Note that running this will overwrite your local DB
+- in project root folder
+- npm run seed --prefix server
+
 ## Running the project
 
 ### Run frontend and backend on localhost 
