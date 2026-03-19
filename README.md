@@ -7,7 +7,7 @@ Group 7
 - docker compose up -d
 
 ## Optional seed the project data
-### Note that running this will delete your local DB
+### Note that running this will overwrite your local DB
 - in project root folder
 - npm run seed --prefix server
 
