@@ -1,0 +1,112 @@
+[  
+	{
+		"ownerEmail": "user1@example.com",
+		"bannerImage": "https://images.unsplash.com/photo-1495446815901-a7297e633e8d?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+		"title": "Campus Book Club Meetup",
+		"eventDate": "2026-04-05T00:00:00.000Z",
+		"eventTime": "6:00 PM",
+		"location": "Library Commons",
+		"cost": 0,
+		"capacity": 40,
+		"description": "Weekly meetup to discuss this month's reading list."
+	},
+	{
+		"ownerEmail": "user1@example.com",
+		"bannerImage": "https://images.unsplash.com/photo-1736163034456-a283cf332081?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+		"title": "Morning Trail Walk",
+		"eventDate": "2026-04-08T00:00:00.000Z",
+		"eventTime": "9:00 AM",
+		"location": "Knox Mountain Park",
+		"cost": 5,
+		"capacity": 25,
+		"description": "Easy pace group walk followed by coffee."
+	},
+	{
+		"ownerEmail": "user1@example.com",
+		"bannerImage": "https://images.unsplash.com/photo-1556438064-2d7646166914?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+		"title": "Indie Game Development Jam",
+		"eventDate": "2026-04-10T00:00:00.000Z",
+		"eventTime": "1:00 PM",
+		"location": "Engineering Lab 2",
+		"cost": 10,
+		"capacity": 60,
+		"description": "Build a playable prototype in one afternoon with local dev mentors."
+	},
+	{
+		"ownerEmail": "user1@example.com",
+		"bannerImage": "https://images.stockcake.com/public/3/a/a/3aa9cdcb-f5bd-49f1-b1df-a49d46764afc_large/sunset-yoga-park-stockcake.jpg",
+		"title": "Sunset Yoga on the Lawn",
+		"eventDate": "2026-04-12T00:00:00.000Z",
+		"eventTime": "7:30 PM",
+		"location": "Main Campus Green",
+		"cost": 0,
+		"capacity": 50,
+		"description": "Bring a mat and join an all-levels outdoor yoga session at sunset."
+	},
+	{
+		"ownerEmail": "user1@example.com",
+		"bannerImage": "https://images.unsplash.com/photo-1560439514-4e9645039924?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+		"title": "Career Networking Night",
+		"eventDate": "2026-04-15T00:00:00.000Z",
+		"eventTime": "5:30 PM",
+		"location": "Student Union Ballroom",
+		"cost": 15,
+		"capacity": 120,
+		"description": "Meet hiring managers and alumni across tech, health, and business sectors."
+	},
+	{
+		"ownerEmail": "user1@example.com",
+		"bannerImage": "https://plus.unsplash.com/premium_photo-1679689588323-4e932e23a35e?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+		"title": "Community Beach Cleanup",
+		"eventDate": "2026-04-18T00:00:00.000Z",
+		"eventTime": "10:00 AM",
+		"location": "City Park Beach",
+		"cost": 0,
+		"capacity": 80,
+		"description": "Volunteer event with gloves and cleanup supplies provided on site."
+	},
+	{
+		"ownerEmail": "user1@example.com",
+		"bannerImage": "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?q=80&w=764&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+		"title": "Intro to Digital Photography",
+		"eventDate": "2026-04-20T00:00:00.000Z",
+		"eventTime": "3:00 PM",
+		"location": "Arts Building Room 104",
+		"cost": 20,
+		"capacity": 30,
+		"description": "Hands-on workshop covering composition, lighting, and camera settings."
+	},
+	{
+		"ownerEmail": "user1@example.com",
+		"bannerImage": "https://images.unsplash.com/photo-1635520356736-90cb46f73413?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+		"title": "Live Jazz and Open Mic",
+		"eventDate": "2026-04-22T00:00:00.000Z",
+		"eventTime": "8:00 PM",
+		"location": "Downtown Cultural Center",
+		"cost": 12,
+		"capacity": 90,
+		"description": "An evening of local jazz performances followed by an open mic session."
+	},
+	{
+		"ownerEmail": "user1@example.com",
+		"bannerImage": "https://images.unsplash.com/photo-1672309558498-cfcc89afff25?q=80&w=735&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+		"title": "Coding Interview Prep Workshop",
+		"eventDate": "2026-04-25T00:00:00.000Z",
+		"eventTime": "11:00 AM",
+		"location": "Computer Science Building 201",
+		"cost": 0,
+		"capacity": 70,
+		"description": "Practice whiteboard problems and behavioral questions with peer feedback."
+	},
+	{
+		"ownerEmail": "user1@example.com",
+		"bannerImage": "https://images.unsplash.com/photo-1485637701894-09ad422f6de6?q=80&w=1136&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+		"title": "Spring Farmers Market",
+		"eventDate": "2026-04-27T00:00:00.000Z",
+		"eventTime": "2:00 PM",
+		"location": "Landmark District",
+		"cost": 0,
+		"capacity": 35,
+		"description": "Explore local produce stalls and small-batch food vendors."
+	}
+]
