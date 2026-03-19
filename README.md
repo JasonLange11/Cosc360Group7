@@ -6,6 +6,10 @@ Group 7
 - Make sure Docker Desktop is running
 - docker compose up -d
 
+## Optional seed the project data
+- in project root folder
+- npm run seed --prefix server
+
 ## Running the project
 
 ### Run frontend and backend on localhost 
@@ -26,3 +30,8 @@ if desired.  If so, do the following instead.
 - cd server
 - npm install
 - npm run dev
+
+
+#### Seed Data into the Database (Note: THIS WILL REMOVE ALL DATA IN THE DATABASE BEFORE SEEDING THE DATA)
+- cd server
+- npm run seed
