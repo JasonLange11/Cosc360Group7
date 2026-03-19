@@ -42,6 +42,27 @@ export async function fetchEvents() {
   return getAllEvents();
 }
 
+export async function filterEvents(searchTerm) {
+  const events = await fetchEvents();
+  const term = searchTerm.trim().toLowerCase();
+
+  if (!term) {
+    return events;
+  }
+
+  return events.filter((event) => {
+    const title = event.title.toLowerCase();
+    const location = event.location.toLowerCase();
+    const description = event.description.toLowerCase();
+
+    return (
+      title.includes(term)
+      || location.includes(term)
+      || description.includes(term)
+    );
+  });
+}
+
 export async function fetchEventById(eventId) {
   const event = await getEventById(eventId);
 

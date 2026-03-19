@@ -1,18 +1,21 @@
 import { useEffect, useState } from 'react';
 import CardDisplay from './CardDisplay';
-import { getEvents } from '../lib/eventsApi';
+import { getEvents, searchEvents } from '../lib/eventsApi';
 import './EventsList.css';
 
-function EventsList() {
+function EventsList({ searchTerm }) {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchEvents = async () => {
+    const loadEvents = async () => {
       try {
         setLoading(true);
-        const data = await getEvents();
+
+        const term = searchTerm.trim();
+        const data = term ? await searchEvents(term) : await getEvents();
+
         setEvents(data);
         setError(null);
       } catch (err) {
@@ -23,8 +26,8 @@ function EventsList() {
       }
     };
 
-    fetchEvents();
-  }, []);
+    loadEvents();
+  }, [searchTerm]);
 
   if (loading) {
     return <div className="events-list-container">Loading events...</div>;
@@ -34,8 +37,8 @@ function EventsList() {
     return <div className="events-list-container error">Error: {error}</div>;
   }
 
-  if (!events || events.length === 0) {
-    return <div className="events-list-container">No events found</div>;
+  if (events.length === 0) {
+    return <div className="events-list-container">No results found</div>;
   }
 
   return (
