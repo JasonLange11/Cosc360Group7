@@ -6,6 +6,7 @@ import SearchBar from '../components/SearchBar'
 import Footer from '../components/Footer'
 import Sidebar from '../components/Sidebar'
 import EventsList from '../components/EventsList'
+import EventDetails from '../components/EventDetails'
 import { Navigate, Routes, Route } from 'react-router-dom'
 import Login from '../features/auth/Login'
 import Signup from '../features/auth/Registration'
@@ -13,18 +14,31 @@ import { useAuth } from '../context/AuthContext.jsx'
 
 function HomePage() {
   const [searchTerm, setSearchTerm] = useState('')
+  const [activeEventId, setActiveEventId] = useState(null)
 
   const handleSearch = (term) => {
     setSearchTerm(term)
   }
 
+  const handleOpenEvent = (eventId) => {
+    setActiveEventId(eventId)
+  }
+
+  const handleCloseEvent = () => {
+    setActiveEventId(null)
+  }
+
   return (
     <>
-      <Header />
-      <SearchBar onSearch={handleSearch} />
-      <Sidebar />
-      <EventsList searchTerm={searchTerm} />
-      <Footer />
+      <div className={activeEventId ? 'page-content page-content-blurred' : 'page-content'}>
+        <Header />
+        <SearchBar onSearch={handleSearch} />
+        <Sidebar />
+        <EventsList searchTerm={searchTerm} onOpenEvent={handleOpenEvent} />
+        <Footer />
+      </div>
+
+      {activeEventId ? <EventDetails eventId={activeEventId} onClose={handleCloseEvent} /> : null}
     </>
   )
 }
