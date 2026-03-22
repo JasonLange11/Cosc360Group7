@@ -1,4 +1,5 @@
 import { createEvent, deleteEventById, getAllEvents, getEventById, getEventsByUserId, updateEventById, } from "./events.repository.js";
+import { findUserById } from "../users/users.repository.js";
 
 function toPlainEvent(event) {
   return typeof event.toObject === "function" ? event.toObject() : event;
@@ -14,6 +15,21 @@ function canModifyEvent(user, event) {
   }
 
   return event.userId.toString() === user.id.toString();
+}
+
+async function attachOrganizerName(event) {
+  const plainEvent = toPlainEvent(event);
+
+  if (!plainEvent?.userId) {
+    return plainEvent;
+  }
+
+  const owner = await findUserById(plainEvent.userId);
+
+  return {
+    ...plainEvent,
+    organizerName: owner?.name || "Unknown Organizer",
+  };
 }
 
 export async function createUserEvent(user, eventData) {
@@ -39,7 +55,8 @@ export async function createUserEvent(user, eventData) {
 }
 
 export async function fetchEvents() {
-  return getAllEvents();
+  const events = await getAllEvents();
+  return Promise.all(events.map((event) => attachOrganizerName(event)));
 }
 
 export async function filterEvents(searchTerm) {
@@ -70,7 +87,7 @@ export async function fetchEventById(eventId) {
     throw new Error("Event not found");
   }
 
-  return toPlainEvent(event);
+  return attachOrganizerName(event);
 }
 
 export async function fetchMyEvents(user) {
@@ -78,7 +95,8 @@ export async function fetchMyEvents(user) {
     throw new Error("Authentication required");
   }
 
-  return getEventsByUserId(user.id);
+  const events = await getEventsByUserId(user.id);
+  return Promise.all(events.map((event) => attachOrganizerName(event)));
 }
 
 export async function editEvent(user, eventId, updateData) {
