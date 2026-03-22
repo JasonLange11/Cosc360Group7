@@ -1,0 +1,209 @@
+import { useEffect, useMemo, useState } from 'react'
+import '@fortawesome/fontawesome-free/css/all.min.css'
+import { getEventById } from '../lib/eventsApi'
+import './EventDetails.css'
+
+function formatEventDate(dateString) {
+    if (!dateString) {
+        return 'Date TBD'
+    }
+
+    const date = new Date(dateString)
+
+    return date.toLocaleDateString(undefined, {
+        weekday: 'long',
+        month: 'long',
+        day: 'numeric',
+        year: 'numeric',
+    })
+}
+
+function formatEventTime(timeString) {
+    if (!timeString) {
+        return 'Time TBD'
+    }
+
+    const parsed = new Date(`1970-01-01 ${timeString}`)
+
+    if (Number.isNaN(parsed.getTime())) {
+        return timeString
+    }
+
+    const twentyFourHour = parsed.toLocaleTimeString([], {
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false,
+    })
+
+    const twelveHour = parsed.toLocaleTimeString([], {
+        hour: 'numeric',
+        minute: '2-digit',
+        hour12: true,
+    }).toLowerCase()
+
+    return `${twentyFourHour} (${twelveHour})`
+}
+
+export default function EventDetails({ eventId, onClose }) {
+    const [event, setEvent] = useState(null)
+    const [loading, setLoading] = useState(true)
+    const [error, setError] = useState(null)
+
+    useEffect(() => {
+        function handleEscape(eventKey) {
+            if (eventKey.key === 'Escape' && typeof onClose === 'function') {
+                onClose()
+            }
+        }
+
+        window.addEventListener('keydown', handleEscape)
+
+        return () => {
+            window.removeEventListener('keydown', handleEscape)
+        }
+    }, [onClose])
+
+    useEffect(() => {
+        let isMounted = true
+
+        async function loadEvent() {
+            try {
+                setLoading(true)
+                const eventData = await getEventById(eventId)
+
+                if (isMounted) {
+                    setEvent(eventData)
+                    setError(null)
+                }
+            } catch (err) {
+                if (isMounted) {
+                    setError(err.message || 'Failed to load event details')
+                    setEvent(null)
+                }
+            } finally {
+                if (isMounted) {
+                    setLoading(false)
+                }
+            }
+        }
+
+        loadEvent()
+
+        return () => {
+            isMounted = false
+        }
+    }, [eventId])
+
+    const formattedCost = useMemo(() => {
+        if (!event || typeof event.cost !== 'number') {
+            return '$0.00'
+        }
+
+        return new Intl.NumberFormat('en-CA', {
+            style: 'currency',
+            currency: 'CAD',
+            minimumFractionDigits: 2,
+        }).format(event.cost)
+    }, [event])
+
+    if (loading) {
+        return (
+            <div className="event-details-overlay" onClick={onClose}>
+                <div className="event-details-shell" onClick={(clickEvent) => clickEvent.stopPropagation()}>
+                    Loading event details...
+                </div>
+            </div>
+        )
+    }
+
+    if (error || !event) {
+        return (
+            <div className="event-details-overlay" onClick={onClose}>
+                <main
+                    className="event-details-shell event-details-error"
+                    onClick={(clickEvent) => clickEvent.stopPropagation()}
+                >
+                    {error || 'Event not found'}
+                </main>
+            </div>
+        )
+    }
+
+    const attendanceCount = typeof event.attendees === 'number' ? event.attendees : 0
+
+    return (
+        <div className="event-details-overlay" onClick={onClose}>
+            <main className="event-details-shell" onClick={(clickEvent) => clickEvent.stopPropagation()}>
+                <section className="event-details-card">
+                    <div className="event-details-image-wrap">
+                        <img src={event.bannerImage} alt={event.title} className="event-details-image" />
+                        <span className="event-details-tag">Music</span>
+                    </div>
+
+                    <div className="event-details-content">
+                        <h2 className="event-details-title">{event.title}</h2>
+
+                        <div className="event-details-grid">
+                            <div className="event-detail-item">
+                                <i className="fa-regular fa-calendar"></i>
+                                <div>
+                                    <p className="event-detail-label">Date</p>
+                                    <p className="event-detail-value">{formatEventDate(event.eventDate)}</p>
+                                </div>
+                            </div>
+
+                            <div className="event-detail-item">
+                                <i className="fa-regular fa-clock"></i>
+                                <div>
+                                    <p className="event-detail-label">Time</p>
+                                    <p className="event-detail-value">{formatEventTime(event.eventTime)}</p>
+                                </div>
+                            </div>
+
+                            <div className="event-detail-item">
+                                <i className="fa-solid fa-location-dot"></i>
+                                <div>
+                                    <p className="event-detail-label">Location</p>
+                                    <p className="event-detail-value">{event.location}</p>
+                                </div>
+                            </div>
+
+                            <div className="event-detail-item">
+                                <i className="fa-solid fa-ticket"></i>
+                                <div>
+                                    <p className="event-detail-label">Admission</p>
+                                    <p className="event-detail-value">{formattedCost}</p>
+                                </div>
+                            </div>
+
+                            <div className="event-detail-item">
+                                <i className="fa-solid fa-person"></i>
+                                <div>
+                                    <p className="event-detail-label">Organizer</p>
+                                    <p className="event-detail-value">{event.organizerName || 'Unknown Organizer'}</p>
+                                </div>
+                            </div>
+
+                            <div className="event-detail-item">
+                                <i className="fa-solid fa-people-group"></i>
+                                <div>
+                                    <p className="event-detail-label">Capacity</p>
+                                    <p className="event-detail-value">{`${attendanceCount}/${event.capacity} Attendees`}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="event-details-description">
+                            <h3>Description:</h3>
+                            <p>{event.description}</p>
+                        </div>
+
+                        <button type="button" className="event-details-button">
+                            Register for this event
+                        </button>
+                    </div>
+                </section>
+            </main>
+        </div>
+    )
+}

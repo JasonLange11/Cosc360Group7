@@ -3,7 +3,7 @@ import CardDisplay from './CardDisplay';
 import { getEvents, searchEvents } from '../lib/eventsApi';
 import './EventsList.css';
 
-function EventsList({ searchTerm }) {
+function EventsList({ searchTerm, onOpenEvent }) {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -47,6 +47,8 @@ function EventsList({ searchTerm }) {
         {events.map((event) => (
           <CardDisplay
             key={event._id}
+            eventId={event._id}
+            onOpenEvent={onOpenEvent}
             img={{
               src: event.bannerImage,
               alt: event.title,
