@@ -4,3 +4,13 @@
 body{
     background-color: #b4a7d6;
 }
+
+.page-content {
+    min-height: 100vh;
+}
+
+.page-content-blurred {
+    filter: blur(6px);
+    pointer-events: none;
+    user-select: none;
+}

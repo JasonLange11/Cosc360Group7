@@ -13,8 +13,14 @@ function CardDisplay(props) {
         ))
     }
 
+    const handleCardClick = () => {
+        if (props.eventId && typeof props.onOpenEvent === 'function') {
+            props.onOpenEvent(props.eventId)
+        }
+    }
+
     return (
-        <div className='card'>
+        <button type='button' className='card card-button' onClick={handleCardClick}>
             <div className='card-image'>
                 <img src={props.img.src} alt={props.img.alt} />
             </div>
@@ -27,7 +33,7 @@ function CardDisplay(props) {
                     {props.description}
                 </p>
             </div>
-        </div>
+        </button>
     ) 
 }
 
