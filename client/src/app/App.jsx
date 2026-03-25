@@ -11,6 +11,7 @@ import { Navigate, Routes, Route } from 'react-router-dom'
 import Login from '../features/auth/Login'
 import Signup from '../features/auth/Registration'
 import { useAuth } from '../context/AuthContext.jsx'
+import AdminPage from '../components/admin/AdminPage.jsx'
 
 function HomePage() {
   const [searchTerm, setSearchTerm] = useState('')
@@ -56,6 +57,7 @@ export default function App(){
       <Route path="/" element={<HomePage />} />
       <Route path="/login" element={currentUser ? <Navigate to="/" replace /> : <Login />} />
       <Route path="/signup" element={currentUser ? <Navigate to="/" replace /> : <Signup />} />
+      <Route path="/admin" element={currentUser && currentUser.isAdmin ? <AdminPage /> : <Navigate to="/" replace />} />
     </Routes>
   )
 }
