@@ -64,8 +64,10 @@ function Navbar(){
                         ) : null}   
                         {currentUser.isAdmin ? (
                             <li>
-                                <i className="fa-solid fa-crown"></i>
-                                Admin Panel
+                                <NavLink to='/admin'>
+                                    <i className="fa-solid fa-crown"></i>
+                                    Admin Panel
+                                </NavLink>
                             </li>
                         ) : null}
                         <li className="nav-account-menu" ref={menuRef}>
