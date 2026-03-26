@@ -8,89 +8,66 @@ import {
   removeEvent,
 } from "./events.services.js";
 
-function getErrorStatus(errorMessage) {
-  if (errorMessage === "Authentication required") {
-    return 401;
-  }
-
-  if (errorMessage === "Forbidden") {
-    return 403;
-  }
-
-  if (errorMessage === "Event not found") {
-    return 404;
-  }
-
-  return 500;
-}
-
-export async function getEvents(req, res) {
+export async function getEvents(req, res, next) {
   try {
     const events = await fetchEvents();
     res.status(200).json(events);
   } catch (error) {
-    const status = getErrorStatus(error.message);
-    res.status(status).json({ message: error.message || "Failed to load events" });
+    next(error);
   }
 }
 
-export async function searchEvents(req, res) {
+export async function searchEvents(req, res, next) {
   try {
     const searchTerm = String(req.body.searchTerm || "");
     const events = await filterEvents(searchTerm);
     res.status(200).json(events);
   } catch (error) {
-    const status = getErrorStatus(error.message);
-    res.status(status).json({ message: error.message || "Failed to search events" });
+    next(error);
   }
 }
 
-export async function getMyEvents(req, res) {
+export async function getMyEvents(req, res, next) {
   try {
     const events = await fetchMyEvents(req.user);
     res.status(200).json(events);
   } catch (error) {
-    const status = getErrorStatus(error.message);
-    res.status(status).json({ message: error.message || "Failed to load user events" });
+    next(error);
   }
 }
 
-export async function getEvent(req, res) {
+export async function getEvent(req, res, next) {
   try {
     const event = await fetchEventById(req.params.eventId);
     res.status(200).json(event);
   } catch (error) {
-    const status = getErrorStatus(error.message);
-    res.status(status).json({ message: error.message || "Failed to load event" });
+    next(error);
   }
 }
 
-export async function createEvent(req, res) {
+export async function createEvent(req, res, next) {
   try {
     const event = await createUserEvent(req.user, req.body);
     res.status(201).json(event);
   } catch (error) {
-    const status = getErrorStatus(error.message);
-    res.status(status).json({ message: error.message || "Failed to create event" });
+    next(error);
   }
 }
 
-export async function updateEvent(req, res) {
+export async function updateEvent(req, res, next) {
   try {
     const event = await editEvent(req.user, req.params.eventId, req.body);
     res.status(200).json(event);
   } catch (error) {
-    const status = getErrorStatus(error.message);
-    res.status(status).json({ message: error.message || "Failed to update event" });
+    next(error);
   }
 }
 
-export async function deleteEvent(req, res) {
+export async function deleteEvent(req, res, next) {
   try {
     await removeEvent(req.user, req.params.eventId);
     res.status(204).send();
   } catch (error) {
-    const status = getErrorStatus(error.message);
-    res.status(status).json({ message: error.message || "Failed to delete event" });
+    next(error);
   }
 }

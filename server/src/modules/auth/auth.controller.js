@@ -1,30 +1,7 @@
 
 import { getCurrentUserFromToken, registerUser, loginUser } from './auth.services.js';
 
-function getErrorStatus(errorMessage) {
-    if (errorMessage === 'Email already in use') {
-        return 409;
-    }
-
-    if (
-        errorMessage === 'Name, email, and password are required' ||
-        errorMessage === 'Email and password are required'
-    ) {
-        return 400;
-    }
-
-    if (errorMessage === 'Invalid email or password') {
-        return 401;
-    }
-
-    if (errorMessage === 'Auth token required' || errorMessage === 'Invalid or expired token') {
-        return 401;
-    }
-
-    return 500;
-}
-
-export async function register(req, res){
+export async function register(req, res, next){
     try{
         const {email, password, name} = req.body;
 
@@ -39,12 +16,11 @@ export async function register(req, res){
             ...authSession,
         })
     }catch(error){
-        const status = getErrorStatus(error.message);
-        res.status(status).json({message: error.message || 'Registration failed'});
+        next(error);
     }
 }
 
-export async function login(req, res){
+export async function login(req, res, next){
 
     try{
         const {email, password} = req.body;
@@ -56,12 +32,11 @@ export async function login(req, res){
             ...authSession,
         })
     }catch(error){
-        const status = getErrorStatus(error.message);
-        res.status(status).json({message: error.message || 'Login failed'});
+        next(error);
     }
 }
 
-export async function me(req, res) {
+export async function me(req, res, next) {
     try {
         const authHeader = req.headers.authorization;
 
@@ -74,7 +49,6 @@ export async function me(req, res) {
 
         res.status(200).json({ user });
     } catch (error) {
-        const status = getErrorStatus(error.message);
-        res.status(status).json({ message: error.message || 'Unable to load current user' });
+        next(error);
     }
 }
