@@ -5,7 +5,7 @@ export async function authenticateUser(req, res, next) {
 		const authHeader = req.headers.authorization;
 
 		if (!authHeader || !authHeader.startsWith('Bearer ')) {
-			return res.status(401).json({ message: 'Auth token required' });
+			return next(new Error('Auth token required'));
 		}
 
 		const token = authHeader.slice(7);
@@ -14,17 +14,17 @@ export async function authenticateUser(req, res, next) {
 		req.user = user;
 		next();
 	} catch (error) {
-		return res.status(401).json({ message: error.message || 'Invalid or expired token' });
+		next(error);
 	}
 }
 
 export function requireAdmin(req, res, next) {
 	if (!req.user) {
-		return res.status(401).json({ message: 'Auth token required' });
+		return next(new Error('Auth token required'));
 	}
 
 	if (!req.user.isAdmin) {
-		return res.status(403).json({ message: 'Admin access required' });
+		return next(new Error('Admin access required'));
 	}
 
 	next();
