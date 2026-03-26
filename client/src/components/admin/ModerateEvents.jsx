@@ -3,6 +3,7 @@ import SearchBar from '../SearchBar'
 import CardDisplay from '../CardDisplay'
 import EventDetails from '../EventDetails'
 import { deleteEvent, getEvents } from '../../lib/eventsApi'
+import './css/ModerateEvents.css'
 
 function getEventId(event) {
 	return event.id || event._id || event.title

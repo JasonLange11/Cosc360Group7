@@ -1,4 +1,5 @@
 import '@fortawesome/fontawesome-free/css/all.min.css'
+import './css/AdminNavbar.css'
 
 export default function AdminNavbar({ activeTab, onTabChange }){
     return(

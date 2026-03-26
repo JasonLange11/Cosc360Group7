@@ -1,0 +1,28 @@
+.a-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+.a-navbtn {
+    margin: 0;
+}
+
+.a-navbtn button {
+    width: 100%;
+    border: 1px solid #7f7699;
+    background: #f7f4ff;
+    color: #2f2942;
+    font-size: 1rem;
+    text-align: left;
+    padding: 0.6rem 0.55rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+}
+
+.a-navbtn button.is-active {
+    background: #d0c4eb;
+    font-weight: 600;
+}

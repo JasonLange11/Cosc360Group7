@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react';
 import { getEvents } from '../../lib/eventsApi';
 import { getUsers } from '../../lib/usersApi';
+import './css/QuickOverview.css';
 
 export default function QuickOverview(){
 

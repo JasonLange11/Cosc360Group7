@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react'
 import SearchBar from '../SearchBar'
+import './css/PendingReviews.css'
 
 export default function PendingReviews({ compact = false, onMore, items = [] }) {
 	const [searchTerm, setSearchTerm] = useState('')

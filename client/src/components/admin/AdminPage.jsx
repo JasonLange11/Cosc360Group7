@@ -7,7 +7,7 @@ import ModerateUsers from './ModerateUsers';
 import ModerateEvents from './ModerateEvents';
 import PendingReviews from './PendingReviews';
 import Footer from '../Footer';
-import './AdminPage.css';
+import './css/AdminPage.css';
 
 export default function AdminPage() {
   const [activeTab, setActiveTab] = useState('dashboard');

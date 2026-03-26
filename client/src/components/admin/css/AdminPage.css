@@ -1,0 +1,54 @@
+.admin-page {
+    min-height: 100vh;
+}
+
+.a-layout {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: 0.75rem;
+    width: min(96%, 1250px);
+    margin: 0.5rem auto 1rem;
+    padding-bottom: 0.75rem;
+}
+
+.a-side {
+    background: #e8e0f6;
+    border: 1px solid #75708a;
+    padding: 0.5rem;
+}
+
+.a-content {
+    background: #ece9f3;
+    border: 1px solid #75708a;
+    padding: 0.75rem;
+}
+
+.a-title {
+    margin: 0 0 0.75rem 0;
+    font-size: 1.9rem;
+    color: #2f2942;
+}
+
+.a-dash {
+    display: grid;
+    gap: 0.75rem;
+}
+
+.a-top {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.a-bottom {
+    grid-template-columns: minmax(0, 1fr);
+    margin-top: 0.75rem;
+}
+
+@media (max-width: 1000px) {
+    .a-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .a-top {
+        grid-template-columns: 1fr;
+    }
+}
