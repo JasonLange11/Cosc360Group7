@@ -44,7 +44,15 @@ function formatEventTime(timeString) {
     return `${twentyFourHour} (${twelveHour})`
 }
 
-export default function EventDetails({ eventId, onClose }) {
+export default function EventDetails({
+    eventId,
+    onClose,
+    actionLabel = 'Register for this event',
+    onAction,
+    actionClassName = 'event-details-button',
+    actionDisabled = false,
+    actionError = '',
+}) {
     const [event, setEvent] = useState(null)
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(null)
@@ -131,6 +139,12 @@ export default function EventDetails({ eventId, onClose }) {
 
     const attendanceCount = typeof event.attendees === 'number' ? event.attendees : 0
 
+    const handleActionClick = async () => {
+        if (typeof onAction === 'function') {
+            await onAction(event)
+        }
+    }
+
     return (
         <div className="event-details-overlay" onClick={onClose}>
             <main className="event-details-shell" onClick={(clickEvent) => clickEvent.stopPropagation()}>
@@ -198,9 +212,15 @@ export default function EventDetails({ eventId, onClose }) {
                             <p>{event.description}</p>
                         </div>
 
-                        <button type="button" className="event-details-button">
-                            Register for this event
+                        <button
+                            type="button"
+                            className={actionClassName}
+                            onClick={handleActionClick}
+                            disabled={actionDisabled}
+                        >
+                            {actionLabel}
                         </button>
+                        {actionError ? <p className="event-details-action-error">{actionError}</p> : null}
                     </div>
                 </section>
             </main>

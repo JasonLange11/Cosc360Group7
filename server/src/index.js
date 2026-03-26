@@ -7,6 +7,7 @@ import swaggerJSDoc from "swagger-jsdoc";
 import usersRouter from "./modules/users/users.routes.js";
 import authRouter from "./modules/auth/auth.routes.js";
 import eventsRouter from "./modules/events/events.routes.js";
+import { errorHandler } from "./middleware/error-handler.js";
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -36,6 +37,7 @@ app.use("/api/users", usersRouter);
 app.use("/api/auth", authRouter)
 app.use("/api/events", eventsRouter)
 app.use("/docs", swaggerUi.serve, swaggerUi.setup(specs));
+app.use(errorHandler);
 
 
 async function startServer(){

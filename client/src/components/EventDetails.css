@@ -125,6 +125,27 @@
   background: #255ac4;
 }
 
+.event-details-button:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.event-details-button--danger {
+  background: #d9534f;
+  border-color: #bb2f2b;
+}
+
+.event-details-button--danger:hover {
+  background: #c7433f;
+}
+
+.event-details-action-error {
+  margin: 0.7rem 0 0;
+  color: #9b1f1b;
+  text-align: center;
+  font-size: 0.92rem;
+}
+
 .event-details-error {
   padding: 1rem;
   border: 1px solid #8f82bf;

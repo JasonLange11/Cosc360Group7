@@ -14,10 +14,13 @@ export async function apiRequest(path, options = {}) {
     ...options,
   })
 
-  const data = await response.json()
+  // Determine if the response body is JSON before attempting to parse it
+  const contentType = response.headers.get('content-type') || ''
+  const hasJsonBody = contentType.includes('application/json')
+  const data = hasJsonBody ? await response.json() : null
 
   if (!response.ok) {
-    throw new Error(data.message || 'Request failed')
+    throw new Error(data?.message || 'Request failed')
   }
 
   return data

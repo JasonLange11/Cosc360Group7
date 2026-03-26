@@ -1,7 +1,8 @@
 import { User } from "./users.model.js";
 
 export async function getAllUsers() {
-  return User.find().lean();
+  // Excludes admins and do not return password. SAFETY!
+  return User.find({ isAdmin: false }).select('-password').lean();
 }
 
 export async function createUser(userData) {
@@ -14,4 +15,8 @@ export async function findUserByEmail(email){
 
 export async function findUserById(userId) {
   return User.findById(userId);
+}
+
+export async function deleteUserById(userId) {
+  return User.findByIdAndDelete(userId);
 }
