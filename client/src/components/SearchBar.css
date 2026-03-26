@@ -38,3 +38,28 @@
     background-color: #674ea7;
     color: black;
 }
+
+.searchSection--compact {
+    max-width: none;
+    margin: 0.35rem 0 0.75rem 0;
+    padding: 0.45rem;
+    border: 1px solid #333333;
+    background-color: #f3f3f3;
+}
+
+.searchSection--compact h2 {
+    display: none;
+}
+
+.searchSection--compact .searchForm input {
+    font-size: 1rem;
+    padding: 0.35rem 0.6rem;
+    border-radius: 0.5rem;
+}
+
+.searchSection--compact .searchForm button {
+    font-size: 1rem;
+    padding: 0.35rem 0.8rem;
+    border-radius: 0.5rem;
+    color: black;
+}
