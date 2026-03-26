@@ -16,3 +16,7 @@ export async function findUserByEmail(email){
 export async function findUserById(userId) {
   return User.findById(userId);
 }
+
+export async function deleteUserById(userId) {
+  return User.findByIdAndDelete(userId);
+}
