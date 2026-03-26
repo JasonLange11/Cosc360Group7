@@ -20,23 +20,37 @@ export default function QuickOverview(){
         } catch(err){
             console.log("Failed to fetch events", err);
         }
+
+        // Placeholder for future moderation data source.
+        setFlagged(0);
     };
 
     fetchData();
     }, []);
+
     return(
-        <div>
-            <h2>Admin Dashboard</h2>
+        <div className="quick-overview">
             <section className="total-users">
-                <p>Total Users</p>
+                <p>
+                    <i className="fa-solid fa-user-group"></i>
+                    Total Users
+                </p>
                 <span>{users}</span>
             </section>
+
             <section className="active-events">
-                <p>Active Events</p>
+                <p>
+                    <i className="fa-solid fa-calendar-check"></i>
+                    Active Events
+                </p>
                 <span>{events}</span>
             </section>
+
             <section className="flagged-content">
-                <p>Flagged Context</p>
+                <p>
+                    <i className="fa-solid fa-flag"></i>
+                    Flagged Content
+                </p>
                 <span>{flagged}</span>
             </section>
         </div>
