@@ -55,16 +55,18 @@ export default function ModerateEvents({ compact = false, onMore }) {
 			return
 		}
 
-		try {
-			setIsRemoving(true)
-			setRemoveError('')
-			await deleteEvent(activeEventId)
-			setEvents((currentEvents) => currentEvents.filter((event) => getEventId(event) !== activeEventId))
-			setActiveEventId(null)
-		} catch (error) {
-			setRemoveError(error.message || 'Failed to remove event')
-		} finally {
-			setIsRemoving(false)
+		if(window.confirm("Are you sure you want to remove this event?")){
+			try {
+				setIsRemoving(true)
+				setRemoveError('')
+				await deleteEvent(activeEventId)
+				setEvents((currentEvents) => currentEvents.filter((event) => getEventId(event) !== activeEventId))
+				setActiveEventId(null)
+			} catch (error) {
+				setRemoveError(error.message || 'Failed to remove event')
+			} finally {
+				setIsRemoving(false)
+			}
 		}
 	}
 
