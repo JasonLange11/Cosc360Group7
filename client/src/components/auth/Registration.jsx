@@ -1,5 +1,5 @@
-import './Registration.css'
-import { HeaderWithoutNav } from '../../components/Header.jsx'
+import './css/Registration.css'
+import { HeaderWithoutNav } from '../ui/Header.jsx'
 import { useState} from 'react'
 import { registerUser } from '../../lib/auth.js'
 import { useNavigate } from 'react-router-dom'

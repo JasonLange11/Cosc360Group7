@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import SearchBar from '../SearchBar'
+import SearchBar from '../search/SearchBar'
 import { getUsers, deleteUser } from '../../lib/usersApi'
 import React from 'react'
 import './css/ModerateUsers.css'

@@ -32,7 +32,3 @@ if desired.  If so, do the following instead.
 - npm install
 - npm run dev
 
-
-#### Seed Data into the Database (Note: THIS WILL REMOVE ALL DATA IN THE DATABASE BEFORE SEEDING THE DATA)
-- cd server
-- npm run seed

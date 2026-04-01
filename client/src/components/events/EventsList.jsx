@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import CardDisplay from './CardDisplay';
-import { getEvents, searchEvents } from '../lib/eventsApi';
-import './EventsList.css';
+import { getEvents, searchEvents } from '../../lib/eventsApi';
+import './css/EventsList.css';
 
 function EventsList({ searchTerm, onOpenEvent }) {
   const [events, setEvents] = useState([]);
