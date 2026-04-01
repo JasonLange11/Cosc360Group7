@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import '@fortawesome/fontawesome-free/css/all.min.css'
-import { getEventById } from '../lib/eventsApi'
-import './EventDetails.css'
+import { getEventById } from '../../lib/eventsApi'
+import './css/EventDetails.css'
 
 function formatEventDate(dateString) {
     if (!dateString) {

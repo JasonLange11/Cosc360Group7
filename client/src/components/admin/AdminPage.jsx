@@ -1,12 +1,12 @@
 
 import { useState } from 'react';
-import Header from '../Header';
+import Header from '../ui/Header';
 import AdminNavbar from './AdminNavbar';
 import QuickOverview from './QuickOverview';
 import ModerateUsers from './ModerateUsers';
 import ModerateEvents from './ModerateEvents';
 import PendingReviews from './PendingReviews';
-import Footer from '../Footer';
+import Footer from '../ui/Footer';
 import './css/AdminPage.css';
 
 export default function AdminPage() {

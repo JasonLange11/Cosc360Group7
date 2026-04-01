@@ -3,11 +3,11 @@
     Navbar will change depending who is currently logged in
     For example: if no one is logged in the only thing someone will see is the Login button
 */
-import './Navbar.css'
+import './css/Navbar.css'
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import { useEffect, useRef, useState } from 'react'
 import { NavLink} from 'react-router-dom'
-import { useAuth } from '../context/AuthContext.jsx'
+import { useAuth } from '../../context/AuthContext.jsx'
 
 function Navbar(){
     const { currentUser, logout } = useAuth()

@@ -1,8 +1,8 @@
-import './Login.css'
+import './css/Login.css'
 import { Link, useNavigate } from 'react-router-dom'
-import { HeaderWithoutNav } from '../../components/Header'
+import { HeaderWithoutNav } from '../ui/Header'
 import { useState } from 'react'
-import { loginUser } from '../../lib/auth' 
+import { loginUser } from '../../lib/auth'
 import { useAuth } from '../../context/AuthContext.jsx'
 
 export default function Login() {

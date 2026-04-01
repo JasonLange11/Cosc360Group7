@@ -1,6 +1,6 @@
 
 import Navbar from './Navbar.jsx'
-import './Header.css'
+import './css/Header.css'
 
 export default function Header(){
 

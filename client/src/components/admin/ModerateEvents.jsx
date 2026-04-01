@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
-import SearchBar from '../SearchBar'
-import CardDisplay from '../CardDisplay'
-import EventDetails from '../EventDetails'
+import SearchBar from '../search/SearchBar'
+import CardDisplay from '../events/CardDisplay'
+import EventDetails from '../events/EventDetails'
 import { deleteEvent, getEvents } from '../../lib/eventsApi'
 import './css/ModerateEvents.css'
 
