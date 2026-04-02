@@ -58,3 +58,21 @@ export async function deleteEvent(eventId) {
     headers: getAuthHeader(),
   });
 }
+
+// Add a tag to an event (requires authentication)
+export async function addTagToEvent(eventId, tag) {
+  return apiRequest("/api/events/" + eventId + "/tags", {
+    method: "PATCH",
+    body: JSON.stringify({ tag }),
+    headers: getAuthHeader(),
+  });
+}
+
+// Remove a tag from an event (requires authentication)
+export async function removeTagFromEvent(eventId, tag) {
+  return apiRequest("/api/events/" + eventId + "/tags", {
+    method: "DELETE",
+    body: JSON.stringify({ tag }),
+    headers: getAuthHeader(),
+  });
+}

@@ -62,6 +62,7 @@ async function seedEvents(eventsData, userIdByEmail) {
 			cost: event.cost,
 			capacity: event.capacity,
 			description: event.description,
+			tags: Array.isArray(event.tags) ? event.tags : [],
 		};
 	});
 

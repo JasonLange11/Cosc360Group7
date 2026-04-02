@@ -2,6 +2,8 @@ const ERROR_STATUS_MAP = {
 	'Email already in use': 409,
 	'Name, email, and password are required': 400,
 	'Email and password are required': 400,
+	'Tag is required': 400,
+	'Tag cannot be empty': 400,
 	'Invalid email or password': 401,
 	'Auth token required': 401,
 	'Invalid or expired token': 401,

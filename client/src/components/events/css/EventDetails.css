@@ -38,16 +38,25 @@
   object-fit: cover;
 }
 
-.event-details-tag {
+.event-details-tags {
   position: absolute;
-  right: 0.75rem;
   top: 0.75rem;
-  padding: 0.2rem 0.55rem;
+  right: 0.75rem;
+  left: 0.75rem;
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.event-details-tag {
+  padding: 0.3rem 0.7rem;
   border: 1px solid #505866;
   border-radius: 999px;
   background: #ffffff;
   color: #121212;
-  font-size: 0.75rem;
+  font-size: 0.85rem;
+  line-height: 1.1;
 }
 
 .event-details-content {

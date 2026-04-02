@@ -1,5 +1,27 @@
-import { createEvent, deleteEventById, getAllEvents, getEventById, getEventsByUserId, updateEventById, } from "./events.repository.js";
+import { 
+  createEvent, 
+  deleteEventById, 
+  getAllEvents, 
+  getEventById, 
+  getEventsByUserId, 
+  updateEventById, 
+  addTagToEvent,
+  removeTagFromEvent, 
+} from "./events.repository.js";
 import { findUserById } from "../users/users.repository.js";
+
+function cleanTag(tag) {
+  if (tag === null || tag === undefined) {
+    throw new Error("Tag is required");
+  }
+
+  const value = String(tag).trim().toLowerCase();
+  if (value.length === 0) {
+    throw new Error("Tag cannot be empty");
+  }
+
+  return value;
+}
 
 function toPlainEvent(event) {
   return typeof event.toObject === "function" ? event.toObject() : event;
@@ -126,4 +148,36 @@ export async function removeEvent(user, eventId) {
   }
 
   await deleteEventById(eventId);
+}
+
+export async function addEventTag(user, eventId, tag) {
+  const existingEvent = await getEventById(eventId);
+  
+  if (!existingEvent) {
+    throw new Error("Event not found");
+  }
+
+  if (!canModifyEvent(user, existingEvent)) {
+    throw new Error("Forbidden");
+  }
+
+  const cleanedTag = cleanTag(tag);
+  const updatedEvent = await addTagToEvent(eventId, cleanedTag);
+  return toPlainEvent(updatedEvent);
+}
+
+export async function removeEventTag(user, eventId, tag) {
+  const existingEvent = await getEventById(eventId);
+  
+  if (!existingEvent) {
+    throw new Error("Event not found");
+  }
+
+  if (!canModifyEvent(user, existingEvent)) {
+    throw new Error("Forbidden");
+  }
+
+  const cleanedTag = cleanTag(tag);
+  const updatedEvent = await removeTagFromEvent(eventId, cleanedTag);
+  return toPlainEvent(updatedEvent);
 }

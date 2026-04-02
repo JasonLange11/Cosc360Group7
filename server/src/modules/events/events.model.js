@@ -57,6 +57,10 @@ const eventSchema = new mongoose.Schema(
       trim: true,
       maxlength: 5000,
     },
+    tags: {
+      type: [String],
+      default: [],
+    },
   },
   { versionKey: false }
 );
