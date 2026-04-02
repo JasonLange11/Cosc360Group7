@@ -1,12 +1,10 @@
 import { apiRequest } from './apiClient';
 import { getAuthHeader } from './auth';
 
-
 // Fetch all events
 export async function getEvents() {
   return apiRequest('/api/events');
 }
-
 
 // Search events by term
 export async function searchEvents(searchTerm) {
@@ -16,12 +14,10 @@ export async function searchEvents(searchTerm) {
   });
 }
 
-
 // Fetch a specific event by ID
 export async function getEventById(eventId) {
   return apiRequest(`/api/events/${eventId}`);
 }
-
 
 // Fetch current user's events (requires authentication)
 export async function getMyEvents() {
@@ -30,6 +26,25 @@ export async function getMyEvents() {
   });
 }
 
+export async function getAttendingEvents() {
+  return apiRequest('/api/events/attending', {
+    headers: getAuthHeader(),
+  });
+}
+
+export async function attendEvent(eventId) {
+  return apiRequest(`/api/events/${eventId}/attend`, {
+    method: 'POST',
+    headers: getAuthHeader(),
+  });
+}
+
+export async function unattendEvent(eventId) {
+  return apiRequest(`/api/events/${eventId}/attend`, {
+    method: 'DELETE',
+    headers: getAuthHeader(),
+  });
+}
 
 // Create a new event (requires authentication)
 export async function createEvent(eventData) {
@@ -40,7 +55,6 @@ export async function createEvent(eventData) {
   });
 }
 
-
 // Update an event (requires authentication)
 export async function updateEvent(eventId, eventData) {
   return apiRequest(`/api/events/${eventId}`, {
@@ -49,7 +63,6 @@ export async function updateEvent(eventId, eventData) {
     headers: getAuthHeader(),
   });
 }
-
 
 // Delete an event (requires authentication)
 export async function deleteEvent(eventId) {
@@ -61,8 +74,8 @@ export async function deleteEvent(eventId) {
 
 // Add a tag to an event (requires authentication)
 export async function addTagToEvent(eventId, tag) {
-  return apiRequest("/api/events/" + eventId + "/tags", {
-    method: "PATCH",
+  return apiRequest('/api/events/' + eventId + '/tags', {
+    method: 'PATCH',
     body: JSON.stringify({ tag }),
     headers: getAuthHeader(),
   });
@@ -70,8 +83,8 @@ export async function addTagToEvent(eventId, tag) {
 
 // Remove a tag from an event (requires authentication)
 export async function removeTagFromEvent(eventId, tag) {
-  return apiRequest("/api/events/" + eventId + "/tags", {
-    method: "DELETE",
+  return apiRequest('/api/events/' + eventId + '/tags', {
+    method: 'DELETE',
     body: JSON.stringify({ tag }),
     headers: getAuthHeader(),
   });

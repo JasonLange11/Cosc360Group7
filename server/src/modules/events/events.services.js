@@ -1,12 +1,13 @@
-import { 
-  createEvent, 
-  deleteEventById, 
-  getAllEvents, 
-  getEventById, 
-  getEventsByUserId, 
-  updateEventById, 
+import {
+  createEvent,
+  deleteEventById,
+  getAllEvents,
+  getEventById,
+  getEventsByAttendeeId,
+  getEventsByUserId,
+  updateEventById,
   addTagToEvent,
-  removeTagFromEvent, 
+  removeTagFromEvent,
 } from "./events.repository.js";
 import { findUserById } from "../users/users.repository.js";
 
@@ -51,6 +52,7 @@ async function attachOrganizerName(event) {
   return {
     ...plainEvent,
     organizerName: owner?.name || "Unknown Organizer",
+    attendees: plainEvent.attendees || [],
   };
 }
 
@@ -59,11 +61,6 @@ export async function createUserEvent(user, eventData) {
     throw new Error("Authentication required");
   }
 
-  /*
-   Might change this so admins can, but just want to 
-   keep accounts seperate for now. Admins can edit 
-   events still if they need to edit someones event.
-  */
   if(user.isAdmin){
     throw new Error("Admins can not create events");
   }
@@ -121,6 +118,53 @@ export async function fetchMyEvents(user) {
   return Promise.all(events.map((event) => attachOrganizerName(event)));
 }
 
+export async function fetchAttendingEvents(user) {
+  if (!user) {
+    throw new Error("Authentication required");
+  }
+
+  const events = await getEventsByAttendeeId(user.id);
+  return Promise.all(events.map((event) => attachOrganizerName(event)));
+}
+
+export async function attendEvent(user, eventId) {
+  if (!user) {
+    throw new Error("Authentication required");
+  }
+
+  const event = await getEventById(eventId);
+
+  if (!event) {
+    throw new Error("Event not found");
+  }
+
+  const isAlreadyAttending = event.attendees.some((attendeeId) => attendeeId.toString() === user.id.toString());
+
+  if (!isAlreadyAttending) {
+    event.attendees.push(user.id);
+    await event.save();
+  }
+
+  return attachOrganizerName(event);
+}
+
+export async function unattendEvent(user, eventId) {
+  if (!user) {
+    throw new Error("Authentication required");
+  }
+
+  const event = await getEventById(eventId);
+
+  if (!event) {
+    throw new Error("Event not found");
+  }
+
+  event.attendees = event.attendees.filter((attendeeId) => attendeeId.toString() !== user.id.toString());
+  await event.save();
+
+  return attachOrganizerName(event);
+}
+
 export async function editEvent(user, eventId, updateData) {
   const existingEvent = await getEventById(eventId);
 
@@ -152,7 +196,7 @@ export async function removeEvent(user, eventId) {
 
 export async function addEventTag(user, eventId, tag) {
   const existingEvent = await getEventById(eventId);
-  
+
   if (!existingEvent) {
     throw new Error("Event not found");
   }
@@ -168,7 +212,7 @@ export async function addEventTag(user, eventId, tag) {
 
 export async function removeEventTag(user, eventId, tag) {
   const existingEvent = await getEventById(eventId);
-  
+
   if (!existingEvent) {
     throw new Error("Event not found");
   }

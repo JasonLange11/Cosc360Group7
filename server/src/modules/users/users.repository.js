@@ -1,7 +1,6 @@
 import { User } from "./users.model.js";
 
 export async function getAllUsers() {
-  // Excludes admins and do not return password. SAFETY!
   return User.find({ isAdmin: false }).select('-password').lean();
 }
 
@@ -15,6 +14,10 @@ export async function findUserByEmail(email){
 
 export async function findUserById(userId) {
   return User.findById(userId);
+}
+
+export async function updateUserById(userId, updateData) {
+  return User.findByIdAndUpdate(userId, updateData, { new: true, runValidators: true });
 }
 
 export async function deleteUserById(userId) {

@@ -1,4 +1,3 @@
-
 /*
     Navbar will change depending who is currently logged in
     For example: if no one is logged in the only thing someone will see is the Login button
@@ -45,6 +44,10 @@ function Navbar(){
         logout()
     }
 
+    function handleSettingsClick() {
+        setIsMenuOpen(false)
+    }
+
     return(
         <nav className="headerNav">
             <ul>
@@ -87,9 +90,9 @@ function Navbar(){
 
                             {isMenuOpen ? (
                                 <div className="nav-dropdown" role="menu">
-                                    <button type="button" className="nav-dropdown-item" disabled>
+                                    <NavLink to="/settings" className="nav-dropdown-item" onClick={handleSettingsClick}>
                                         Settings
-                                    </button>
+                                    </NavLink>
                                     <button type="button" className="nav-dropdown-item" onClick={handleLogoutClick}>
                                         Logout
                                     </button>
