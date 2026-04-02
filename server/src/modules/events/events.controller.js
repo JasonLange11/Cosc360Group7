@@ -1,11 +1,14 @@
 import {
+  attendEvent,
   createUserEvent,
   editEvent,
+  fetchAttendingEvents,
   fetchEventById,
   fetchEvents,
   fetchMyEvents,
   filterEvents,
   removeEvent,
+  unattendEvent,
 } from "./events.services.js";
 
 export async function getEvents(req, res, next) {
@@ -30,6 +33,15 @@ export async function searchEvents(req, res, next) {
 export async function getMyEvents(req, res, next) {
   try {
     const events = await fetchMyEvents(req.user);
+    res.status(200).json(events);
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function getAttendingEvents(req, res, next) {
+  try {
+    const events = await fetchAttendingEvents(req.user);
     res.status(200).json(events);
   } catch (error) {
     next(error);
@@ -67,6 +79,24 @@ export async function deleteEvent(req, res, next) {
   try {
     await removeEvent(req.user, req.params.eventId);
     res.status(204).send();
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function attendEventController(req, res, next) {
+  try {
+    const event = await attendEvent(req.user, req.params.eventId);
+    res.status(200).json(event);
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function unattendEventController(req, res, next) {
+  try {
+    const event = await unattendEvent(req.user, req.params.eventId);
+    res.status(200).json(event);
   } catch (error) {
     next(error);
   }

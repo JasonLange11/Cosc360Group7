@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import '@fortawesome/fontawesome-free/css/all.min.css'
-import { getEventById } from '../../lib/eventsApi'
+import { attendEvent, getEventById, unattendEvent } from '../../lib/eventsApi'
+import { useAuth } from '../../context/AuthContext.jsx'
 import './css/EventDetails.css'
 
 function formatEventDate(dateString) {
@@ -49,13 +50,17 @@ export default function EventDetails({
     onClose,
     actionLabel = 'Register for this event',
     onAction,
+    onAttendanceChange,
     actionClassName = 'event-details-button',
     actionDisabled = false,
     actionError = '',
 }) {
+    const { currentUser } = useAuth()
     const [event, setEvent] = useState(null)
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(null)
+    const [actionLoading, setActionLoading] = useState(false)
+    const [internalActionError, setInternalActionError] = useState('')
 
     useEffect(() => {
         function handleEscape(eventKey) {
@@ -114,6 +119,18 @@ export default function EventDetails({
         }).format(event.cost)
     }, [event])
 
+    const isAttending = Boolean(
+        currentUser
+        && Array.isArray(event?.attendees)
+        && event.attendees.some((attendeeId) => attendeeId.toString() === currentUser.id.toString())
+    )
+
+    const defaultActionLabel = currentUser
+        ? (isAttending ? 'Leave event' : 'Register for this event')
+        : 'Login to register'
+
+    const resolvedActionLabel = onAction ? actionLabel : defaultActionLabel
+
     if (loading) {
         return (
             <div className="event-details-overlay" onClick={onClose}>
@@ -137,11 +154,33 @@ export default function EventDetails({
         )
     }
 
-    const attendanceCount = typeof event.attendees === 'number' ? event.attendees : 0
+    const attendanceCount = Array.isArray(event.attendees) ? event.attendees.length : 0
 
     const handleActionClick = async () => {
+        setInternalActionError('')
+
         if (typeof onAction === 'function') {
             await onAction(event)
+            return
+        }
+
+        if (!currentUser) {
+            setInternalActionError('You must be logged in to register for an event.')
+            return
+        }
+
+        try {
+            setActionLoading(true)
+            const updatedEvent = isAttending ? await unattendEvent(event._id) : await attendEvent(event._id)
+            setEvent(updatedEvent)
+
+            if (typeof onAttendanceChange === 'function') {
+                onAttendanceChange(updatedEvent)
+            }
+        } catch (err) {
+            setInternalActionError(err.message || 'Failed to update attendance.')
+        } finally {
+            setActionLoading(false)
         }
     }
 
@@ -216,11 +255,12 @@ export default function EventDetails({
                             type="button"
                             className={actionClassName}
                             onClick={handleActionClick}
-                            disabled={actionDisabled}
+                            disabled={actionDisabled || actionLoading}
                         >
-                            {actionLabel}
+                            {actionLoading ? 'Saving...' : resolvedActionLabel}
                         </button>
                         {actionError ? <p className="event-details-action-error">{actionError}</p> : null}
+                        {internalActionError ? <p className="event-details-action-error">{internalActionError}</p> : null}
                     </div>
                 </section>
             </main>

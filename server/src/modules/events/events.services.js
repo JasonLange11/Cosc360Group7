@@ -1,8 +1,16 @@
-import { createEvent, deleteEventById, getAllEvents, getEventById, getEventsByUserId, updateEventById, } from "./events.repository.js";
+import {
+  createEvent,
+  deleteEventById,
+  getAllEvents,
+  getEventById,
+  getEventsByAttendeeId,
+  getEventsByUserId,
+  updateEventById,
+} from "./events.repository.js";
 import { findUserById } from "../users/users.repository.js";
 
 function toPlainEvent(event) {
-  return typeof event.toObject === "function" ? event.toObject() : event;
+  return typeof event?.toObject === "function" ? event.toObject() : event;
 }
 
 function canModifyEvent(user, event) {
@@ -29,6 +37,7 @@ async function attachOrganizerName(event) {
   return {
     ...plainEvent,
     organizerName: owner?.name || "Unknown Organizer",
+    attendees: plainEvent.attendees || [],
   };
 }
 
@@ -37,12 +46,7 @@ export async function createUserEvent(user, eventData) {
     throw new Error("Authentication required");
   }
 
-  /*
-   Might change this so admins can, but just want to 
-   keep accounts seperate for now. Admins can edit 
-   events still if they need to edit someones event.
-  */
-  if(user.isAdmin){
+  if (user.isAdmin) {
     throw new Error("Admins can not create events");
   }
 
@@ -72,11 +76,7 @@ export async function filterEvents(searchTerm) {
     const location = event.location.toLowerCase();
     const description = event.description.toLowerCase();
 
-    return (
-      title.includes(term)
-      || location.includes(term)
-      || description.includes(term)
-    );
+    return title.includes(term) || location.includes(term) || description.includes(term);
   });
 }
 
@@ -97,6 +97,53 @@ export async function fetchMyEvents(user) {
 
   const events = await getEventsByUserId(user.id);
   return Promise.all(events.map((event) => attachOrganizerName(event)));
+}
+
+export async function fetchAttendingEvents(user) {
+  if (!user) {
+    throw new Error("Authentication required");
+  }
+
+  const events = await getEventsByAttendeeId(user.id);
+  return Promise.all(events.map((event) => attachOrganizerName(event)));
+}
+
+export async function attendEvent(user, eventId) {
+  if (!user) {
+    throw new Error("Authentication required");
+  }
+
+  const event = await getEventById(eventId);
+
+  if (!event) {
+    throw new Error("Event not found");
+  }
+
+  const isAlreadyAttending = event.attendees.some((attendeeId) => attendeeId.toString() === user.id.toString());
+
+  if (!isAlreadyAttending) {
+    event.attendees.push(user.id);
+    await event.save();
+  }
+
+  return attachOrganizerName(event);
+}
+
+export async function unattendEvent(user, eventId) {
+  if (!user) {
+    throw new Error("Authentication required");
+  }
+
+  const event = await getEventById(eventId);
+
+  if (!event) {
+    throw new Error("Event not found");
+  }
+
+  event.attendees = event.attendees.filter((attendeeId) => attendeeId.toString() !== user.id.toString());
+  await event.save();
+
+  return attachOrganizerName(event);
 }
 
 export async function editEvent(user, eventId, updateData) {

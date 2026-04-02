@@ -1,17 +1,33 @@
-
 import { apiRequest } from './apiClient';
 import { getAuthHeader } from './auth';
 
-// Returns all users other than admins
 export async function getUsers() {
   return apiRequest('/api/users');
 }
 
-// Delete a user (requires authentication)
-export async function deleteUser(userId){
+export async function deleteUser(userId) {
   return apiRequest(`/api/users/${userId}`, {
     method: 'DELETE',
     headers: getAuthHeader('You must be logged in to remove a user'),
-  })
+  });
 }
 
+export async function getMyProfile() {
+  return apiRequest('/api/users/me/profile', {
+    headers: getAuthHeader(),
+  });
+}
+
+export async function updateMyProfile(profileData) {
+  return apiRequest('/api/users/me/profile', {
+    method: 'PUT',
+    headers: getAuthHeader(),
+    body: JSON.stringify(profileData),
+  });
+}
+
+export async function getMyDashboard() {
+  return apiRequest('/api/users/me/dashboard', {
+    headers: getAuthHeader(),
+  });
+}

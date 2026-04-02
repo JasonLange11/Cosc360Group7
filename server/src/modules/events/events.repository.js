@@ -16,8 +16,12 @@ export async function getEventsByUserId(userId) {
   return Event.find({ userId }).sort({ createdAt: -1 }).lean();
 }
 
+export async function getEventsByAttendeeId(userId) {
+  return Event.find({ attendees: userId }).sort({ createdAt: -1 }).lean();
+}
+
 export async function updateEventById(eventId, updateData) {
-  return Event.findByIdAndUpdate(eventId, updateData, {new: true, runValidators: true, });
+  return Event.findByIdAndUpdate(eventId, updateData, { new: true, runValidators: true });
 }
 
 export async function deleteEventById(eventId) {

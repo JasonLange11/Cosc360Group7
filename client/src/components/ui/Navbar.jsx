@@ -1,4 +1,3 @@
-
 /*
     Navbar will change depending who is currently logged in
     For example: if no one is logged in the only thing someone will see is the Login button
@@ -6,10 +5,10 @@
 import './css/Navbar.css'
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import { useEffect, useRef, useState } from 'react'
-import { NavLink} from 'react-router-dom'
+import { NavLink } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext.jsx'
 
-function Navbar(){
+function Navbar() {
     const { currentUser, logout } = useAuth()
     const [isMenuOpen, setIsMenuOpen] = useState(false)
     const menuRef = useRef(null)
@@ -45,23 +44,27 @@ function Navbar(){
         logout()
     }
 
-    return(
+    function handleMenuItemClick() {
+        setIsMenuOpen(false)
+    }
+
+    return (
         <nav className="headerNav">
             <ul>
                 {currentUser ? (
-                    <>  
+                    <>
                         {!currentUser.isAdmin ? (
-                        <li>
-                            <i className="fa-solid fa-calendar-plus"></i>
-                            Create
-                        </li>
-                        ) : null}      
+                            <li>
+                                <i className="fa-solid fa-calendar-plus"></i>
+                                Create
+                            </li>
+                        ) : null}
                         {!currentUser.isAdmin ? (
                             <li>
                                 <i className="fa-solid fa-users"></i>
                                 Group
                             </li>
-                        ) : null}   
+                        ) : null}
                         {currentUser.isAdmin ? (
                             <li>
                                 <NavLink to='/admin'>
@@ -87,9 +90,9 @@ function Navbar(){
 
                             {isMenuOpen ? (
                                 <div className="nav-dropdown" role="menu">
-                                    <button type="button" className="nav-dropdown-item" disabled>
+                                    <NavLink to="/settings" className="nav-dropdown-item" onClick={handleMenuItemClick}>
                                         Settings
-                                    </button>
+                                    </NavLink>
                                     <button type="button" className="nav-dropdown-item" onClick={handleLogoutClick}>
                                         Logout
                                     </button>

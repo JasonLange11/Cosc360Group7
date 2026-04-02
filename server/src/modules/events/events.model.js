@@ -8,6 +8,11 @@ const eventSchema = new mongoose.Schema(
       required: true,
       index: true,
     },
+    attendees: {
+      type: [mongoose.Schema.Types.ObjectId],
+      ref: "User",
+      default: [],
+    },
     bannerImage: {
       type: mongoose.Schema.Types.Mixed,
       required: true,
@@ -58,7 +63,7 @@ const eventSchema = new mongoose.Schema(
       maxlength: 5000,
     },
   },
-  { versionKey: false }
+  { versionKey: false, timestamps: true }
 );
 
 export const Event = mongoose.model("Event", eventSchema);

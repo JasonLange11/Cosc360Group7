@@ -1,4 +1,45 @@
-import { createUser, deleteUserById, findUserById, getAllUsers } from "./users.repository.js";
+import bcrypt from "bcrypt";
+import {
+  createUser,
+  deleteUserById,
+  findUserById,
+  getAllUsers,
+  updateUserById,
+} from "./users.repository.js";
+import { getEventsByUserId, getEventsByAttendeeId, getEventById } from "../events/events.repository.js";
+import { getGroupsByMemberId } from "../groups/groups.repository.js";
+import { getCommentsByUserId } from "../comments/comments.repository.js";
+
+const SALT_ROUNDS = 10;
+
+function toSafeUserProfile(user) {
+  return {
+    id: user._id,
+    email: user.email,
+    name: user.name,
+    nickname: user.nickname || "",
+    bio: user.bio || "",
+    location: user.location || "",
+    favoriteTags: user.favoriteTags || [],
+    profileImageUrl: user.profileImageUrl || "",
+    isAdmin: Boolean(user.isAdmin),
+  };
+}
+
+function parseFavoriteTags(value) {
+  if (Array.isArray(value)) {
+    return value.map((tag) => String(tag).trim()).filter(Boolean);
+  }
+
+  if (typeof value === "string") {
+    return value
+      .split(",")
+      .map((tag) => tag.trim())
+      .filter(Boolean);
+  }
+
+  return [];
+}
 
 export async function fetchUsers() {
   return getAllUsers();
@@ -35,4 +76,99 @@ export async function removeUser(requestUser, targetUserId) {
   }
 
   await deleteUserById(targetUserId);
+}
+
+export async function fetchMyProfile(user) {
+  if (!user) {
+    throw new Error("Authentication required");
+  }
+
+  const existingUser = await findUserById(user.id);
+
+  if (!existingUser) {
+    throw new Error("User not found");
+  }
+
+  return toSafeUserProfile(existingUser);
+}
+
+export async function updateMyProfile(user, updateData) {
+  if (!user) {
+    throw new Error("Authentication required");
+  }
+
+  const existingUser = await findUserById(user.id);
+
+  if (!existingUser) {
+    throw new Error("User not found");
+  }
+
+  const nextData = {
+    nickname: updateData.nickname ?? existingUser.nickname,
+    bio: updateData.bio ?? existingUser.bio,
+    location: updateData.location ?? existingUser.location,
+    profileImageUrl: updateData.profileImageUrl ?? existingUser.profileImageUrl,
+    favoriteTags:
+      updateData.favoriteTags === undefined
+        ? existingUser.favoriteTags || []
+        : parseFavoriteTags(updateData.favoriteTags),
+  };
+
+  if (typeof updateData.name === "string" && updateData.name.trim()) {
+    nextData.name = updateData.name.trim();
+  }
+
+  if (updateData.newPassword) {
+    if (!updateData.oldPassword) {
+      throw new Error("Old password is required to set a new password");
+    }
+
+    const passwordIsHashed = typeof existingUser.password === "string" && existingUser.password.startsWith("$2");
+    const oldPasswordMatches = passwordIsHashed
+      ? await bcrypt.compare(updateData.oldPassword, existingUser.password)
+      : updateData.oldPassword === existingUser.password;
+
+    if (!oldPasswordMatches) {
+      throw new Error("Old password is incorrect");
+    }
+
+    nextData.password = await bcrypt.hash(updateData.newPassword, SALT_ROUNDS);
+  }
+
+  const updatedUser = await updateUserById(user.id, nextData);
+
+  return toSafeUserProfile(updatedUser);
+}
+
+export async function fetchMyDashboard(user) {
+  if (!user) {
+    throw new Error("Authentication required");
+  }
+
+  const [profile, createdEvents, attendingEvents, groups, comments] = await Promise.all([
+    fetchMyProfile(user),
+    getEventsByUserId(user.id),
+    getEventsByAttendeeId(user.id),
+    getGroupsByMemberId(user.id),
+    getCommentsByUserId(user.id),
+  ]);
+
+  const commentHistory = await Promise.all(
+    comments.map(async (comment) => {
+      const event = await getEventById(comment.eventId);
+
+      return {
+        ...comment,
+        eventTitle: event?.title || "Unknown Event",
+      };
+    })
+  );
+
+  return {
+    profile,
+    createdEvents,
+    attendingEvents,
+    groups,
+    commentHistory,
+  };
 }

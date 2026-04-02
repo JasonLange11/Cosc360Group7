@@ -1,4 +1,3 @@
-
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { createUser, findUserByEmail, findUserById } from '../users/users.repository.js';
@@ -10,13 +9,18 @@ function getJwtSecret() {
     return process.env.JWT_SECRET || 'development-only-change-me';
 }
 
-function toSafeUser(user){
-    return{
+function toSafeUser(user) {
+    return {
         id: user._id,
         email: user.email,
         name: user.name,
+        nickname: user.nickname || '',
+        bio: user.bio || '',
+        location: user.location || '',
+        favoriteTags: user.favoriteTags || [],
+        profileImageUrl: user.profileImageUrl || '',
         isAdmin: Boolean(user.isAdmin),
-    }
+    };
 }
 
 function createAuthResponse(user) {
@@ -34,32 +38,32 @@ function createAuthResponse(user) {
     return { token, user: safeUser };
 }
 
-export async function registerUser({email, password, name}){
-    if(!email || !password || !name){
+export async function registerUser({ email, password, name }) {
+    if (!email || !password || !name) {
         throw new Error('Name, email, and password are required');
     }
 
     const existingUser = await findUserByEmail(email);
 
-    if(existingUser){
+    if (existingUser) {
         throw new Error('Email already in use');
     }
 
     const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
 
-    const user = await createUser({email, password: hashedPassword, name});
+    const user = await createUser({ email, password: hashedPassword, name });
 
     return createAuthResponse(user);
 }
 
-export async function loginUser({email, password}){
-    if(!email || !password){
-        throw new Error("Email and password are required");
+export async function loginUser({ email, password }) {
+    if (!email || !password) {
+        throw new Error('Email and password are required');
     }
 
     const user = await findUserByEmail(email);
 
-    if(!user){
+    if (!user) {
         throw new Error('Invalid email or password');
     }
 
@@ -68,7 +72,7 @@ export async function loginUser({email, password}){
         ? await bcrypt.compare(password, user.password)
         : user.password === password;
 
-    if(!passwordMatches){
+    if (!passwordMatches) {
         throw new Error('Invalid email or password');
     }
 
