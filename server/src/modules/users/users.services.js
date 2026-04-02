@@ -106,6 +106,24 @@ export async function updateMyProfile(user, updateData = {}) {
     throw new Error("User not found");
   }
 
+  const hasNameUpdate = typeof updateData.name === "string" && updateData.name.trim().length > 0;
+  const hasBioUpdate = typeof updateData.bio === "string";
+  const hasLocationUpdate = typeof updateData.location === "string";
+  const hasProfileImageUrlUpdate = typeof updateData.profileImageUrl === "string";
+  const hasFavoriteTagsUpdate = updateData.favoriteTags !== undefined;
+  const hasPasswordUpdate = Boolean(updateData.newPassword);
+
+  if (
+    !hasNameUpdate
+    && !hasBioUpdate
+    && !hasLocationUpdate
+    && !hasProfileImageUrlUpdate
+    && !hasFavoriteTagsUpdate
+    && !hasPasswordUpdate
+  ) {
+    throw new Error("At least one profile field is required");
+  }
+
   const nextData = {
     bio: updateData.bio ?? existingUser.bio,
     location: updateData.location ?? existingUser.location,

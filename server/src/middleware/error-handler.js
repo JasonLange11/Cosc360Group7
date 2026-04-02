@@ -18,6 +18,7 @@ const ERROR_STATUS_MAP = {
   "Comment content is required": 400,
   "Old password is required to set a new password": 400,
   "Old password is incorrect": 400,
+  "At least one profile field is required": 400,
 };
 
 export function errorHandler(err, req, res, next) {
