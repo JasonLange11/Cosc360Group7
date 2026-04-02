@@ -150,6 +150,7 @@ export default function ModerateEvents({ compact = false, onMore, selectedFilter
 					actionClassName="event-details-button event-details-button--danger"
 					actionDisabled={isRemoving}
 					actionError={removeError}
+					enableTagEdit={true}
 				/>
 			) : null}
 		</section>

@@ -94,7 +94,8 @@ export async function deleteEvent(req, res, next) {
 
 export async function addTag(req, res, next) {
   try {
-    const event = await addEventTag(req.user, req.params.eventId, req.body.tag);
+    const tag = req.body?.tag ?? req.query?.tag;
+    const event = await addEventTag(req.user, req.params.eventId, tag);
     res.status(200).json(event);
   } catch (error) {
     next(error);
@@ -103,7 +104,8 @@ export async function addTag(req, res, next) {
 
 export async function removeTag(req, res, next) {
   try {
-    const event = await removeEventTag(req.user, req.params.eventId, req.body.tag);
+    const tag = req.body?.tag ?? req.query?.tag;
+    const event = await removeEventTag(req.user, req.params.eventId, tag);
     res.status(200).json(event);
   } catch (error) {
     next(error);
