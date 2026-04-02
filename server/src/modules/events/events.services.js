@@ -163,7 +163,7 @@ export async function addEventTag(user, eventId, tag) {
 
   const cleanedTag = cleanTag(tag);
   const updatedEvent = await addTagToEvent(eventId, cleanedTag);
-  return toPlainEvent(updatedEvent);
+  return attachOrganizerName(updatedEvent);
 }
 
 export async function removeEventTag(user, eventId, tag) {
@@ -179,5 +179,5 @@ export async function removeEventTag(user, eventId, tag) {
 
   const cleanedTag = cleanTag(tag);
   const updatedEvent = await removeTagFromEvent(eventId, cleanedTag);
-  return toPlainEvent(updatedEvent);
+  return attachOrganizerName(updatedEvent);
 }

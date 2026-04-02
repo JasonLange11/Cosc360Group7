@@ -61,18 +61,18 @@ export async function deleteEvent(eventId) {
 
 // Add a tag to an event (requires authentication)
 export async function addTagToEvent(eventId, tag) {
-  return apiRequest("/api/events/" + eventId + "/tags", {
+  const encodedTag = encodeURIComponent(tag);
+  return apiRequest("/api/events/" + eventId + "/tags?tag=" + encodedTag, {
     method: "PATCH",
-    body: JSON.stringify({ tag }),
     headers: getAuthHeader(),
   });
 }
 
 // Remove a tag from an event (requires authentication)
 export async function removeTagFromEvent(eventId, tag) {
-  return apiRequest("/api/events/" + eventId + "/tags", {
+  const encodedTag = encodeURIComponent(tag);
+  return apiRequest("/api/events/" + eventId + "/tags?tag=" + encodedTag, {
     method: "DELETE",
-    body: JSON.stringify({ tag }),
     headers: getAuthHeader(),
   });
 }
