@@ -22,7 +22,7 @@ const swaggerOptions = {
       description: "Backend API documentation"
     }
   },
-  apis: ["./src/modules/users/*.js", "./src/modules/auth/*.js", "./src/modules/events/*.js", "./src/index.js"]
+  apis: ["./src/modules/users/*.js", "./src/modules/auth/*.js", "./src/modules/events/*.js", "./src/modules/events/*.js", "./src/index.js"]
 };
 
 const specs = swaggerJSDoc(swaggerOptions);
@@ -37,6 +37,7 @@ app.get("/", (req, res) => {
 app.use("/api/users", usersRouter);
 app.use("/api/auth", authRouter)
 app.use("/api/events", eventsRouter)
+app.use("/api/groups", groupsRouter)
 app.use("/docs", swaggerUi.serve, swaggerUi.setup(specs));
 app.use(errorHandler);
 
