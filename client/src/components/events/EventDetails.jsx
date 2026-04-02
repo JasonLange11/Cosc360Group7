@@ -154,7 +154,10 @@ export default function EventDetails({
         )
     }
 
-    const attendanceCount = Array.isArray(event.attendees) ? event.attendees.length : 0
+    const attendanceCount = Array.isArray(event.attendees)
+        ? event.attendees.length
+        : (typeof event.attendees === 'number' ? event.attendees : 0)
+    const eventTags = Array.isArray(event.tags) ? event.tags : []
 
     const handleActionClick = async () => {
         setInternalActionError('')
@@ -190,7 +193,13 @@ export default function EventDetails({
                 <section className="event-details-card">
                     <div className="event-details-image-wrap">
                         <img src={event.bannerImage} alt={event.title} className="event-details-image" />
-                        <span className="event-details-tag">Music</span>
+                        {eventTags.length > 0 ? (
+                            <div className="event-details-tags">
+                              {eventTags.map((tag) => (
+                                <span key={tag} className="event-details-tag">{tag}</span>
+                            ))}
+                        </div>
+                        ) : null}
                     </div>
 
                     <div className="event-details-content">

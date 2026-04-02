@@ -6,11 +6,26 @@ import {
   getEventsByAttendeeId,
   getEventsByUserId,
   updateEventById,
-} from "./events.repository.js";
-import { findUserById } from "../users/users.repository.js";
+  addTagToEvent,
+  removeTagFromEvent,
+} from './events.repository.js';
+import { findUserById } from '../users/users.repository.js';
+
+function cleanTag(tag) {
+  if (tag === null || tag === undefined) {
+    throw new Error('Tag is required');
+  }
+
+  const value = String(tag).trim().toLowerCase();
+  if (value.length === 0) {
+    throw new Error('Tag cannot be empty');
+  }
+
+  return value;
+}
 
 function toPlainEvent(event) {
-  return typeof event?.toObject === "function" ? event.toObject() : event;
+  return typeof event?.toObject === 'function' ? event.toObject() : event;
 }
 
 function canModifyEvent(user, event) {
@@ -36,18 +51,18 @@ async function attachOrganizerName(event) {
 
   return {
     ...plainEvent,
-    organizerName: owner?.name || "Unknown Organizer",
+    organizerName: owner?.name || 'Unknown Organizer',
     attendees: plainEvent.attendees || [],
   };
 }
 
 export async function createUserEvent(user, eventData) {
   if (!user) {
-    throw new Error("Authentication required");
+    throw new Error('Authentication required');
   }
 
   if (user.isAdmin) {
-    throw new Error("Admins can not create events");
+    throw new Error('Admins can not create events');
   }
 
   const event = await createEvent({
@@ -84,7 +99,7 @@ export async function fetchEventById(eventId) {
   const event = await getEventById(eventId);
 
   if (!event) {
-    throw new Error("Event not found");
+    throw new Error('Event not found');
   }
 
   return attachOrganizerName(event);
@@ -92,7 +107,7 @@ export async function fetchEventById(eventId) {
 
 export async function fetchMyEvents(user) {
   if (!user) {
-    throw new Error("Authentication required");
+    throw new Error('Authentication required');
   }
 
   const events = await getEventsByUserId(user.id);
@@ -101,7 +116,7 @@ export async function fetchMyEvents(user) {
 
 export async function fetchAttendingEvents(user) {
   if (!user) {
-    throw new Error("Authentication required");
+    throw new Error('Authentication required');
   }
 
   const events = await getEventsByAttendeeId(user.id);
@@ -110,13 +125,13 @@ export async function fetchAttendingEvents(user) {
 
 export async function attendEvent(user, eventId) {
   if (!user) {
-    throw new Error("Authentication required");
+    throw new Error('Authentication required');
   }
 
   const event = await getEventById(eventId);
 
   if (!event) {
-    throw new Error("Event not found");
+    throw new Error('Event not found');
   }
 
   const isAlreadyAttending = event.attendees.some((attendeeId) => attendeeId.toString() === user.id.toString());
@@ -131,13 +146,13 @@ export async function attendEvent(user, eventId) {
 
 export async function unattendEvent(user, eventId) {
   if (!user) {
-    throw new Error("Authentication required");
+    throw new Error('Authentication required');
   }
 
   const event = await getEventById(eventId);
 
   if (!event) {
-    throw new Error("Event not found");
+    throw new Error('Event not found');
   }
 
   event.attendees = event.attendees.filter((attendeeId) => attendeeId.toString() !== user.id.toString());
@@ -150,11 +165,11 @@ export async function editEvent(user, eventId, updateData) {
   const existingEvent = await getEventById(eventId);
 
   if (!existingEvent) {
-    throw new Error("Event not found");
+    throw new Error('Event not found');
   }
 
   if (!canModifyEvent(user, existingEvent)) {
-    throw new Error("Forbidden");
+    throw new Error('Forbidden');
   }
 
   const updatedEvent = await updateEventById(eventId, updateData);
@@ -165,12 +180,44 @@ export async function removeEvent(user, eventId) {
   const existingEvent = await getEventById(eventId);
 
   if (!existingEvent) {
-    throw new Error("Event not found");
+    throw new Error('Event not found');
   }
 
   if (!canModifyEvent(user, existingEvent)) {
-    throw new Error("Forbidden");
+    throw new Error('Forbidden');
   }
 
   await deleteEventById(eventId);
+}
+
+export async function addEventTag(user, eventId, tag) {
+  const existingEvent = await getEventById(eventId);
+
+  if (!existingEvent) {
+    throw new Error('Event not found');
+  }
+
+  if (!canModifyEvent(user, existingEvent)) {
+    throw new Error('Forbidden');
+  }
+
+  const cleanedTag = cleanTag(tag);
+  const updatedEvent = await addTagToEvent(eventId, cleanedTag);
+  return toPlainEvent(updatedEvent);
+}
+
+export async function removeEventTag(user, eventId, tag) {
+  const existingEvent = await getEventById(eventId);
+
+  if (!existingEvent) {
+    throw new Error('Event not found');
+  }
+
+  if (!canModifyEvent(user, existingEvent)) {
+    throw new Error('Forbidden');
+  }
+
+  const cleanedTag = cleanTag(tag);
+  const updatedEvent = await removeTagFromEvent(eventId, cleanedTag);
+  return toPlainEvent(updatedEvent);
 }

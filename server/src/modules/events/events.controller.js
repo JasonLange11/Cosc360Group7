@@ -9,7 +9,9 @@ import {
   filterEvents,
   removeEvent,
   unattendEvent,
-} from "./events.services.js";
+  addEventTag,
+  removeEventTag,
+} from './events.services.js';
 
 export async function getEvents(req, res, next) {
   try {
@@ -22,7 +24,7 @@ export async function getEvents(req, res, next) {
 
 export async function searchEvents(req, res, next) {
   try {
-    const searchTerm = String(req.body.searchTerm || "");
+    const searchTerm = String(req.body.searchTerm || '');
     const events = await filterEvents(searchTerm);
     res.status(200).json(events);
   } catch (error) {
@@ -96,6 +98,24 @@ export async function attendEventController(req, res, next) {
 export async function unattendEventController(req, res, next) {
   try {
     const event = await unattendEvent(req.user, req.params.eventId);
+    res.status(200).json(event);
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function addTag(req, res, next) {
+  try {
+    const event = await addEventTag(req.user, req.params.eventId, req.body.tag);
+    res.status(200).json(event);
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function removeTag(req, res, next) {
+  try {
+    const event = await removeEventTag(req.user, req.params.eventId, req.body.tag);
     res.status(200).json(event);
   } catch (error) {
     next(error);
