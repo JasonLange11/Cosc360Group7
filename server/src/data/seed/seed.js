@@ -69,6 +69,8 @@ async function seedEvents(eventsData, userIdByEmail) {
 	await Event.insertMany(preparedEvents);
 }
 
+//TODO: Seed users
+
 async function seed() {
 	await connectDB();
 

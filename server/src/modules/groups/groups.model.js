@@ -12,7 +12,6 @@ const groupSchema = new mongoose.Schema(
       type: [mongoose.Schema.Types.ObjectId],
       ref: "User",
       required: true,
-      index: true,
     },
     bannerImage: {
       type: mongoose.Schema.Types.Mixed,
