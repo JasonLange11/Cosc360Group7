@@ -106,13 +106,13 @@ async function seed() {
 
 	const usersData = await readJson("./users.json");
 	const eventsData = await readJson("./events.json");
-	const groupsData = await readJson("./groups.json")
+	const groupsData = await readJson("./groups.json");
 
 	const userIdByEmail = await seedUsers(usersData);
 	await seedEvents(eventsData, userIdByEmail);
 	await seedGroups(groupsData, userIdByEmail);
 
-	console.log(`Seed complete: ${usersData.length} users and ${eventsData.length} events inserted.`);
+	console.log(`Seed complete: ${usersData.length} users, ${eventsData.length} events, and ${groupsData.length} groups inserted.`);
 }
 
 seed()
