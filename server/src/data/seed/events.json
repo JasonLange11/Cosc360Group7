@@ -8,7 +8,8 @@
 		"location": "Library Commons",
 		"cost": 0,
 		"capacity": 40,
-		"description": "Weekly meetup to discuss this month's reading list."
+		"description": "Weekly meetup to discuss this month's reading list.",
+		"tags": ["free", "indoor", "student", "community"]
 	},
 	{
 		"ownerEmail": "user1@example.com",
@@ -19,7 +20,8 @@
 		"location": "Knox Mountain Park",
 		"cost": 5,
 		"capacity": 25,
-		"description": "Easy pace group walk followed by coffee."
+		"description": "Easy pace group walk followed by coffee.",
+		"tags": ["outdoors", "active", "morning"]
 	},
 	{
 		"ownerEmail": "user1@example.com",
@@ -30,7 +32,8 @@
 		"location": "Engineering Lab 2",
 		"cost": 10,
 		"capacity": 60,
-		"description": "Build a playable prototype in one afternoon with local dev mentors."
+		"description": "Build a playable prototype in one afternoon with local dev mentors.",
+		"tags": ["tech", "gaming", "workshop", "student"]
 	},
 	{
 		"ownerEmail": "user1@example.com",
@@ -41,7 +44,8 @@
 		"location": "Main Campus Green",
 		"cost": 0,
 		"capacity": 50,
-		"description": "Bring a mat and join an all-levels outdoor yoga session at sunset."
+		"description": "Bring a mat and join an all-levels outdoor yoga session at sunset.",
+		"tags": ["free", "outdoors", "wellness", "evening"]
 	},
 	{
 		"ownerEmail": "user1@example.com",
@@ -52,7 +56,8 @@
 		"location": "Student Union Ballroom",
 		"cost": 15,
 		"capacity": 120,
-		"description": "Meet hiring managers and alumni across tech, health, and business sectors."
+		"description": "Meet hiring managers and alumni across tech, health, and business sectors.",
+		"tags": ["career", "networking", "indoor", "professional"]
 	},
 	{
 		"ownerEmail": "user1@example.com",
@@ -63,7 +68,8 @@
 		"location": "City Park Beach",
 		"cost": 0,
 		"capacity": 80,
-		"description": "Volunteer event with gloves and cleanup supplies provided on site."
+		"description": "Volunteer event with gloves and cleanup supplies provided on site.",
+		"tags": ["free", "outdoors", "volunteer", "community"]
 	},
 	{
 		"ownerEmail": "user1@example.com",
@@ -74,7 +80,8 @@
 		"location": "Arts Building Room 104",
 		"cost": 20,
 		"capacity": 30,
-		"description": "Hands-on workshop covering composition, lighting, and camera settings."
+		"description": "Hands-on workshop covering composition, lighting, and camera settings.",
+		"tags": ["photography", "workshop", "indoor", "creative"]
 	},
 	{
 		"ownerEmail": "user1@example.com",
@@ -85,7 +92,8 @@
 		"location": "Downtown Cultural Center",
 		"cost": 12,
 		"capacity": 90,
-		"description": "An evening of local jazz performances followed by an open mic session."
+		"description": "An evening of local jazz performances followed by an open mic session.",
+		"tags": ["music", "nightlife", "indoor", "community"]
 	},
 	{
 		"ownerEmail": "user1@example.com",
@@ -96,7 +104,8 @@
 		"location": "Computer Science Building 201",
 		"cost": 0,
 		"capacity": 70,
-		"description": "Practice whiteboard problems and behavioral questions with peer feedback."
+		"description": "Practice whiteboard problems and behavioral questions with peer feedback.",
+		"tags": ["free", "tech", "career", "workshop"]
 	},
 	{
 		"ownerEmail": "user1@example.com",
@@ -107,6 +116,7 @@
 		"location": "Landmark District",
 		"cost": 0,
 		"capacity": 35,
-		"description": "Explore local produce stalls and small-batch food vendors."
+		"description": "Explore local produce stalls and small-batch food vendors.",
+		"tags": ["free", "outdoors", "family-friendly", "community"]
 	}
 ]
