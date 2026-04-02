@@ -49,6 +49,7 @@ export async function createUserGroup(user, groupData) {
   const group = await createGroup({
     ...groupData,
     userId: user.id,
+    members: [user.id]
   });
 
   return toPlainGroup(group);
@@ -72,11 +73,13 @@ export async function filterGroups(searchTerm) {
     const title = group.name.toLowerCase();
     const location = group.location.toLowerCase();
     const description = group.description.toLowerCase();
+    const tags = group.tags.every(tag => tag.toLowerCase());
 
     return (
       title.includes(term)
       || location.includes(term)
       || description.includes(term)
+      || tags.every(tag => tag.includes(term))
     );
   });
 }
