@@ -5,6 +5,7 @@ import Footer from '../ui/Footer'
 import Sidebar from '../ui/Sidebar'
 import EventsList from '../events/EventsList'
 import EventDetails from '../events/EventDetails'
+import './css/Homepage.css'
 
 export default function HomePage() {
   const [searchTerm, setSearchTerm] = useState('')
@@ -26,9 +27,18 @@ export default function HomePage() {
     <>
       <div className={activeEventId ? 'page-content page-content-blurred' : 'page-content'}>
         <Header />
-        <SearchBar onSearch={handleSearch} />
-        <Sidebar />
-        <EventsList searchTerm={searchTerm} onOpenEvent={handleOpenEvent} />
+
+        <div className="home-layout">
+          <aside className="home-sidebar">
+            <Sidebar />
+          </aside>
+
+          <main className="home-main">
+            <SearchBar onSearch={handleSearch} />
+            <EventsList searchTerm={searchTerm} onOpenEvent={handleOpenEvent} />
+          </main>
+        </div>
+        
         <Footer />
       </div>
 
