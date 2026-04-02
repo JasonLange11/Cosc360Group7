@@ -10,11 +10,14 @@ function getJwtSecret() {
 }
 
 function toSafeUser(user) {
+    if (!user) {
+        throw new Error('Invalid or expired token');
+    }
+
     return {
         id: user._id,
         email: user.email,
         name: user.name,
-        nickname: user.nickname || '',
         bio: user.bio || '',
         location: user.location || '',
         favoriteTags: user.favoriteTags || [],

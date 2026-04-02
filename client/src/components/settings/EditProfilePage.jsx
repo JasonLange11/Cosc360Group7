@@ -15,7 +15,6 @@ export default function EditProfilePage() {
   const [success, setSuccess] = useState('')
   const [form, setForm] = useState({
     name: '',
-    nickname: '',
     bio: '',
     oldPassword: '',
     newPassword: '',
@@ -32,7 +31,6 @@ export default function EditProfilePage() {
         setForm((previous) => ({
           ...previous,
           name: profile?.name || '',
-          nickname: profile?.nickname || '',
           bio: profile?.bio || '',
           location: profile?.location || '',
           favoriteTags: Array.isArray(profile?.favoriteTags) ? profile.favoriteTags.join(', ') : '',
@@ -67,7 +65,6 @@ export default function EditProfilePage() {
 
       const payload = {
         name: form.name,
-        nickname: form.nickname,
         bio: form.bio,
         oldPassword: form.oldPassword,
         newPassword: form.newPassword,
@@ -82,6 +79,7 @@ export default function EditProfilePage() {
 
       setForm((previous) => ({ ...previous, oldPassword: '', newPassword: '' }))
       setSuccess('Profile updated successfully.')
+      navigate('/settings', { replace: true })
     } catch (err) {
       setError(err.message || 'Failed to update profile.')
     } finally {
@@ -107,13 +105,8 @@ export default function EditProfilePage() {
 
         <form onSubmit={handleSubmit} className="edit-profile-form">
           <label>
-            Display Name:
+            New Name:
             <input value={form.name} onChange={(event) => updateField('name', event.target.value)} />
-          </label>
-
-          <label>
-            New Nickname:
-            <input value={form.nickname} onChange={(event) => updateField('nickname', event.target.value)} />
           </label>
 
           <label>

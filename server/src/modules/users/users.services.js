@@ -13,11 +13,14 @@ import { getCommentsByUserId } from "../comments/comments.repository.js";
 const SALT_ROUNDS = 10;
 
 function toSafeUserProfile(user) {
+  if (!user) {
+    throw new Error("User not found");
+  }
+
   return {
     id: user._id,
     email: user.email,
     name: user.name,
-    nickname: user.nickname || "",
     bio: user.bio || "",
     location: user.location || "",
     favoriteTags: user.favoriteTags || [],
@@ -92,7 +95,7 @@ export async function fetchMyProfile(user) {
   return toSafeUserProfile(existingUser);
 }
 
-export async function updateMyProfile(user, updateData) {
+export async function updateMyProfile(user, updateData = {}) {
   if (!user) {
     throw new Error("Authentication required");
   }
@@ -104,7 +107,6 @@ export async function updateMyProfile(user, updateData) {
   }
 
   const nextData = {
-    nickname: updateData.nickname ?? existingUser.nickname,
     bio: updateData.bio ?? existingUser.bio,
     location: updateData.location ?? existingUser.location,
     profileImageUrl: updateData.profileImageUrl ?? existingUser.profileImageUrl,

@@ -87,10 +87,10 @@ function Registration() {
           </section>
 
           <section className="field-section">
-            <p className="field-label">Nickname</p>
-            <div className="nickname-row">
+            <p className="field-label">Name</p>
+            <div className="name-row">
               <input type="text" 
-              placeholder="Enter your nickname"
+              placeholder="Enter your name"
               value={name}
               onChange={(event) => setName(event.target.value)}
               required />

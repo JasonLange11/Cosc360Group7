@@ -12,7 +12,7 @@ import commentsRouter from "./modules/comments/comments.routes.js";
 import { errorHandler } from "./middleware/error-handler.js";
 
 const app = express();
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 4000;
 
 const swaggerOptions = {
   definition: {

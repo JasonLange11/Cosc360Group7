@@ -51,7 +51,7 @@
 }
 
 .input-row,
-.nickname-row {
+.name-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 10px;
@@ -119,7 +119,7 @@
   }
 
   .input-row,
-  .nickname-row {
+  .name-row {
     grid-template-columns: 1fr;
   }
 

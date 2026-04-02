@@ -224,7 +224,7 @@ export default function SettingsPage() {
         <section className="settings-top-row">
           <div>
             <h2>Settings</h2>
-            <p className="settings-user">@{profile?.nickname || profile?.name || 'User'}</p>
+            <p className="settings-user">@{profile?.name || 'User'}</p>
             <p>{profile?.bio || 'No bio added yet.'}</p>
             <p><strong>Location:</strong> {profile?.location || 'Not set'}</p>
             <p><strong>Favorite Tags:</strong> {Array.isArray(profile?.favoriteTags) && profile.favoriteTags.length ? profile.favoriteTags.join(', ') : 'None'}</p>
