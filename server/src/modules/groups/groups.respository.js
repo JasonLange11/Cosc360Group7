@@ -1,6 +1,6 @@
 import { Group  } from "./groups.model.js";
 
-export async function createEvent(groupData) {
+export async function createGroup(groupData) {
   return Group.create(groupData);
 }
 

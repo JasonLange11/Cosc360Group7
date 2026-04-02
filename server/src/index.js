@@ -7,6 +7,7 @@ import swaggerJSDoc from "swagger-jsdoc";
 import usersRouter from "./modules/users/users.routes.js";
 import authRouter from "./modules/auth/auth.routes.js";
 import eventsRouter from "./modules/events/events.routes.js";
+import groupsRouter from "./modules/groups/groups.routes.js"
 import { errorHandler } from "./middleware/error-handler.js";
 
 const app = express();

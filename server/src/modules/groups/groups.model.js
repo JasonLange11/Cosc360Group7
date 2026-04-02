@@ -8,6 +8,12 @@ const groupSchema = new mongoose.Schema(
       required: true,
       index: true,
     },
+    members: {
+      type: [mongoose.Schema.Types.ObjectId],
+      ref: "User",
+      required: true,
+      index: true,
+    },
     bannerImage: {
       type: mongoose.Schema.Types.Mixed,
       required: true,
@@ -38,7 +44,7 @@ const groupSchema = new mongoose.Schema(
     },
     tags: {
       type: [String],
-      required: true,
+      default: [],
       validate: {
         validator: function (tags) {
             return tags.length > 0 && tags.every(tag => tag.length > 0 && tag.length <= 50);

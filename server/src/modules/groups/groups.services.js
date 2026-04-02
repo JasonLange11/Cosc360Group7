@@ -128,3 +128,35 @@ export async function removeGroup(user, groupId) {
 
   await deleteGroupById(groupId);
 }
+
+export async function addGroupTag(user, groupId, tag) {
+  const existingGroup = await getGroupById(groupId);
+  
+  if (!existingGroup) {
+    throw new Error("Group not found");
+  }
+
+  if (!canModifyGroup(user, existingGroup)) {
+    throw new Error("Forbidden");
+  }
+
+  const cleanedTag = cleanTag(tag);
+  const updatedGroup = await addTagToGroup(groupId, cleanedTag);
+  return toPlainGroup(updatedGroup);
+}
+
+export async function removeGroupTag(user, groupId, tag) {
+  const existingGroup = await getGroupById(groupId);
+  
+  if (!existingGroup) {
+    throw new Error("Group not found");
+  }
+
+  if (!canModifyGroup(user, existingGroup)) {
+    throw new Error("Forbidden");
+  }
+
+  const cleanedTag = cleanTag(tag);
+  const updatedGroup = await removeTagFromGroup(groupId, cleanedTag);
+  return toPlainGroup(updatedGroup);
+}
