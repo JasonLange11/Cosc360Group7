@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 export async function connectDB(){
 
-    const url = process.env.MONGODB_URI;
+    const url = process.env.MONGODB_URL;
 
     if(!url){
         throw new Error("MONGODB_URL is not set")
