@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react'
 import '@fortawesome/fontawesome-free/css/all.min.css'
-import { getGroupById } from '../../lib/groupssApi'
+import { getGroupById } from '../../lib/groupsApi'
 import './css/GroupDetails.css'
 
 export default function GroupDetails({
     groupId,
     onClose,
-    actionLabel = 'Sign up for this ',
+    actionLabel = 'Sign up for this group',
     onAction,
     actionClassName = 'group-details-button',
     actionDisabled = false,
@@ -23,10 +23,10 @@ export default function GroupDetails({
             }
         }
 
-        window.addGroupListener('keydown', handleEscape)
+        window.addEventListener('keydown', handleEscape)
 
         return () => {
-            window.removeGroupListener('keydown', handleEscape)
+            window.removeEventListener('keydown', handleEscape)
         }
     }, [onClose])
 

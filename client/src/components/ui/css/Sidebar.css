@@ -16,6 +16,23 @@
   font-size: 1.9rem;
 }
 
+.sidebar-panel h4 {
+  font-weight: lighter;
+  margin-top: -.2rem;
+  margin-bottom: .5rem;
+}
+
+.sidebar-panel h4 a {
+  color: darkgray;
+  text-decoration: none;
+}
+
+.sidebar-panel h4 a:hover {
+  color: lightslategray;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
 .sidebar ul {
   margin: 0;
   padding: 0;
@@ -25,4 +42,12 @@
 
 .sidebar ul li {
   padding: 0.2rem 0;
+}
+
+.sidebar ul li button {
+  background-color: #f3f3f3;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  font-size: medium;
+  font-weight: 501;
 }

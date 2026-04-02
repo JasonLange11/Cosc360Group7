@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { getGroups } from '../../lib/groupsApi';
 import './css/Sidebar.css'
 
-function Sidebar() {
+function Sidebar({ onOpenGroup }) {
     const [groups, setGroups] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -13,6 +13,7 @@ function Sidebar() {
             setLoading(true);
 
             const data = await getGroups();
+            data.length = 5
     
             setGroups(data);
             setError(null);
@@ -40,15 +41,21 @@ function Sidebar() {
     return <div className="events-list-container">No results found</div>;
   }
 
+    const handleItemClick = (groupId) => {
+        if (groupId && typeof onOpenGroup === 'function') {
+            onOpenGroup(groupId)
+        }
+    }
+
     return (
         <div className='sidebar'>
             <section className='sidebar-panel'>
                 <h2>Groups:</h2>
-                <h4><a href="/groups"></a></h4>
+                <h4 className='groups search'><a href="/groups">Search Groups</a></h4>
                 <ul className='side list'>
                     {
                         groups.map((group) => (
-                            <li><a href='#'>{group.name}</a></li>
+                            <li><button onClick={() => handleItemClick(group._id)}>{group.name}</button></li>
                         ))
                     }
                 </ul>
