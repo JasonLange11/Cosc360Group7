@@ -49,5 +49,9 @@
   border-radius: 8px;
   border: 1px solid transparent;
   font-size: medium;
-  font-weight: 501;
+}
+
+.sidebar ul li button:hover {
+  text-decoration: solid underline;
+  cursor: pointer;
 }
