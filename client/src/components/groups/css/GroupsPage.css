@@ -1,32 +1,27 @@
-.home-layout {
-  width: min(1280px, 100%);
+.groups-layout {
+  width: min(100%, 1280px);
   margin: 1rem auto;
   padding: 0 0.5rem;
   display: grid;
-  grid-template-columns: 260px 1fr; 
   gap: 1rem;
   box-sizing: border-box;
 }
 
-.home-sidebar {
-  min-width: 0;
+.groups-main {
+  width: 100%;
 }
 
-.home-main {
-  min-width: 0;
-}
-
-.home-main .searchSection {
+.groups-main .searchSection {
   max-width: none;
   margin: 0 0 1rem 0;
 }
 
-.home-main .events-list-container {
+.groups-main .events-list-container {
   padding: 0;
 }
 
 @media (max-width: 900px) {
-  .home-layout {
+  .groups-layout {
     grid-template-columns: 1fr;
   }
 }

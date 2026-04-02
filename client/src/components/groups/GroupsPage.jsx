@@ -8,7 +8,7 @@ import GroupDetails from '../groups/GroupDetails'
 import './css/GroupsPage.css'
 import GroupsList from './GroupsList'
 
-export default function HomePage() {
+export default function GroupsPage() {
   const [searchTerm, setSearchTerm] = useState('')
   const [activeGroupId, setActiveGroupId] = useState(null)
 
@@ -29,12 +29,9 @@ export default function HomePage() {
       <div className={activeGroupId ? 'page-content page-content-blurred' : 'page-content'}>
         <Header />
 
-        <div className="home-layout">
-          <aside className="home-sidebar">
-            
-          </aside>
+        <div className="groups-layout">
 
-          <main className="home-main">
+          <main className="groups-main">
             <SearchBar onSearch={handleSearch} />
             <GroupsList searchTerm={searchTerm} onOpenGroup={handleOpenGroup} />
           </main>
