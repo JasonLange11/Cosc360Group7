@@ -6,6 +6,8 @@ import {
   fetchMyEvents,
   filterEvents,
   removeEvent,
+  addEventTag,
+  removeEventTag,
 } from "./events.services.js";
 
 export async function getEvents(req, res, next) {
@@ -67,6 +69,24 @@ export async function deleteEvent(req, res, next) {
   try {
     await removeEvent(req.user, req.params.eventId);
     res.status(204).send();
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function addTag(req, res, next) {
+  try {
+    const event = await addEventTag(req.user, req.params.eventId, req.body.tag);
+    res.status(200).json(event);
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function removeTag(req, res, next) {
+  try {
+    const event = await removeEventTag(req.user, req.params.eventId, req.body.tag);
+    res.status(200).json(event);
   } catch (error) {
     next(error);
   }

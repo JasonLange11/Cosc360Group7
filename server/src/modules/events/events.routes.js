@@ -8,6 +8,8 @@ import {
 	getMyEvents,
 	searchEvents,
 	updateEvent,
+	addTag,
+	removeTag,
 } from "./events.controller.js";
 
 const router = Router();
@@ -20,5 +22,8 @@ router.post("/search", searchEvents);
 router.post("/", authenticateUser, createEvent);
 router.put("/:eventId", authenticateUser, updateEvent);
 router.delete("/:eventId", authenticateUser, deleteEvent);
+
+router.patch("/:eventId/tags", authenticateUser, addTag);
+router.delete("/:eventId/tags", authenticateUser, removeTag);
 
 export default router;

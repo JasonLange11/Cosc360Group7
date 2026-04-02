@@ -23,3 +23,19 @@ export async function updateEventById(eventId, updateData) {
 export async function deleteEventById(eventId) {
   return Event.findByIdAndDelete(eventId);
 }
+
+export async function addTagToEvent(eventId, tag) {
+  return Event.findByIdAndUpdate(
+    eventId,
+    { $addToSet: { tags: tag } },
+    { new: true }
+  );
+}
+
+export async function removeTagFromEvent(eventId, tag) {
+  return Event.findByIdAndUpdate(
+    eventId,
+    { $pull: { tags: tag } },
+    { new: true }
+  );
+}
