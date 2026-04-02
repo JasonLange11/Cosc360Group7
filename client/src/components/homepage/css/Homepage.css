@@ -1,0 +1,32 @@
+.home-layout {
+  width: min(1280px, 100%);
+  margin: 1rem auto;
+  padding: 0 0.5rem;
+  display: grid;
+  grid-template-columns: 260px 1fr; 
+  gap: 1rem;
+  box-sizing: border-box;
+}
+
+.home-sidebar {
+  min-width: 0;
+}
+
+.home-main {
+  min-width: 0;
+}
+
+.home-main .searchSection {
+  max-width: none;
+  margin: 0 0 1rem 0;
+}
+
+.home-main .events-list-container {
+  padding: 0;
+}
+
+@media (max-width: 900px) {
+  .home-layout {
+    grid-template-columns: 1fr;
+  }
+}
