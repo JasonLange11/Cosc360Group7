@@ -32,7 +32,7 @@ export default function GroupsPage() {
         <div className="groups-layout">
 
           <main className="groups-main">
-            <SearchBar onSearch={handleSearch} />
+            <SearchBar onSearch={handleSearch} title={'Find Groups'}/>
             <GroupsList searchTerm={searchTerm} onOpenGroup={handleOpenGroup} />
           </main>
         </div>
