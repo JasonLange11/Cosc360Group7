@@ -8,7 +8,6 @@ import { useAuth } from '../context/AuthContext.jsx'
 import AdminPage from '../components/admin/AdminPage.jsx'
 import GroupsPage from '../components/groups/GroupsPage.jsx'
 
-
 export default function App(){
   const { authReady, currentUser } = useAuth()
 
