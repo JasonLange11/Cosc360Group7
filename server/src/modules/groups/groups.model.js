@@ -37,15 +37,15 @@ const groupSchema = new mongoose.Schema(
       maxlength: 200,
     },
     tags: {
-    type: [String],
-    required: true,
-    validate: {
+      type: [String],
+      required: true,
+      validate: {
         validator: function (tags) {
             return tags.length > 0 && tags.every(tag => tag.length > 0 && tag.length <= 50);
         },
         message: 'Tags must be a non-empty array with each tag being a non-empty string (max 50 characters).'
-    },
-    set: function (tags) {
+      },
+      set: function (tags) {
         // Normalize: trim whitespace, convert to lowercase, remove duplicates and empty strings
         const normalized = [...new Set(
             tags
@@ -54,9 +54,9 @@ const groupSchema = new mongoose.Schema(
         )];
         return normalized.slice(0, 10); // Limit to 10 tags
         }
-    }
-  },
-  { versionKey: false }
+      }
+    },
+    { versionKey: false }
 );
 
 export const Group = mongoose.model("Group", groupSchema);
