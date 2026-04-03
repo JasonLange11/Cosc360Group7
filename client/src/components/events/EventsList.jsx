@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import CardDisplay from './CardDisplay';
+import CardDisplay from '../ui/CardDisplay';
 import { getEvents, searchEvents } from '../../lib/eventsApi';
 import './css/EventsList.css';
 
