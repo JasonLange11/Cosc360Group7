@@ -5,6 +5,7 @@ import mongoose from "mongoose";
 import { connectDB } from "../db/connection.js";
 import { User } from "../../modules/users/users.model.js";
 import { Event } from "../../modules/events/events.model.js";
+import { Group } from "../../modules/groups/groups.model.js"
 
 const SALT_ROUNDS = 10;
 
@@ -69,16 +70,49 @@ async function seedEvents(eventsData, userIdByEmail) {
 	await Event.insertMany(preparedEvents);
 }
 
+async function seedGroups(groupData, userIdByEmail) {
+	await Group.deleteMany({});
+
+	if (!groupData.length) {
+		return;
+	}
+
+	const preparedGroup = groupData.map((group) => {
+		const ownerEmail = group.ownerEmail || group.userEmail;
+		const userId = group.userId || (ownerEmail ? userIdByEmail.get(ownerEmail) : null);
+
+		if (!userId) {
+			throw new Error(
+				`Group \"${group.title || "Untitled"}\" is missing a valid owner. Add ownerEmail that matches users.json.`
+			);
+		}
+
+		return {
+			userId,
+			bannerImage: group.bannerImage,
+			name: group.name,
+			location: group.location,
+			description: group.description,
+			tags: Array.isArray(group.tags) ? group.tags : [],
+			members: Array.isArray(group.members) ? group.members : [],
+		};
+	});
+
+	await Group.insertMany(preparedGroup);
+}
+
 async function seed() {
 	await connectDB();
 
 	const usersData = await readJson("./users.json");
 	const eventsData = await readJson("./events.json");
+	const groupsData = await readJson("./groups.json");
 
 	const userIdByEmail = await seedUsers(usersData);
 	await seedEvents(eventsData, userIdByEmail);
+	await seedGroups(groupsData, userIdByEmail);
 
-	console.log(`Seed complete: ${usersData.length} users and ${eventsData.length} events inserted.`);
+	console.log(`Seed complete: ${usersData.length} users, ${eventsData.length} events, and ${groupsData.length} groups inserted.`);
 }
 
 seed()
