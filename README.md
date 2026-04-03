@@ -15,7 +15,7 @@ Group 7
 - docker compose --profile localdb up -d
 
 ### Website hosted at
-- [localhost: ](http://localhost:5173)
+- [localhost:5173 ](http://localhost:5173)
 
 ## Optional seed the project data
 ### Note that running this will overwrite the database
