@@ -7,6 +7,7 @@ import swaggerJSDoc from "swagger-jsdoc";
 import usersRouter from "./modules/users/users.routes.js";
 import authRouter from "./modules/auth/auth.routes.js";
 import eventsRouter from "./modules/events/events.routes.js";
+import groupsRouter from "./modules/groups/groups.routes.js"
 import { errorHandler } from "./middleware/error-handler.js";
 
 const app = express();
@@ -21,7 +22,7 @@ const swaggerOptions = {
       description: "Backend API documentation"
     }
   },
-  apis: ["./src/modules/users/*.js", "./src/modules/auth/*.js", "./src/modules/events/*.js", "./src/index.js"]
+  apis: ["./src/modules/users/*.js", "./src/modules/auth/*.js", "./src/modules/events/*.js", "./src/modules/events/*.js", "./src/index.js"]
 };
 
 const specs = swaggerJSDoc(swaggerOptions);
@@ -36,6 +37,7 @@ app.get("/", (req, res) => {
 app.use("/api/users", usersRouter);
 app.use("/api/auth", authRouter)
 app.use("/api/events", eventsRouter)
+app.use("/api/groups", groupsRouter)
 app.use("/docs", swaggerUi.serve, swaggerUi.setup(specs));
 app.use(errorHandler);
 
