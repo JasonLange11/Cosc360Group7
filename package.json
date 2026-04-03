@@ -4,8 +4,5 @@
   "scripts": {
     "postinstall": "npm install --prefix client && npm install --prefix server",
     "start": "npx concurrently \"npm run dev --prefix client\" \"npm run dev --prefix server\""
-  },
-  "dependencies": {
-    "mongodb": "^7.1.1"
   }
 }
