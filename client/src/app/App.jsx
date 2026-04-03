@@ -8,6 +8,7 @@ import AdminPage from '../components/admin/AdminPage.jsx'
 import SettingsPage from '../components/settings/SettingsPage.jsx'
 import EditProfilePage from '../components/settings/EditProfilePage.jsx'
 
+import GroupsPage from '../components/groups/GroupsPage.jsx'
 
 export default function App(){
   const { authReady, currentUser } = useAuth()
@@ -25,6 +26,7 @@ export default function App(){
       <Route path="/admin" element={currentUser && currentUser.isAdmin ? <AdminPage /> : <Navigate to="/" replace />} />
       <Route path="/settings" element={currentUser ? <SettingsPage /> : <Navigate to="/login" replace />} />
       <Route path="/settings/edit" element={currentUser ? <EditProfilePage /> : <Navigate to="/login" replace />} />
+      <Route path="/groups" element={<GroupsPage />} />
     </Routes>
   )
 }

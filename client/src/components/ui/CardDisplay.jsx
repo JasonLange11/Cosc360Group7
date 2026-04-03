@@ -16,6 +16,9 @@ function CardDisplay(props) {
     const handleCardClick = () => {
         if (props.eventId && typeof props.onOpenEvent === 'function') {
             props.onOpenEvent(props.eventId)
+        } 
+        if (props.groupId && typeof props.onOpenGroup === 'function') {
+            props.onOpenGroup(props.groupId)
         }
     }
 

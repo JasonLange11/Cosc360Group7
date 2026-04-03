@@ -73,7 +73,8 @@ export async function filterGroups(searchTerm) {
     const title = group.name.toLowerCase();
     const location = group.location.toLowerCase();
     const description = group.description.toLowerCase();
-    const tags = group.tags.every(tag => tag.toLowerCase());
+    const tags = group.tags;
+    tags.forEach((tag) => {tag = tag.toLowerCase()})
 
     return (
       title.includes(term)

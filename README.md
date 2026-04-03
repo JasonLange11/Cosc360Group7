@@ -1,34 +1,23 @@
-# Cosc-360-
+# Cosc-360
 Group 7
 
-## Start up Docker Container for Database
-- Stay in the project root folder
-- Make sure Docker Desktop is running
+## Start up Project
+- Go into the server folder
+- Copy the .env.example file and save it as .env in server
+
+
+### Standard Method (MongoDB Atlas)
+- In project root folder
 - docker compose up -d
 
+### Alternate Method (localhost) 
+- In project root folder
+- docker compose --profile localdb up -d
+
+### Website hosted at
+- [localhost:5173 ](http://localhost:5173)
+
 ## Optional seed the project data
-### Note that running this will overwrite your local DB
-- in project root folder
-- npm run seed --prefix server
-
-## Running the project
-
-### Run frontend and backend on localhost 
-- Stay in project root folder
-- npm install
-- npm start
-
-### Alternative Method
-The project can be started with the fronted and server individually
-if desired.  If so, do the following instead.
-
-#### Run frontend (client) on localhost
-- cd client
-- npm install
-- npm run dev
-
-#### Run backend (server) on localhost
-- cd server
-- npm install
-- npm run dev
-
+### Note that running this will overwrite the database
+- In project root folder
+- docker compose exec server npm run seed
