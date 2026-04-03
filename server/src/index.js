@@ -22,7 +22,6 @@ app.use("/api/users", usersRouter);
 app.use("/api/auth", authRouter)
 app.use("/api/events", eventsRouter)
 app.use("/api/groups", groupsRouter)
-app.use("/docs", swaggerUi.serve, swaggerUi.setup(specs));
 app.use(errorHandler);
 
 
