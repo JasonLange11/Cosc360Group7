@@ -26,7 +26,7 @@ export default function App(){
       <Route path="/admin" element={currentUser && currentUser.isAdmin ? <AdminPage /> : <Navigate to="/" replace />} />
       <Route path="/settings" element={currentUser ? <SettingsPage /> : <Navigate to="/login" replace />} />
       <Route path="/settings/edit" element={currentUser ? <EditProfilePage /> : <Navigate to="/login" replace />} />
-      <Route path="/groups" element={currentUser ? <GroupsPage /> : <Navigate to="/" replace />}/>
+      <Route path="/groups" element={<GroupsPage />} />
     </Routes>
   )
 }
