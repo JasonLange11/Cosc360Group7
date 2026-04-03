@@ -2,6 +2,9 @@
 Group 7
 
 ## Start up Project
+- Go into the server folder
+- Copy the .env.example file and save it as .env in server
+
 
 ### Standard Method (MongoDB Atlas)
 - In project root folder
@@ -9,7 +12,7 @@ Group 7
 
 ### Alternate Method (localhost) 
 - In project root folder
-- docker compose --profiles localdb up -d
+- docker compose --profile localdb up -d
 
 ## Optional seed the project data
 ### Note that running this will overwrite the database
