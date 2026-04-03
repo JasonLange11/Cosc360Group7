@@ -1,4 +1,3 @@
-
 .headerNav ul{
     display: flex;
     align-items: center;
@@ -27,7 +26,7 @@
 .nav-button {
     background: transparent;
     border: 1px solid #333333;
-    padding: 0.2rem 0.75rem;
+    padding: 0.2rem 1rem;
     cursor: pointer;
 }
 
@@ -73,6 +72,8 @@
     padding: 0.65rem 0.9rem;
     text-align: left;
     cursor: pointer;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .nav-dropdown-item:hover:not(:disabled) {
@@ -85,5 +86,5 @@
 }
 
 .headerNav i {
-    margin-right: 0.25rem; /* space between icon and text */
+    margin-right: 0.25rem;
 }

@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import { createContext, useContext, useEffect, useState } from 'react'
 import { clearAuthSession, fetchCurrentUser, getStoredAuthSession, storeAuthSession } from '../lib/auth.js'
 
@@ -75,6 +76,29 @@ export function AuthProvider({ children }) {
     setCurrentUser(normalizedAuthSession.user)
   }
 
+  async function refreshCurrentUser() {
+    const storedAuth = getStoredAuthSession()
+
+    if (!storedAuth?.token) {
+      return
+    }
+
+    const { user } = await fetchCurrentUser(storedAuth.token)
+    storeAuthSession({ token: storedAuth.token, user })
+    setCurrentUser(user)
+  }
+
+  function updateCurrentUser(nextUser) {
+    const storedAuth = getStoredAuthSession()
+
+    if (!storedAuth?.token || !nextUser) {
+      return
+    }
+
+    storeAuthSession({ token: storedAuth.token, user: nextUser })
+    setCurrentUser(nextUser)
+  }
+
   function logout() {
     clearAuthSession()
     setCurrentUser(null)
@@ -87,6 +111,8 @@ export function AuthProvider({ children }) {
         currentUser,
         isAuthenticated: Boolean(currentUser),
         completeLogin,
+        refreshCurrentUser,
+        updateCurrentUser,
         logout,
       }}
     >

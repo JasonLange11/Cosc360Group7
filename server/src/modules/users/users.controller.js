@@ -1,4 +1,4 @@
-import { fetchUsers, registerUser, removeUser } from "./users.services.js";
+import { fetchMyProfile, fetchUsers, registerUser, removeUser, updateMyProfile } from "./users.services.js";
 
 export async function getUsers(req, res, next) {
   try {
@@ -23,6 +23,24 @@ export async function deleteUser(req, res, next){
   try {
     await removeUser(req.user, req.params.userId);
     res.status(204).send();
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function getMyProfile(req, res, next) {
+  try {
+    const profile = await fetchMyProfile(req.user);
+    res.status(200).json(profile);
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function updateProfile(req, res, next) {
+  try {
+    const profile = await updateMyProfile(req.user, req.body);
+    res.status(200).json(profile);
   } catch (error) {
     next(error);
   }

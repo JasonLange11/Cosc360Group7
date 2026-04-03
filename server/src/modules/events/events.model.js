@@ -8,6 +8,11 @@ const eventSchema = new mongoose.Schema(
       required: true,
       index: true,
     },
+    attendees: {
+      type: [mongoose.Schema.Types.ObjectId],
+      ref: "User",
+      default: [],
+    },
     bannerImage: {
       type: mongoose.Schema.Types.Mixed,
       required: true,

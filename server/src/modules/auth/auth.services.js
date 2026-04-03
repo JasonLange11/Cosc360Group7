@@ -1,4 +1,3 @@
-
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { createUser, findUserByEmail, findUserById } from '../users/users.repository.js';
@@ -15,6 +14,10 @@ function toSafeUser(user){
         id: user._id,
         email: user.email,
         name: user.name,
+        bio: user.bio || '',
+        location: user.location || '',
+        favoriteTags: user.favoriteTags || [],
+        profileImageUrl: user.profileImageUrl || '',
         isAdmin: Boolean(user.isAdmin),
     }
 }
