@@ -17,7 +17,11 @@ const adminFiltersByTab = {
     { value: 'active', label: 'Active Events', icon: 'fa-solid fa-calendar-check' },
     { value: 'expired', label: 'Expired Events', icon: 'fa-regular fa-calendar-xmark' },
   ],
-  users: [],
+  users: [
+    { value: 'users', label: 'Users', icon: 'fa-regular fa-user' },
+    { value: 'admins', label: 'Admins', icon: 'fa-solid fa-crown' },
+    { value: 'all', label: 'All', icon: 'fa-solid fa-user-group' }
+  ],
   groups: [],
   reviews: [],
   dashboard: [],
@@ -25,7 +29,7 @@ const adminFiltersByTab = {
 
 const defaultFilterByTab = {
   events: 'all',
-  users: '',
+  users: 'users',
   groups: '',
   reviews: '',
   dashboard: '',
