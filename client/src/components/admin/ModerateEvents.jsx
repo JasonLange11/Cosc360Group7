@@ -3,13 +3,14 @@ import SearchBar from '../search/SearchBar'
 import CardDisplay from '../ui/CardDisplay'
 import EventDetails from '../events/EventDetails'
 import { deleteEvent, getEvents } from '../../lib/eventsApi'
+import { isEventExpired } from '../../lib/eventDates'
 import './css/ModerateEvents.css'
 
 function getEventId(event) {
 	return event.id || event._id || event.title
 }
 
-export default function ModerateEvents({ compact = false, onMore }) {
+export default function ModerateEvents({ compact = false, onMore, selectedFilter = 'all' }) {
 	const [events, setEvents] = useState([])
 	const [searchTerm, setSearchTerm] = useState('')
 	const [loading, setLoading] = useState(true)
@@ -33,20 +34,32 @@ export default function ModerateEvents({ compact = false, onMore }) {
 	}, [])
 
 	const filteredEvents = useMemo(() => {
+		const eventsByStatus = events.filter((event) => {
+			if (selectedFilter === 'active') {
+				return !isEventExpired(event.eventDate)
+			}
+
+			if (selectedFilter === 'expired') {
+				return isEventExpired(event.eventDate)
+			}
+
+			return true
+		})
+
 		if (!searchTerm.trim()) {
-			return events
+			return eventsByStatus
 		}
 
 		const term = searchTerm.toLowerCase()
 
-		return events.filter((event) => {
+		return eventsByStatus.filter((event) => {
 			const title = String(event.title || '').toLowerCase()
 			const location = String(event.location || '').toLowerCase()
 			const description = String(event.description || '').toLowerCase()
 
 			return title.includes(term) || location.includes(term) || description.includes(term)
 		})
-	}, [events, searchTerm])
+	}, [events, searchTerm, selectedFilter])
 
 	const visibleEvents = compact ? filteredEvents.slice(0, 4) : filteredEvents
 
