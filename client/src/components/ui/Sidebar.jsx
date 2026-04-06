@@ -51,7 +51,6 @@ function Sidebar({ onOpenGroup }) {
         <div className='sidebar'>
             <section className='sidebar-panel'>
                 <h2>Groups:</h2>
-                <h4 className='groups search'><a href="/groups">Search Groups</a></h4>
                 <ul className='side list'>
                     {
                         groups.map((group) => (
