@@ -9,6 +9,7 @@
 .registration-header {
   width: min(720px, 100%);
   margin: 0 auto;
+  padding-bottom: 0.5rem;
 }
 
 .registration-card {

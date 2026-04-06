@@ -1,12 +1,12 @@
 import './css/Registration.css'
 import { HeaderWithoutNav } from '../ui/Header.jsx'
-import { useState} from 'react'
+import { useEffect, useState } from 'react'
 import { registerUser } from '../../lib/auth.js'
 import { useNavigate } from 'react-router-dom'
 
 // TODO: Need to make a good css look for formError. Should probably be a error next to the signup button.
 
-function Registration() {
+function Registration({ modal = false, onClose }) {
   
   const [email, setEmail] = useState("");
   const [verifyEmail, setVerifyEmail] = useState("");
@@ -21,6 +21,45 @@ function Registration() {
   const emailsMatch = email.trim() === verifyEmail.trim();
   const passwordsMatch = password.trim() === verifyPassword.trim();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!modal) {
+      return;
+    }
+
+    function handleEscape(event) {
+      if (event.key === 'Escape' && typeof onClose === 'function') {
+        onClose();
+      }
+    }
+
+    window.addEventListener('keydown', handleEscape);
+
+    return () => {
+      window.removeEventListener('keydown', handleEscape);
+    };
+  }, [modal, onClose]);
+
+  function handleClose() {
+    if (typeof onClose === 'function') {
+      onClose();
+      return;
+    }
+
+    navigate('/');
+  }
+
+  function handleWrapperClick() {
+    if (modal) {
+      handleClose();
+    }
+  }
+
+  function handleShellClick(event) {
+    if (modal) {
+      event.stopPropagation();
+    }
+  }
   
   async function handleSubmit(event) {
     event.preventDefault();
@@ -48,8 +87,8 @@ function Registration() {
   }
 
   return (
-    <div className="page-shell">
-
+    <div className={modal ? "auth-overlay" : "page-shell"} onClick={handleWrapperClick}>
+      <div className={modal ? "auth-shell" : ""} onClick={handleShellClick}>
       <main className="registration-card">
       <div className="registration-header">
         <HeaderWithoutNav />
@@ -109,6 +148,7 @@ function Registration() {
           <p className="tagline">TouchGrassEvents: Find events. Get out. Touch grass.</p>
         </form>
       </main>
+      </div>
     </div>
   )
 }
