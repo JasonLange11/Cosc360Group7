@@ -61,8 +61,10 @@ function Navbar(){
                         ) : null}      
                         {!currentUser.isAdmin ? (
                             <li>
-                                <i className="fa-solid fa-users"></i>
-                                Group
+                                <NavLink to="/groups">
+                                    <i className="fa-solid fa-users"></i>
+                                    Group
+                                </NavLink>
                             </li>
                         ) : null}   
                         {currentUser.isAdmin ? (
