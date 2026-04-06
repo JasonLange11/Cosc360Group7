@@ -11,7 +11,7 @@ const userSchema = new mongoose.Schema(
     favoriteTags: { type: [String], default: [] },
     profileImageUrl: { type: String, trim: true, default: "" },
   },
-  { versionKey: false }
+  { versionKey: false, timestamps: true }
 );
 
 export const User = mongoose.model("User", userSchema);

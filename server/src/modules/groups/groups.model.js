@@ -61,7 +61,7 @@ const groupSchema = new mongoose.Schema(
         }
       }
     },
-    { versionKey: false }
+    { versionKey: false, timestamps: true }
 );
 
 export const Group = mongoose.model("Group", groupSchema);
