@@ -8,6 +8,7 @@ import ModerateEvents from './ModerateEvents';
 import PendingReviews from './PendingReviews';
 import Footer from '../ui/Footer';
 import './css/AdminPage.css';
+import ModerateGroups from './ModerateGroups';
 
 export default function AdminPage() {
   const [activeTab, setActiveTab] = useState('dashboard');
@@ -32,12 +33,17 @@ export default function AdminPage() {
               <section className="a-dash a-bottom">
                 <ModerateEvents compact onMore={() => setActiveTab('events')} />
               </section>
+              <section className="a-dash a-bottom">
+                <ModerateGroups compact onMore={() => setActiveTab('groups')} />
+              </section>
             </>
           ) : null}
 
           {activeTab === 'users' ? <ModerateUsers /> : null}
           {activeTab === 'events' ? <ModerateEvents /> : null}
           {activeTab === 'reviews' ? <PendingReviews /> : null}
+          {activeTab === 'groups' ? <ModerateGroups /> : null}
+          
         </section>
       </main>
       <Footer />
