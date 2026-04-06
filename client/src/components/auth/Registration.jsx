@@ -147,6 +147,10 @@ function Registration({ modal = false, onClose }) {
 
           <p className="tagline">TouchGrassEvents: Find events. Get out. Touch grass.</p>
         </form>
+
+        <section className="signup-image">
+          <img src="../../../assets/okanagan-valley.jpg" alt="Picture of the Okanagan"></img>
+        </section>
       </main>
       </div>
     </div>

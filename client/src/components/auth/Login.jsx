@@ -124,6 +124,9 @@ export default function Login({ modal = false, onClose }) {
 
                     <p className="login-tagline">TouchGrassEvents: Find events. Get out. Touch grass.</p>
                 </form>
+                <section className="login-image"> 
+                    <img src="../../../assets/okanagan-valley.jpg" alt="Picture of the Okanagan"></img>
+                </section>
             </main>
             </div>
         </div>
