@@ -15,8 +15,15 @@ function Registration({ modal = false, onClose }) {
   const [verifyPassword, setVerifyPassword] = useState("");
 
   const [name, setName] = useState("");
+  const [termsAccepted, setTermsAccepted] = useState(false);
 
   const [formError, setFormError] = useState("");
+  const [invalidEmail, setInvalidEmail] = useState(false);
+  const [invalidVerifyEmail, setInvalidVerifyEmail] = useState(false);
+  const [invalidPassword, setInvalidPassword] = useState(false);
+  const [invalidVerifyPassword, setInvalidVerifyPassword] = useState(false);
+  const [invalidName, setInvalidName] = useState(false);
+  const [invalidTerms, setInvalidTerms] = useState(false);
 
   const emailsMatch = email.trim() === verifyEmail.trim();
   const passwordsMatch = password.trim() === verifyPassword.trim();
@@ -64,14 +71,46 @@ function Registration({ modal = false, onClose }) {
   async function handleSubmit(event) {
     event.preventDefault();
     setFormError('');
+    setInvalidEmail(false);
+    setInvalidVerifyEmail(false);
+    setInvalidPassword(false);
+    setInvalidVerifyPassword(false);
+    setInvalidName(false);
+    setInvalidTerms(false);
+
+    const trimmedEmail = email.trim();
+    const trimmedVerifyEmail = verifyEmail.trim();
+    const trimmedPassword = password.trim();
+    const trimmedVerifyPassword = verifyPassword.trim();
+    const trimmedName = name.trim();
+
+    if (!trimmedEmail || !trimmedVerifyEmail || !trimmedPassword || !trimmedVerifyPassword || !trimmedName) {
+      setInvalidEmail(!trimmedEmail);
+      setInvalidVerifyEmail(!trimmedVerifyEmail);
+      setInvalidPassword(!trimmedPassword);
+      setInvalidVerifyPassword(!trimmedVerifyPassword);
+      setInvalidName(!trimmedName);
+      setFormError('Please fill in all required fields');
+      return;
+    }
 
     if(!emailsMatch){
       setFormError('Emails do not match');
+      setInvalidEmail(true);
+      setInvalidVerifyEmail(true);
       return;
     }
 
     if(!passwordsMatch){
       setFormError('Passwords do not match');
+      setInvalidPassword(true);
+      setInvalidVerifyPassword(true);
+      return;
+    }
+
+    if(!termsAccepted){
+      setFormError('You must agree to the Terms of Service');
+      setInvalidTerms(true);
       return;
     }
     
@@ -82,6 +121,7 @@ function Registration({ modal = false, onClose }) {
 
     }catch(error){
       setFormError(error.message);
+      setInvalidEmail(true);
     }
     
   }
@@ -100,12 +140,22 @@ function Registration({ modal = false, onClose }) {
               <input type="email" 
               placeholder="Enter your email"
               value={email}
-              onChange={(event) => setEmail(event.target.value)} 
+              className={invalidEmail ? 'invalid' : ''}
+              onChange={(event) => {
+                setEmail(event.target.value);
+                setInvalidEmail(false);
+                setFormError('');
+              }} 
               required/>
               <input type="email" 
               placeholder="Re-Enter your email"
               value={verifyEmail}
-              onChange={(event) => setVerifyEmail(event.target.value)}
+              className={invalidVerifyEmail ? 'invalid' : ''}
+              onChange={(event) => {
+                setVerifyEmail(event.target.value);
+                setInvalidVerifyEmail(false);
+                setFormError('');
+              }}
               required />
             </div>
           </section>
@@ -116,12 +166,22 @@ function Registration({ modal = false, onClose }) {
               <input type="password" 
               placeholder="Enter your password"
               value={password}
-              onChange={(event) => setPassword(event.target.value)}
+              className={invalidPassword ? 'invalid' : ''}
+              onChange={(event) => {
+                setPassword(event.target.value);
+                setInvalidPassword(false);
+                setFormError('');
+              }}
               required />
               <input type="password" 
               placeholder="Re-Enter your password"
               value={verifyPassword}
-              onChange={(event) => setVerifyPassword(event.target.value)} />
+              className={invalidVerifyPassword ? 'invalid' : ''}
+              onChange={(event) => {
+                setVerifyPassword(event.target.value);
+                setInvalidVerifyPassword(false);
+                setFormError('');
+              }} />
             </div>
           </section>
 
@@ -131,10 +191,23 @@ function Registration({ modal = false, onClose }) {
               <input type="text" 
               placeholder="Enter your nickname"
               value={name}
-              onChange={(event) => setName(event.target.value)}
+              className={invalidName ? 'invalid' : ''}
+              onChange={(event) => {
+                setName(event.target.value);
+                setInvalidName(false);
+                setFormError('');
+              }}
               required />
-              <label className="terms-label">
-                <input type="checkbox" />I agree to the Terms of Service
+              <label className={invalidTerms ? 'terms-label invalid-terms' : 'terms-label'}>
+                <input
+                  type="checkbox"
+                  checked={termsAccepted}
+                  onChange={(event) => {
+                    setTermsAccepted(event.target.checked);
+                    setInvalidTerms(false);
+                    setFormError('');
+                  }}
+                />I agree to the Terms of Service
               </label>
             </div>
           </section>
@@ -143,7 +216,7 @@ function Registration({ modal = false, onClose }) {
             SignUp
           </button>
 
-          <span>{formError}</span>
+          <span className={formError ? 'error-message' : ''}>{formError}</span>
 
           <p className="tagline">TouchGrassEvents: Find events. Get out. Touch grass.</p>
         </form>

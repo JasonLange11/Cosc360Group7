@@ -52,6 +52,10 @@
   border-bottom-color: #3b2a67;
 }
 
+.login-input.invalid {
+  box-shadow: 0 0 4px red;
+}
+
 .login-remember-label {
   display: inline-flex;
   align-items: center;
@@ -104,6 +108,14 @@
   line-height: 1.2;
   font-size: 1.2rem;
   color: #222;
+}
+
+.error-message {
+  color: red;
+  font-size: 0.95em;
+  padding-left: 1.1rem;
+  margin-top: 2px;
+  margin-bottom: 6px;
 }
 
 .login-image {
