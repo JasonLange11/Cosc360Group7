@@ -7,6 +7,7 @@ import QuickOverview from './QuickOverview';
 import ModerateUsers from './ModerateUsers';
 import ModerateEvents from './ModerateEvents';
 import FlaggedContent from './FlaggedContent';
+import Reports from './Reports';
 import Footer from '../ui/Footer';
 import './css/AdminPage.css';
 import ModerateGroups from './ModerateGroups';
@@ -23,7 +24,12 @@ const adminFiltersByTab = {
     { value: 'all', label: 'All', icon: 'fa-solid fa-user-group' }
   ],
   groups: [],
-  reviews: [],
+  reports: [
+    { value: 'attendance', label: 'Total Attendance', icon: 'fa-solid fa-user-check' },
+    { value: 'unique-attendees', label: 'Unique Attendees', icon: 'fa-solid fa-users-viewfinder' },
+    { value: 'events-created', label: 'Events Created', icon: 'fa-solid fa-calendar-plus' },
+    { value: 'users-created', label: 'Users Created', icon: 'fa-solid fa-user-plus' },
+  ],
   dashboard: [],
 };
 
@@ -31,7 +37,7 @@ const defaultFilterByTab = {
   events: 'all',
   users: 'users',
   groups: '',
-  reviews: '',
+  reports: 'attendance',
   dashboard: '',
 };
 
@@ -76,7 +82,7 @@ export default function AdminPage() {
               <QuickOverview />
               <section className="a-dash a-top">
                 <ModerateUsers compact onMore={() => setActiveTab('users')} />
-                <FlaggedContent compact onMore={() => setActiveTab('reviews')} />
+                <FlaggedContent compact />
               </section>
               <section className="a-dash a-bottom">
                 <ModerateEvents compact onMore={() => setActiveTab('events')} />
@@ -89,7 +95,7 @@ export default function AdminPage() {
 
           {activeTab === 'users' ? <ModerateUsers selectedFilter={selectedFilters.users} /> : null}
           {activeTab === 'events' ? <ModerateEvents selectedFilter={selectedFilters.events} /> : null}
-          {activeTab === 'reviews' ? <FlaggedContent selectedFilter={selectedFilters.reviews} /> : null}
+          {activeTab === 'reports' ? <Reports selectedFilter={selectedFilters.reports} /> : null}
           {activeTab === 'groups' ? <ModerateGroups selectedFilter={selectedFilters.groups} /> : null}
           
         </section>

@@ -58,6 +58,16 @@ export default function AdminNavbar({ activeTab, onTabChange }){
                     Flagged Content
                 </button>
             </section>
+            <section className="a-navbtn">
+                <button
+                    type="button"
+                    className={activeTab === 'reports' ? 'is-active' : ''}
+                    onClick={() => onTabChange('reports')}
+                >
+                    <i className="fa-solid fa-chart-bar"></i>
+                    Reports
+                </button>
+            </section>
         </nav>
     )
 }
