@@ -54,8 +54,8 @@ export default function AdminNavbar({ activeTab, onTabChange }){
                     className={activeTab === 'reviews' ? 'is-active' : ''}
                     onClick={() => onTabChange('reviews')}
                 >
-                    <i className="fa-regular fa-envelope"></i>
-                    Pending Reviews
+                    <i className="fa-solid fa-flag"></i>
+                    Flagged Content
                 </button>
             </section>
         </nav>
