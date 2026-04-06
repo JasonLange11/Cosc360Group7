@@ -74,11 +74,6 @@
   border-bottom-color: #3b2a67;
 }
 
-.form-card input::placeholder {
-  color: #2f2f2f;
-  opacity: 1;
-}
-
 .terms-label {
   display: flex;
   align-items: center;
@@ -110,7 +105,7 @@
   margin: 8px 0 0;
   width: min(420px, 100%);
   line-height: 1.2;
-  font-size: 1.7rem;
+  font-size: 1.2rem;
   color: #222;
 }
 
