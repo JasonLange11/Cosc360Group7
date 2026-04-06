@@ -15,7 +15,7 @@ const adminFiltersByTab = {
   events: [
     { value: 'all', label: 'All Events', icon: 'fa-solid fa-layer-group' },
     { value: 'active', label: 'Active Events', icon: 'fa-solid fa-calendar-check' },
-    { value: 'expired', label: 'Old Events', icon: 'fa-regular fa-calendar-xmark' },
+    { value: 'expired', label: 'Expired Events', icon: 'fa-regular fa-calendar-xmark' },
   ],
   users: [],
   groups: [],

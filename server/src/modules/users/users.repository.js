@@ -1,7 +1,7 @@
 import { User } from "./users.model.js";
 
 export async function getAllUsers() {
-  return User.find({ isAdmin: false }).select('-password').lean();
+  return User.find().select('-password').lean();
 }
 
 export async function createUser(userData) {
