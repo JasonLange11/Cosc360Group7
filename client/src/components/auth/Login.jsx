@@ -74,7 +74,7 @@ export default function Login({ modal = false, onClose }) {
         try{
             const result = await loginUser({email, password});
 
-            completeLogin(result);
+            completeLogin(result, rememberMe);
             navigate('/');
         }catch (error){
             setFormError(error.message || 'Invalid email or password');

@@ -4,14 +4,8 @@ import {apiRequest} from './apiClient';
 
 const AUTH_STORAGE_KEY = 'authSession';
 
-// Save the authenticated session (token + user) to localStorage
-export function storeAuthSession(authSession) {
-    localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(authSession));
-}
-
-// Read and parse the saved auth session from localStorage
-export function getStoredAuthSession() {
-    const storedAuth = localStorage.getItem(AUTH_STORAGE_KEY);
+function readAuthSession(storage) {
+    const storedAuth = storage.getItem(AUTH_STORAGE_KEY);
 
     if (!storedAuth) {
         return null;
@@ -20,14 +14,42 @@ export function getStoredAuthSession() {
     try {
         return JSON.parse(storedAuth);
     } catch {
-        localStorage.removeItem(AUTH_STORAGE_KEY);
+        storage.removeItem(AUTH_STORAGE_KEY);
         return null;
     }
 }
 
-// Remove any saved auth session from localStorage
+// Save the authenticated session (token + user) to localStorage or sessionStorage
+export function storeAuthSession(authSession, { persistent = true } = {}) {
+    localStorage.removeItem(AUTH_STORAGE_KEY);
+    sessionStorage.removeItem(AUTH_STORAGE_KEY);
+
+    const storage = persistent ? localStorage : sessionStorage;
+    storage.setItem(AUTH_STORAGE_KEY, JSON.stringify(authSession));
+}
+
+// Read and parse the saved auth session from localStorage first, then sessionStorage
+export function getStoredAuthSession() {
+    return readAuthSession(localStorage) || readAuthSession(sessionStorage);
+}
+
+// Returns where the current auth session is stored
+export function getStoredAuthSessionStorage() {
+    if (readAuthSession(localStorage)) {
+        return 'local';
+    }
+
+    if (readAuthSession(sessionStorage)) {
+        return 'session';
+    }
+
+    return null;
+}
+
+// Remove any saved auth session from localStorage and sessionStorage
 export function clearAuthSession() {
     localStorage.removeItem(AUTH_STORAGE_KEY);
+    sessionStorage.removeItem(AUTH_STORAGE_KEY);
 }
 
 // Build an Authorization header from the saved token
