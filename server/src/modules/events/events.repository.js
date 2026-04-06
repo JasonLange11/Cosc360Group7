@@ -4,8 +4,8 @@ export async function createEvent(eventData) {
   return Event.create(eventData);
 }
 
-export async function getAllEvents() {
-  return Event.find().sort({ createdAt: -1 }).lean();
+export async function getAllEvents(filter = {}) {
+  return Event.find(filter).sort({ createdAt: -1 }).lean();
 }
 
 export async function getEventById(eventId) {

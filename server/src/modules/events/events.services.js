@@ -24,6 +24,47 @@ function cleanTag(tag) {
   return value;
 }
 
+function normalizeEventStatus(status) {
+  const normalizedStatus = String(status || "upcoming").trim().toLowerCase();
+
+  if (["upcoming", "expired", "all"].includes(normalizedStatus)) {
+    return normalizedStatus;
+  }
+
+  throw new Error("Invalid event status");
+}
+
+function getEventsDateFilter(status) {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  if (status === "expired") {
+    return { eventDate: { $lt: today } };
+  }
+
+  if (status === "upcoming") {
+    return { eventDate: { $gte: today } };
+  }
+
+  return {};
+}
+
+function validateEventStatusAccess(status, user) {
+  if ((status === "expired" || status === "all") && !user?.isAdmin) {
+    throw new Error("Admin access required");
+  }
+}
+
+function isEventExpired(eventDate) {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const eventDay = new Date(eventDate);
+  eventDay.setHours(0, 0, 0, 0);
+
+  return eventDay < today;
+}
+
 function toPlainEvent(event) {
   return typeof event.toObject === "function" ? event.toObject() : event;
 }
@@ -73,13 +114,16 @@ export async function createUserEvent(user, eventData) {
   return toPlainEvent(event);
 }
 
-export async function fetchEvents() {
-  const events = await getAllEvents();
+export async function fetchEvents(options = {}) {
+  const status = normalizeEventStatus(options.status);
+  validateEventStatusAccess(status, options.user);
+
+  const events = await getAllEvents(getEventsDateFilter(status));
   return Promise.all(events.map((event) => attachOrganizerName(event)));
 }
 
-export async function filterEvents(searchTerm) {
-  const events = await fetchEvents();
+export async function filterEvents(searchTerm, options = {}) {
+  const events = await fetchEvents(options);
   const term = searchTerm.trim().toLowerCase();
 
   if (!term) {
@@ -136,6 +180,10 @@ export async function attendEvent(user, eventId) {
 
   if (!event) {
     throw new Error("Event not found");
+  }
+
+  if (isEventExpired(event.eventDate)) {
+    throw new Error("Cannot register for an expired event");
   }
 
   const isAlreadyAttending = event.attendees.some((attendeeId) => attendeeId.toString() === user.id.toString());
