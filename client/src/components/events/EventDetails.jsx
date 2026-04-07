@@ -3,6 +3,7 @@ import '@fortawesome/fontawesome-free/css/all.min.css'
 import { attendEvent, getEventById, unattendEvent } from '../../lib/eventsApi'
 import { isEventExpired } from '../../lib/eventDates'
 import { useAuth } from '../../context/AuthContext.jsx'
+import CommentSection from '../comments/CommentSection'
 import './css/EventDetails.css'
 
 function formatEventDate(dateString) {
@@ -276,6 +277,8 @@ export default function EventDetails({
                         </button>
                         {actionError ? <p className="event-details-action-error">{actionError}</p> : null}
                         {internalActionError ? <p className="event-details-action-error">{internalActionError}</p> : null}
+
+                        <CommentSection parentType="event" parentId={event._id} pageSize={5} />
                     </div>
                 </section>
             </main>

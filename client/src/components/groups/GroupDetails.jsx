@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useAuth } from '../../context/AuthContext'
 import '@fortawesome/fontawesome-free/css/all.min.css'
 import { getGroupById, joinGroup, leaveGroup } from '../../lib/groupsApi'
+import CommentSection from '../comments/CommentSection'
 import './css/GroupDetails.css'
 
 export default function GroupDetails({
@@ -175,6 +176,8 @@ export default function GroupDetails({
                         </button>
                         {actionError ? <p className="group-details-action-error">{actionError}</p> : null}
                         {internalActionError ? <p className="group-details-action-error">{internalActionError}</p> : null}
+
+                        <CommentSection parentType="group" parentId={group._id} pageSize={5} />
                     </div>
                 </section>
             </main>

@@ -1,0 +1,115 @@
+.comment-section {
+  margin-top: 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  padding-top: 1rem;
+  width: 100%;
+  max-width: 100%;
+}
+
+.comment-section-title {
+  margin: 0 0 0.75rem;
+}
+
+.comment-form {
+  display: grid;
+  gap: 0.6rem;
+}
+
+.comment-input {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  resize: vertical;
+  min-height: 80px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.06);
+  color: inherit;
+  padding: 0.7rem;
+  font: inherit;
+}
+
+.comment-submit {
+  justify-self: flex-end;
+  border: none;
+  border-radius: 8px;
+  padding: 0.5rem 0.9rem;
+  cursor: pointer;
+  font: inherit;
+}
+
+.comment-list {
+  list-style: none;
+  margin: 1rem 0;
+  padding: 0;
+  display: grid;
+  gap: 0.7rem;
+}
+
+.comment-item {
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+  padding: 0.7rem;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.comment-meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.6rem;
+  align-items: baseline;
+  font-size: 0.9rem;
+}
+
+.comment-meta span {
+  opacity: 0.7;
+  font-size: 0.8rem;
+}
+
+.comment-content {
+  margin: 0.5rem 0 0;
+  white-space: pre-wrap;
+}
+
+.comment-delete {
+  margin-top: 0.6rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  padding: 0.35rem 0.6rem;
+  font: inherit;
+}
+
+.comment-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.comment-pagination button {
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  padding: 0.35rem 0.65rem;
+  font: inherit;
+}
+
+.comment-pagination button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.comment-error {
+  color: #ffb3b3;
+  margin: 0.7rem 0 0;
+}
+
+.comment-empty {
+  opacity: 0.8;
+  margin: 0.7rem 0;
+}
