@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import '@fortawesome/fontawesome-free/css/all.min.css'
 import { attendEvent, getEventById, unattendEvent } from '../../lib/eventsApi'
+import { addTagToEvent, removeTagFromEvent } from '../../lib/eventsApi'
 import { isEventExpired } from '../../lib/eventDates'
 import { useAuth } from '../../context/AuthContext.jsx'
 import CommentSection from '../comments/CommentSection'
@@ -56,6 +57,7 @@ export default function EventDetails({
     actionClassName = 'event-details-button',
     actionDisabled = false,
     actionError = '',
+    enableTagEdit = false,
 }) {
     const { currentUser } = useAuth()
     const [event, setEvent] = useState(null)
@@ -63,6 +65,10 @@ export default function EventDetails({
     const [error, setError] = useState(null)
     const [actionLoading, setActionLoading] = useState(false)
     const [internalActionError, setInternalActionError] = useState('')
+
+    const [newTag, setNewTag] = useState('')
+    const [tagBusy, setTagBusy] = useState(false)
+    const [tagError, setTagError] = useState('')
 
     useEffect(() => {
         function handleEscape(eventKey) {
@@ -161,6 +167,38 @@ export default function EventDetails({
     const attendanceCount = Array.isArray(event.attendees) ? event.attendees.length : 0
     const eventTags = Array.isArray(event.tags) ? event.tags : []
 
+    const handleAddTag = async (submitEvent) => {
+        submitEvent.preventDefault()
+        const tag = newTag.trim().toLowerCase()
+        if (!tag) return
+
+        try {
+            setTagBusy(true)
+            setTagError('')
+            const updatedEvent = await addTagToEvent(eventId, tag)
+            setEvent(updatedEvent)
+            setNewTag('')
+        } catch (err) {
+            setTagError(err.message || 'Failed to add tag')
+        } finally {
+            setTagBusy(false)
+        }
+    }
+
+    const handleRemoveTag = async (tag) => {
+        try {
+            setTagBusy(true)
+            setTagError('')
+            const updatedEvent = await removeTagFromEvent(eventId, tag)
+            setEvent(updatedEvent)
+        } catch (err) {
+            setTagError(err.message || 'Failed to remove tag')
+        } finally {
+            setTagBusy(false)
+        }
+    }
+
+
     const handleActionClick = async () => {
         setInternalActionError('')
 
@@ -200,17 +238,48 @@ export default function EventDetails({
                 <section className="event-details-card">
                     <div className="event-details-image-wrap">
                         <img src={event.bannerImage} alt={event.title} className="event-details-image" />
-                        {eventTags.length > 0 ? (
-                            <div className="event-details-tags">
-                              {eventTags.map((tag) => (
-                                <span key={tag} className="event-details-tag">{tag}</span>
-                            ))}
-                        </div>
-                        ) : null}
+                            {eventTags.length > 0 ? (
+                                <div className="event-details-tags">
+                                    {eventTags.map((tag) => (
+                                    <span key={tag} className="event-details-tag">
+                                        {tag}
+                                        {enableTagEdit ? (
+                                        <button
+                                            type="button"
+                                            className="event-details-tag-remove"
+                                            onClick={() => handleRemoveTag(tag)}
+                                            disabled={tagBusy}
+                                            aria-label={`Remove ${tag} tag`}
+                                        >
+                                            x
+                                        </button>
+                                        ) : null}
+                                    </span>
+                                    ))}
+                                </div>
+                            ) : null}
                     </div>
 
                     <div className="event-details-content">
                         <h2 className="event-details-title">{event.title}</h2>
+
+                        {enableTagEdit ? (
+                            <>
+                                <form className="event-tag-form" onSubmit={handleAddTag}>
+                                <input
+                                    type="text"
+                                    value={newTag}
+                                    onChange={(changeEvent) => setNewTag(changeEvent.target.value)}
+                                    placeholder="Add tag"
+                                    disabled={tagBusy}
+                                />
+                                <button type="submit" disabled={tagBusy}>
+                                    {tagBusy ? 'Saving...' : 'Add tag'}
+                                </button>
+                                </form>
+                                {tagError ? <p className="event-tag-error">{tagError}</p> : null}
+                            </>
+                        ) : null}
 
                         <div className="event-details-grid">
                             <div className="event-detail-item">
