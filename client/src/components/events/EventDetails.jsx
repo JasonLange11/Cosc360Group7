@@ -45,6 +45,20 @@ function formatEventTime(timeString) {
     return `${twentyFourHour} (${twelveHour})`
 }
 
+function isEventExpired(eventDate) {
+    if (!eventDate) {
+        return false
+    }
+
+    const today = new Date()
+    today.setHours(0, 0, 0, 0)
+
+    const eventDay = new Date(eventDate)
+    eventDay.setHours(0, 0, 0, 0)
+
+    return eventDay < today
+}
+
 export default function EventDetails({
     eventId,
     onClose,
@@ -124,12 +138,14 @@ export default function EventDetails({
         && Array.isArray(event?.attendees)
         && event.attendees.some((attendeeId) => attendeeId.toString() === currentUser.id.toString())
     )
+    const eventIsExpired = isEventExpired(event?.eventDate)
 
     const defaultActionLabel = currentUser
-        ? (isAttending ? 'Leave event' : 'Register for this event')
+        ? (isAttending ? 'Leave event' : (eventIsExpired ? 'Event has ended' : 'Register for this event'))
         : 'Login to register'
 
     const resolvedActionLabel = onAction ? actionLabel : defaultActionLabel
+    const resolvedActionDisabled = actionDisabled || actionLoading || (!onAction && eventIsExpired && !isAttending)
 
     if (loading) {
         return (
@@ -167,6 +183,11 @@ export default function EventDetails({
 
         if (!currentUser) {
             setInternalActionError('You must be logged in to register for an event.')
+            return
+        }
+
+        if (eventIsExpired && !isAttending) {
+            setInternalActionError('This event has already ended.')
             return
         }
 
@@ -262,7 +283,7 @@ export default function EventDetails({
                             type="button"
                             className={actionClassName}
                             onClick={handleActionClick}
-                            disabled={actionDisabled || actionLoading}
+                            disabled={resolvedActionDisabled}
                         >
                             {actionLoading ? 'Saving...' : resolvedActionLabel}
                         </button>

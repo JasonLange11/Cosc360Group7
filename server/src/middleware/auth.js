@@ -1,20 +1,43 @@
 import { getCurrentUserFromToken } from '../modules/auth/auth.services.js'
 
+function getBearerToken(authHeader) {
+	if (!authHeader || !authHeader.startsWith('Bearer ')) {
+		return null
+	}
+
+	return authHeader.slice(7)
+}
+
 export async function authenticateUser(req, res, next) {
 	try {
 		const authHeader = req.headers.authorization;
+		const token = getBearerToken(authHeader)
 
-		if (!authHeader || !authHeader.startsWith('Bearer ')) {
+		if (!token) {
 			return next(new Error('Auth token required'));
 		}
 
-		const token = authHeader.slice(7);
 		const user = await getCurrentUserFromToken(token);
 
 		req.user = user;
 		next();
 	} catch (error) {
 		next(error);
+	}
+}
+
+export async function optionalAuthenticateUser(req, res, next) {
+	try {
+		const token = getBearerToken(req.headers.authorization)
+
+		if (!token) {
+			return next()
+		}
+
+		req.user = await getCurrentUserFromToken(token)
+		next()
+	} catch (error) {
+		next(error)
 	}
 }
 

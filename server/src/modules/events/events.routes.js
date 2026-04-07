@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { authenticateUser } from "../../middleware/auth.js";
+import { authenticateUser, optionalAuthenticateUser } from "../../middleware/auth.js";
 import {
 	attendEventController,
 	createEvent,
@@ -17,12 +17,12 @@ import {
 
 const router = Router();
 
-router.get("/", getEvents);
+router.get("/", optionalAuthenticateUser, getEvents);
 router.get("/mine", authenticateUser, getMyEvents);
 router.get("/attending", authenticateUser, getAttendingEvents);
 router.get("/:eventId", getEvent);
 
-router.post("/search", searchEvents);
+router.post("/search", optionalAuthenticateUser, searchEvents);
 router.post("/", authenticateUser, createEvent);
 router.post("/:eventId/attend", authenticateUser, attendEventController);
 

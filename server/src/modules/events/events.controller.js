@@ -15,7 +15,10 @@ import {
 
 export async function getEvents(req, res, next) {
   try {
-    const events = await fetchEvents();
+    const events = await fetchEvents({
+      status: req.query.status,
+      user: req.user,
+    });
     res.status(200).json(events);
   } catch (error) {
     next(error);
@@ -25,7 +28,10 @@ export async function getEvents(req, res, next) {
 export async function searchEvents(req, res, next) {
   try {
     const searchTerm = String(req.body.searchTerm || "");
-    const events = await filterEvents(searchTerm);
+    const events = await filterEvents(searchTerm, {
+      status: req.body.status,
+      user: req.user,
+    });
     res.status(200).json(events);
   } catch (error) {
     next(error);

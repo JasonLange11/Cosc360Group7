@@ -1,16 +1,34 @@
 import { apiRequest } from './apiClient';
 import { getAuthHeader } from './auth';
 
+function buildEventsRequestOptions(options = {}) {
+  return {
+    headers: options.includeAuth ? getAuthHeader() : undefined,
+  };
+}
+
+function buildEventsQuery(options = {}) {
+  const params = new URLSearchParams();
+
+  if (options.status) {
+    params.set('status', options.status);
+  }
+
+  const query = params.toString();
+  return query ? `?${query}` : '';
+}
+
 // Fetch all events
-export async function getEvents() {
-  return apiRequest('/api/events');
+export async function getEvents(options = {}) {
+  return apiRequest(`/api/events${buildEventsQuery(options)}`, buildEventsRequestOptions(options));
 }
 
 // Search events by term
-export async function searchEvents(searchTerm) {
+export async function searchEvents(searchTerm, options = {}) {
   return apiRequest('/api/events/search', {
     method: 'POST',
-    body: JSON.stringify({ searchTerm }),
+    body: JSON.stringify({ searchTerm, status: options.status }),
+    ...buildEventsRequestOptions(options),
   });
 }
 

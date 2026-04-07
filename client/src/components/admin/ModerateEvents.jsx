@@ -20,7 +20,7 @@ export default function ModerateEvents({ compact = false, onMore }) {
 	useEffect(() => {
 		const fetchEvents = async () => {
 			try {
-				const eventsData = await getEvents()
+				const eventsData = await getEvents({ status: 'all', includeAuth: true })
 				setEvents(eventsData)
 			} catch (error) {
 				console.log('Failed to fetch events', error)
