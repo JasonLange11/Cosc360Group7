@@ -8,6 +8,7 @@ import { createGroup } from '../../lib/groupsApi';
 export default function GroupsPage() {
   const navigate = useNavigate()
   const [groupName, setGroupName] = useState('')
+  const [location, setLocation] = useState('')
   const [description, setDescription] = useState('')
   const [tags, setTags] = useState([])
   const [tagInput, setTagInput] = useState('')
@@ -39,7 +40,14 @@ export default function GroupsPage() {
       setError('Group name is required')
       return false
     }
-    setTags(tags.length > 0 ? tags : undefined)
+    if (!description.trim()) {
+      setError('Description is required')
+      return false
+    }
+    if (!location.trim()) {
+      setError('Location is required')
+      return false
+    }
     return true
   }
 
@@ -56,6 +64,8 @@ export default function GroupsPage() {
       const groupData = {
         name: groupName,
         description: description,
+        tags: tags,
+        location: location
       }
       await createGroup(groupData)
       setSuccess(true)
@@ -106,16 +116,31 @@ export default function GroupsPage() {
                 maxLength="100"
               />
             </div>
+            <div className="form-group">
+              <label htmlFor="location" className="form-label">
+                Location <span className="required">*</span>
+              </label>
+              <input
+                id="location"
+                type="text"
+                className="form-input"
+                placeholder="Enter group location"
+                value={location}
+                onChange={(e) => setLocation(e.target.value)}
+                disabled={loading}
+                maxLength="100"
+              />
+            </div>
 
             {/* Description Input */}
             <div className="form-group">
               <label htmlFor="description" className="form-label">
-                Description
+                Description <span className="required">*</span>
               </label>
               <textarea
                 id="description"
                 className="form-textarea"
-                placeholder="Enter group description (optional)"
+                placeholder="Enter group description"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 disabled={loading}
@@ -124,16 +149,16 @@ export default function GroupsPage() {
               />
               <span className="char-count">{description.length}/500</span>
             </div>
+
             {/*Tags Input */}
             <div className="form-group">
               <label htmlFor="tagInput" className="form-label">
                 Tags
               </label>
-              <div className="tags-input-wrapper">
-                <input
+              <input
                   id="tagInput"
                   type="text"
-                  className="form-input tags-input"
+                  className="form-input"
                   placeholder="Type a tag and press Enter"
                   value={tagInput}
                   onChange={(e) => setTagInput(e.target.value)}
@@ -141,7 +166,6 @@ export default function GroupsPage() {
                   disabled={loading || tags.length >= 10}
                   maxLength="30"
                 />
-              </div>
               
               {/* Tags Display */}
               {tags.length > 0 && (
