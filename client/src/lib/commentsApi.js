@@ -1,34 +1,30 @@
-import { apiRequest } from './apiClient';
-import { getAuthHeader } from './auth';
+import { apiRequest } from './apiClient'
+import { getAuthHeader, getStoredAuthSession } from './auth'
 
+export function getComments({ parentType, parentId, page = 1, limit = 5 }) {
+  const query = new URLSearchParams({
+    parentType,
+    parentId,
+    page: String(page),
+    limit: String(limit),
+  })
 
-// Fetch all of a group's comments
-export async function getCommentss(groupId) {
-  return apiRequest(`/api/comments/${groupId}`);
+  return apiRequest(`/api/comments?${query.toString()}`)
 }
 
-// Fetch current user's groups (requires authentication)
-export async function getMyCommentss() {
-  return apiRequest('/api/comments/mine', {
-    headers: getAuthHeader(),
-  });
-}
+export function createComment(commentData) {
+  const token = getStoredAuthSession()?.token
 
-
-// Create a new comment (requires authentication)
-export async function createComment(commentData) {
   return apiRequest('/api/comments', {
     method: 'POST',
     body: JSON.stringify(commentData),
-    headers: getAuthHeader(),
-  });
+    headers: token ? { Authorization: `Bearer ${token}` } : {},
+  })
 }
 
-
-// Delete a comment (requires authentication)
-export async function deleteGroup(commentId) {
+export function deleteComment(commentId) {
   return apiRequest(`/api/comments/${commentId}`, {
     method: 'DELETE',
     headers: getAuthHeader(),
-  });
+  })
 }
