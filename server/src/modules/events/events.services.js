@@ -134,11 +134,14 @@ export async function filterEvents(searchTerm, options = {}) {
     const title = event.title.toLowerCase();
     const location = event.location.toLowerCase();
     const description = event.description.toLowerCase();
+    const hasTagMatch = Array.isArray(event.tags)
+      && event.tags.some((tag) => String(tag).toLowerCase().includes(term));
 
     return (
       title.includes(term)
       || location.includes(term)
       || description.includes(term)
+      || hasTagMatch
     );
   });
 }
