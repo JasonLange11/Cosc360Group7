@@ -92,9 +92,9 @@ export default function GroupDetails({
     const isMember = Boolean(
         currentUser && Array.isArray(group.members) && group.members.some((memberId) => memberId.toString() === currentUser.id.toString())
     )
-    const defaultActionLabel = currentUser ? (isMember ? 'Leave group' : 'Join Group') : 'Login to register'
+    const defaultActionLabel = currentUser ? (isMember ? 'Leave group' : 'Join Group') : 'Login to join'
     const resolvedActionLabel = onAction ? actionLabel : defaultActionLabel
-    const resolvedActionDisabled = actionDisabled || (!onAction && !isMember)
+    const resolvedActionDisabled = actionDisabled || actionLoading
 
     const handleActionClick = async () => {
             setInternalActionError('')
@@ -105,7 +105,7 @@ export default function GroupDetails({
             }
     
             if (!currentUser) {
-                setInternalActionError('You must be logged in to register for an event.')
+                setInternalActionError('You must be logged in to join a group.')
                 return
             }
     
