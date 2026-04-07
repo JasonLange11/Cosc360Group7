@@ -1,5 +1,5 @@
 import bcrypt from "bcrypt";
-import { createComment, getAllComments, getCommentById, getCommentsByGroup, getCommentsByUserId, updateCommentById, deleteCommentById } from "./comments.respository";
+import { createComment, getAllComments, getCommentById, getCommentsByGroup, getCommentsByUserId, deleteCommentById } from "./comments.respository";
 
 const SALT_ROUNDS = 10;
 
