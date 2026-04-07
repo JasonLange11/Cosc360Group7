@@ -10,11 +10,10 @@ import {
 
 const router = Router();
 
-router.get("/", getComments);
+router.get("/:groupId", getComments);
 router.get("/mine", authenticateUser, getMyComments);
-router.get("/:groupId", getComment);
 
 router.post("/", authenticateUser, createComment);
-router.delete("/:groupId", authenticateUser, deleteComment);
+router.delete("/:commentId", authenticateUser, deleteComment);
 
 export default router;
