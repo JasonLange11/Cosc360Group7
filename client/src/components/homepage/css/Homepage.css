@@ -25,8 +25,31 @@
   padding: 0;
 }
 
+.auth-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2200;
+  background: rgba(21, 17, 38, 0.34);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 1rem;
+  overflow-y: auto;
+}
+
+.auth-shell {
+  width: min(760px, 100%);
+  margin: 0.25rem 0 1rem;
+}
+
 @media (max-width: 900px) {
   .home-layout {
     grid-template-columns: 1fr;
+  }
+
+  .auth-shell {
+    width: min(680px, 100%);
   }
 }

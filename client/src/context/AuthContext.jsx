@@ -1,6 +1,6 @@
-/* eslint-disable react-refresh/only-export-components */
+
 import { createContext, useContext, useEffect, useState } from 'react'
-import { clearAuthSession, fetchCurrentUser, getStoredAuthSession, storeAuthSession } from '../lib/auth.js'
+import { clearAuthSession, fetchCurrentUser, getStoredAuthSession, getStoredAuthSessionStorage, storeAuthSession } from '../lib/auth.js'
 
 const AuthContext = createContext(null)
 
@@ -40,9 +40,13 @@ export function AuthProvider({ children }) {
 
       try {
         const { user } = await fetchCurrentUser(storedAuth.token)
+        const storedAuthLocation = getStoredAuthSessionStorage()
 
         if (isMounted) {
-          storeAuthSession({ token: storedAuth.token, user })
+          storeAuthSession(
+            { token: storedAuth.token, user },
+            { persistent: storedAuthLocation !== 'session' }
+          )
           setCurrentUser(user)
         }
       } catch {
@@ -65,37 +69,45 @@ export function AuthProvider({ children }) {
     }
   }, [])
 
-  function completeLogin(authSession) {
+  function completeLogin(authSession, rememberMe = true) {
     const normalizedAuthSession = normalizeAuthSession(authSession)
 
     if (!normalizedAuthSession) {
       return
     }
 
-    storeAuthSession(normalizedAuthSession)
+    storeAuthSession(normalizedAuthSession, { persistent: rememberMe })
     setCurrentUser(normalizedAuthSession.user)
   }
 
   async function refreshCurrentUser() {
     const storedAuth = getStoredAuthSession()
+    const storedAuthLocation = getStoredAuthSessionStorage()
 
     if (!storedAuth?.token) {
       return
     }
 
     const { user } = await fetchCurrentUser(storedAuth.token)
-    storeAuthSession({ token: storedAuth.token, user })
+    storeAuthSession(
+      { token: storedAuth.token, user },
+      { persistent: storedAuthLocation !== 'session' }
+    )
     setCurrentUser(user)
   }
 
   function updateCurrentUser(nextUser) {
     const storedAuth = getStoredAuthSession()
+    const storedAuthLocation = getStoredAuthSessionStorage()
 
     if (!storedAuth?.token || !nextUser) {
       return
     }
 
-    storeAuthSession({ token: storedAuth.token, user: nextUser })
+    storeAuthSession(
+      { token: storedAuth.token, user: nextUser },
+      { persistent: storedAuthLocation !== 'session' }
+    )
     setCurrentUser(nextUser)
   }
 
