@@ -12,6 +12,10 @@ export async function getGroupById(groupId) {
   return Group.findById(groupId);
 }
 
+export async function getGroupsByMemberId(userId) {
+  return Group.find({ members: userId }).sort({ createdAt: -1 }).lean();
+}
+
 export async function updateGroupById(groupId, updateData) {
   return Group.findByIdAndUpdate(groupId, updateData, {new: true, runValidators: true, });
 }
