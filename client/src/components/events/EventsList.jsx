@@ -3,10 +3,17 @@ import CardDisplay from '../ui/CardDisplay';
 import { getEvents, searchEvents } from '../../lib/eventsApi';
 import './css/EventsList.css';
 
-function EventsList({ searchTerm, onOpenEvent }) {
+function EventsList({ searchTerm, onOpenEvent, onTagsLoaded = () => {}, selectedTags = [] }) {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  const filteredEvents = selectedTags.length === 0
+    ? events
+    : events.filter((event) => {
+      const eventTags = Array.isArray(event.tags) ? event.tags : [];
+      return selectedTags.every((tag) => eventTags.includes(tag));
+    });
 
   useEffect(() => {
     const loadEvents = async () => {
@@ -15,6 +22,11 @@ function EventsList({ searchTerm, onOpenEvent }) {
 
         const term = searchTerm.trim();
         const data = term ? await searchEvents(term) : await getEvents();
+
+        const tags = [...new Set(
+          data.flatMap((event) => Array.isArray(event.tags) ? event.tags : [])
+        )].sort();
+        onTagsLoaded(tags);
 
         setEvents(data);
         setError(null);
@@ -27,7 +39,7 @@ function EventsList({ searchTerm, onOpenEvent }) {
     };
 
     loadEvents();
-  }, [searchTerm]);
+  }, [searchTerm, onTagsLoaded]);
 
   if (loading) {
     return <div className="events-list-container">Loading events...</div>;
@@ -37,14 +49,14 @@ function EventsList({ searchTerm, onOpenEvent }) {
     return <div className="events-list-container error">Error: {error}</div>;
   }
 
-  if (events.length === 0) {
+  if (filteredEvents.length === 0) {
     return <div className="events-list-container">No results found</div>;
   }
 
   return (
     <div className="events-list-container">
       <div className="events-grid">
-        {events.map((event) => (
+        {filteredEvents.map((event) => (
           <CardDisplay
             key={event._id}
             eventId={event._id}

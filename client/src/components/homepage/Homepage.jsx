@@ -13,12 +13,18 @@ import './css/Homepage.css'
 
 export default function HomePage({ authModal = null }) {
   const [searchTerm, setSearchTerm] = useState('')
+  const [selectedTags, setSelectedTags] = useState([])
+  const [availableTags, setAvailableTags] = useState([])
   const [activeEventId, setActiveEventId] = useState(null)
   const [activeGroupId, setActiveGroupId] = useState(null)
   const navigate = useNavigate()
 
   const handleSearch = (term) => {
     setSearchTerm(term)
+  }
+
+  const handleTagsChange = (tags) => {
+    setSelectedTags(tags)
   }
 
   const handleOpenEvent = (eventId) => {
@@ -62,12 +68,22 @@ export default function HomePage({ authModal = null }) {
 
         <div className="home-layout">
           <aside className="home-sidebar">
-            <Sidebar onOpenGroup={handleOpenGroup} />
+            <Sidebar
+              onOpenGroup={handleOpenGroup}
+              availableTags={availableTags}
+              selectedTags={selectedTags}
+              onSelectedTagsChange={handleTagsChange}
+            />
           </aside>
 
           <main className="home-main">
             <SearchBar onSearch={handleSearch} />
-            <EventsList searchTerm={searchTerm} onOpenEvent={handleOpenEvent} />
+            <EventsList
+              searchTerm={searchTerm}
+              onOpenEvent={handleOpenEvent}
+              onTagsLoaded={setAvailableTags}
+              selectedTags={selectedTags}
+            />
           </main>
         </div>
         

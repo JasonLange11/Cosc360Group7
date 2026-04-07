@@ -55,3 +55,44 @@
   text-decoration: solid underline;
   cursor: pointer;
 }
+
+.sidebar-tag-dropdown {
+  width: 100%;
+}
+
+.sidebar-tag-dropdown summary {
+  width: 100%;
+  box-sizing: border-box;
+  background-color: #f3f3f3;
+  border: 1px solid #333333;
+  border-radius: 6px;
+  font-size: 1rem;
+  padding: 0.3rem;
+  cursor: pointer;
+}
+
+.sidebar-tag-options {
+  margin-top: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  max-height: 10rem;
+  overflow-y: auto;
+}
+
+.sidebar-tag-option {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 1rem;
+}
+
+.sidebar-tag-reset {
+  margin-top: 0.6rem;
+  border: 1px solid #333333;
+  border-radius: 6px;
+  background-color: #f3f3f3;
+  font-size: 0.95rem;
+  padding: 0.25rem 0.5rem;
+  cursor: pointer;
+}
