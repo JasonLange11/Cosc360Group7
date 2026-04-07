@@ -1,6 +1,6 @@
 import { Comment } from "./comments.model";
 
-export async function createComment(commentData) {
+export async function createGroupComment(commentData) {
   return Comment.create(commentData);
 }
 
@@ -14,10 +14,6 @@ export async function getCommentsByGroup(groupId) {
 
 export async function getCommentById(commentId) {
   return Comment.findById(commentId);
-}
-
-export async function updateCommentById(commentId, updateData) {
-  return Comment.findByIdAndUpdate(commentId, updateData, {new: true, runValidators: true, });
 }
 
 export async function deleteCommentById(commentId) {
