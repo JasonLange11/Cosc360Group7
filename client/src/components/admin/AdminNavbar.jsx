@@ -40,6 +40,17 @@ export default function AdminNavbar({ activeTab, onTabChange }){
             <section className="a-navbtn">
                 <button
                     type="button"
+                    className={activeTab === 'groups' ? 'is-active' : ''}
+                    onClick={() => onTabChange('groups')}
+                >
+                    <i className="fa-solid fa-users"></i>
+                    Moderate Groups
+                </button>
+            </section>
+
+            <section className="a-navbtn">
+                <button
+                    type="button"
                     className={activeTab === 'reviews' ? 'is-active' : ''}
                     onClick={() => onTabChange('reviews')}
                 >
