@@ -17,6 +17,22 @@
     padding: 0.5rem;
 }
 
+.a-side-filters {
+    margin-top: 1rem;
+    padding-top: 0.85rem;
+    border-top: 1px solid #b7adc9;
+}
+
+.a-side-filters-title {
+    margin: 0;
+    font-size: 1rem;
+    color: #2f2942;
+}
+
+.a-side-filters .filter-bar {
+    margin-bottom: 0;
+}
+
 .a-content {
     background: #ece9f3;
     border: 1px solid #75708a;

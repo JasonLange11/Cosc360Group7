@@ -1,8 +1,8 @@
 import { useMemo, useState } from 'react'
 import SearchBar from '../search/SearchBar'
-import './css/PendingReviews.css'
+import './css/FlaggedContent.css'
 
-export default function PendingReviews({ compact = false, onMore, items = [] }) {
+export default function FlaggedContent({ compact = false, onMore, items = [] }) {
 	const [searchTerm, setSearchTerm] = useState('')
 
 	const filteredItems = useMemo(() => {
@@ -19,7 +19,7 @@ export default function PendingReviews({ compact = false, onMore, items = [] }) 
 	return (
 		<section className={`a-panel ${compact ? 'a-compact' : 'a-full'}`}>
 			<header className="a-head">
-				<h3>Pending Reviews</h3>
+				<h3>Flagged Content</h3>
 				{compact && onMore ? (
 					<button type="button" className="a-link" onClick={onMore}>
 						More &gt;
@@ -30,17 +30,17 @@ export default function PendingReviews({ compact = false, onMore, items = [] }) 
 			<SearchBar
 				onSearch={setSearchTerm}
 				title=""
-				placeholder="Search reviews"
+				placeholder="Search content"
 				buttonLabel="Search"
 				variant="compact"
 				clearOnSearch={false}
 				initialValue={searchTerm}
-				inputAriaLabel="Search pending reviews"
+				inputAriaLabel="Search flagged content"
 			/>
 
 			<div className="a-list">
 				{visibleItems.length === 0 ? (
-					<p className="a-empty">No pending reviews found.</p>
+					<p className="a-empty">No flagged content found.</p>
 				) : (
 					visibleItems.map((review) => (
 						<article className="a-row" key={review.id}>

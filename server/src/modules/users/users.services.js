@@ -49,6 +49,10 @@ export async function removeUser(requestUser, targetUserId) {
 
   const isSelfDelete = requestUser.id?.toString() === targetUserId.toString();
 
+  if (isSelfDelete && requestUser.isAdmin) {
+    throw new Error("Admins cannot delete themselves");
+  }
+
   if (isSelfDelete) {
     await deleteUserById(targetUserId);
     return;

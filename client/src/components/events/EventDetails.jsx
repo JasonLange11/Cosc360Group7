@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import '@fortawesome/fontawesome-free/css/all.min.css'
 import { attendEvent, getEventById, unattendEvent } from '../../lib/eventsApi'
+import { isEventExpired } from '../../lib/eventDates'
 import { useAuth } from '../../context/AuthContext.jsx'
 import './css/EventDetails.css'
 
@@ -43,20 +44,6 @@ function formatEventTime(timeString) {
     }).toLowerCase()
 
     return `${twentyFourHour} (${twelveHour})`
-}
-
-function isEventExpired(eventDate) {
-    if (!eventDate) {
-        return false
-    }
-
-    const today = new Date()
-    today.setHours(0, 0, 0, 0)
-
-    const eventDay = new Date(eventDate)
-    eventDay.setHours(0, 0, 0, 0)
-
-    return eventDay < today
 }
 
 export default function EventDetails({

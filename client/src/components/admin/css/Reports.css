@@ -1,0 +1,128 @@
+.r-subtitle {
+	margin: 0.25rem 0 0;
+	color: #615a77;
+	font-size: 0.92rem;
+}
+
+.r-year-picker {
+	display: flex;
+	flex-direction: column;
+	gap: 0.35rem;
+	color: #2f2942;
+	font-size: 0.9rem;
+}
+
+.r-year-picker select {
+	border: 1px solid #8d85a5;
+	background: #fff;
+	padding: 0.45rem 0.55rem;
+	font: inherit;
+	color: #2f2942;
+}
+
+.r-summary-grid {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 0.75rem;
+	margin: 1rem 0;
+}
+
+.r-summary-card {
+	border: 1px solid #8d85a5;
+	background: #fff;
+	padding: 0.85rem;
+}
+
+.r-summary-label {
+	display: flex;
+	align-items: center;
+	gap: 0.45rem;
+	margin: 0;
+	font-size: 0.92rem;
+	color: #534c68;
+	font-weight: 600;
+}
+
+.r-summary-value {
+	display: block;
+	margin-top: 0.45rem;
+	font-size: 2rem;
+	color: #2f2942;
+}
+
+.r-summary-meta {
+	margin: 0.35rem 0 0;
+	color: #615a77;
+	font-size: 0.9rem;
+}
+
+.r-card-attendance {
+	background: #eef8f2;
+	border-color: #73a17f;
+}
+
+.r-card-events {
+	background: #eef4fb;
+	border-color: #708db0;
+}
+
+.r-card-users {
+	background: #fbf0ea;
+	border-color: #b58c70;
+}
+
+.r-chart {
+	display: grid;
+	gap: 0.8rem;
+}
+
+.r-chart-row {
+	display: grid;
+	gap: 0.35rem;
+}
+
+.r-chart-head {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 1rem;
+	font-size: 0.92rem;
+	color: #2f2942;
+}
+
+.r-month-label,
+.r-month-value {
+	font-weight: 600;
+}
+
+.r-bar-track {
+	height: 16px;
+	background: #ddd7ea;
+	border: 1px solid #c7bfd9;
+	overflow: hidden;
+}
+
+.r-bar-fill {
+	height: 100%;
+	min-width: 0;
+	background: #6f6690;
+	transition: width 0.25s ease;
+}
+
+.r-bar-fill.r-card-attendance {
+	background: #5a8a67;
+}
+
+.r-bar-fill.r-card-events {
+	background: #5d7ea8;
+}
+
+.r-bar-fill.r-card-users {
+	background: #b06e4f;
+}
+
+@media (max-width: 900px) {
+	.r-summary-grid {
+		grid-template-columns: 1fr;
+	}
+}

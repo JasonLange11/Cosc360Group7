@@ -1,10 +1,9 @@
 import { useEffect, useMemo, useState } from 'react'
 import SearchBar from '../search/SearchBar'
 import { getUsers, deleteUser } from '../../lib/usersApi'
-import React from 'react'
 import './css/ModerateUsers.css'
 
-export default function ModerateUsers({ compact = false, onMore }){
+export default function ModerateUsers({ compact = false, onMore, selectedFilter = 'users' }){
     const [users, setUsers] = useState([])
     const [searchTerm, setSearchTerm] = useState('')
     const [loading, setLoading] = useState(true)
@@ -16,6 +15,7 @@ export default function ModerateUsers({ compact = false, onMore }){
             try {
                 const usersData = await getUsers()
                 setUsers(usersData)
+
             } catch (error) {
                 console.log('Failed to fetch users', error)
             } finally {
@@ -27,19 +27,31 @@ export default function ModerateUsers({ compact = false, onMore }){
     }, [])
 
     const filteredUsers = useMemo(() => {
+		const usersByRole = users.filter((user) => {
+			if (selectedFilter === 'users') {
+				return !user.isAdmin
+			}
+
+			if (selectedFilter === 'admins') {
+				return Boolean(user.isAdmin)
+			}
+
+			return true
+		})
+
         if (!searchTerm.trim()) {
-            return users
+            return usersByRole
         }
 
         const term = searchTerm.toLowerCase()
 
-        return users.filter((user) => {
+        return usersByRole.filter((user) => {
             const name = String(user.name || '').toLowerCase()
             const email = String(user.email || '').toLowerCase()
 
             return name.includes(term) || email.includes(term)
         })
-    }, [users, searchTerm])
+    }, [users, searchTerm, selectedFilter])
 
     const visibleUsers = compact ? filteredUsers.slice(0, 6) : filteredUsers
 
