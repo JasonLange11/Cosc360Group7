@@ -195,7 +195,7 @@ export async function joinGroup(user, groupId) {
   return attachOrganizerName(group);
 }
 
-export async function unattendEvent(user, groupId) {
+export async function leaveGroup(user, groupId) {
   if (!user) {
     throw new Error("Authentication required");
   }
