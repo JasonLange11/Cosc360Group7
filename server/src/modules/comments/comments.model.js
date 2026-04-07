@@ -2,20 +2,27 @@ import mongoose from "mongoose";
 
 const commentSchema = new mongoose.Schema(
   {
-    groupId: {
+    parentType: {
+      type: String,
+      enum: ["group", "event"],
+      required: true,
+      index: true,
+    },
+    parentId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Group",
       required: true,
       index: true,
     },
     userId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
-      required: true,
+      default: null,
+      index: true,
     },
     username: {
       type: String,
       required: true,
+      trim: true,
     },
     content: {
       type: String,
@@ -26,5 +33,7 @@ const commentSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
+commentSchema.index({ parentType: 1, parentId: 1, createdAt: -1 });
 
 export const Comment = mongoose.model("Comment", commentSchema);

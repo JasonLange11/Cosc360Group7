@@ -1,14 +1,19 @@
 import { 
     fetchComments,
     fetchUserComments,
-    createComment,
+  createComment as createCommentService,
+  fetchCommentById,
     removeComment
-} from "./comments.services";
+} from "./comments.services.js";
 
 export async function getComments(req, res, next) {
   try {
-    const { groupId } = req.params.groupId;
-    const comments = await getCommentsByGroupId(groupId);
+    const comments = await fetchComments({
+      parentType: req.query.parentType,
+      parentId: req.query.parentId,
+      page: req.query.page,
+      limit: req.query.limit,
+    });
     res.status(200).json(comments);
   } catch (error) {
     next(error);
@@ -35,7 +40,7 @@ export async function getComment(req, res, next) {
 
 export async function createComment(req, res, next) {
   try {
-    const comment = await createComment(req.body);
+    const comment = await createCommentService(req.user, req.body);
     res.status(201).json(comment);
   } catch (error) {
     next(error);

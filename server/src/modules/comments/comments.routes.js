@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { authenticateUser } from "../../middleware/auth.js";
+import { authenticateUser, optionalAuthenticateUser } from "../../middleware/auth.js";
 import {
 	createComment,
 	deleteComment,
@@ -10,10 +10,11 @@ import {
 
 const router = Router();
 
-router.get("/:groupId", getComments);
+router.get("/", getComments);
 router.get("/mine", authenticateUser, getMyComments);
+router.get("/:commentId", getComment);
 
-router.post("/", authenticateUser, createComment);
+router.post("/", optionalAuthenticateUser, createComment);
 router.delete("/:commentId", authenticateUser, deleteComment);
 
 export default router;
