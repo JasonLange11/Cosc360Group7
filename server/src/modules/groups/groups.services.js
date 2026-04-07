@@ -1,4 +1,4 @@
-import { createGroup, getAllGroups, getGroupById, getGroupsByUserId, updateGroupById, deleteGroupById } from "./groups.respository.js";
+import { createGroup, getAllGroups, getGroupById, getGroupsByUserId, updateGroupById, deleteGroupById, getGroupsByMemberId } from "./groups.respository.js";
 import { findUserById } from "../users/users.repository.js";
 
 function toPlainGroup(group) {
@@ -163,4 +163,51 @@ export async function removeGroupTag(user, groupId, tag) {
   const cleanedTag = cleanTag(tag);
   const updatedGroup = await removeTagFromGroup(groupId, cleanedTag);
   return toPlainGroup(updatedGroup);
+}
+
+export async function fetchGroupMembership(user) {
+  if (!user) {
+    throw new Error("Authentication required");
+  }
+
+  const groups = await getGroupsByMemberId(user.id);
+  return Promise.all(groups.map((group) => attachOrganizerName(group)));
+}
+
+export async function joinGroup(user, groupId) {
+  if (!user) {
+    throw new Error("Authentication required");
+  }
+
+  const group = await getGroupById(groupId);
+
+  if (!group) {
+    throw new Error("Group not found");
+  }
+
+  const isAlreadyMember = group.members.some((memberId) => memberId.toString() === user.id.toString());
+
+  if (!isAlreadyMember) {
+    group.members.push(user.id);
+    await group.save();
+  }
+
+  return attachOrganizerName(group);
+}
+
+export async function leaveGroup(user, groupId) {
+  if (!user) {
+    throw new Error("Authentication required");
+  }
+
+  const group = await getGroupById(groupId);
+
+  if (!group) {
+    throw new Error("Group not found");
+  }
+
+  group.members = group.members.filter((memberId) => memberId.toString() !== user.id.toString());
+  await group.save();
+
+  return attachOrganizerName(group);
 }

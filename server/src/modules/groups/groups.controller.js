@@ -8,6 +8,9 @@ import {
   removeGroup,
   addGroupTag,
   removeGroupTag,
+  joinGroup,
+  leaveGroup,
+  fetchGroupMembership
 } from "./groups.services.js";
 
 export async function getGroups(req, res, next) {
@@ -87,6 +90,33 @@ export async function removeTag(req, res, next) {
   try {
     const group = await removeGroupTag(req.user, req.params.groupId, req.body.tag);
     res.status(200).json(group);
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function joinGroupController(req, res, next) {
+  try {
+    const group = await joinGroup(req.user, req.params.groupId);
+    res.status(200).json(group);
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function leaveGroupController(req, res, next) {
+  try {
+    const group = await leaveGroup(req.user, req.params.groupId);
+    res.status(200).json(group);
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function getGroupMembership(req, res, next) {
+  try {
+    const groups = await fetchGroupMembership(req.user);
+    res.status(200).json(groups);
   } catch (error) {
     next(error);
   }

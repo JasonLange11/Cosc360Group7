@@ -56,7 +56,7 @@ function Navbar(){
                         {!currentUser.isAdmin ? (
                         <li>
                             <i className="fa-solid fa-calendar-plus"></i>
-                            Create
+                            Create Event
                         </li>
                         ) : null}      
                         {!currentUser.isAdmin ? (
@@ -64,6 +64,14 @@ function Navbar(){
                                 <NavLink to="/groups">
                                     <i className="fa-solid fa-users"></i>
                                     Group
+                                </NavLink>
+                            </li>
+                        ) : null}   
+                        {!currentUser.isAdmin ? (
+                            <li>
+                                <NavLink to="/groups/new">
+                                    <i className="fa-solid fa-users"></i>
+                                    Create Group
                                 </NavLink>
                             </li>
                         ) : null}   
