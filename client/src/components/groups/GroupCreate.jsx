@@ -65,7 +65,9 @@ export default function GroupsPage() {
         name: groupName,
         description: description,
         tags: tags,
-        location: location
+        location: location,
+        bannerImage: "https://images.unsplash.com/photo-1495446815901-a7297e633e8d?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+        //TODO: Implement image file upload
       }
       await createGroup(groupData)
       setSuccess(true)
