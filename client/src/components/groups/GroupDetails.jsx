@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import '@fortawesome/fontawesome-free/css/all.min.css'
 import { getGroupById } from '../../lib/groupsApi'
+import CommentSection from '../comments/CommentSection'
 import './css/GroupDetails.css'
 
 export default function GroupDetails({
@@ -141,6 +142,8 @@ export default function GroupDetails({
                             {actionLabel}
                         </button>
                         {actionError ? <p className="group-details-action-error">{actionError}</p> : null}
+
+                        <CommentSection parentType="group" parentId={group._id} pageSize={5} />
                     </div>
                 </section>
             </main>

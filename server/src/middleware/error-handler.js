@@ -4,6 +4,8 @@ const ERROR_STATUS_MAP = {
 	'Email and password are required': 400,
 	'Tag is required': 400,
 	'Tag cannot be empty': 400,
+	'Parent type and parent id are required': 400,
+	'Content is required': 400,
 	'At least one profile field is required': 400,
 	'Old password is required to set a new password': 400,
 	'Old password is incorrect': 400,
@@ -16,6 +18,7 @@ const ERROR_STATUS_MAP = {
 	'Cannot delete admin user': 403,
 	'Admins can not create events': 403,
 	'Event not found': 404,
+	'Comment not found': 404,
 	'User not found': 404,
 };
 
