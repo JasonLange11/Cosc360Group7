@@ -25,3 +25,23 @@ export async function updateMyProfile(profileData) {
     body: JSON.stringify(profileData),
   });
 }
+
+export async function getGroupMembership() {
+  return apiRequest('/api/groups/membership', {
+    headers: getAuthHeader(),
+  });
+}
+
+export async function joinGroup(groupId) {
+  return apiRequest(`/api/groups/${groupId}/join`, {
+    method: 'POST',
+    headers: getAuthHeader(),
+  });
+}
+
+export async function leaveGroup(groupId) {
+  return apiRequest(`/api/groups/${groupId}/leave`, {
+    method: 'DELETE',
+    headers: getAuthHeader(),
+  });
+}
