@@ -1,4 +1,4 @@
-import { createGroup, getAllGroups, getGroupById, getGroupsByUserId, updateGroupById, deleteGroupById, fetchGroupMembership } from "./groups.respository.js";
+import { createGroup, getAllGroups, getGroupById, getGroupsByUserId, updateGroupById, deleteGroupById, getGroupsByMemberId } from "./groups.respository.js";
 import { findUserById } from "../users/users.repository.js";
 
 function toPlainGroup(group) {
@@ -170,8 +170,8 @@ export async function fetchGroupMembership(user) {
     throw new Error("Authentication required");
   }
 
-  const events = await fetchGroupMembership(user.id);
-  return Promise.all(events.map((event) => attachOrganizerName(event)));
+  const groups = await getGroupsByMemberId(user.id);
+  return Promise.all(groups.map((group) => attachOrganizerName(group)));
 }
 
 export async function joinGroup(user, groupId) {

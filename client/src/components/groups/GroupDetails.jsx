@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
+import { useAuth } from '../../context/AuthContext'
 import '@fortawesome/fontawesome-free/css/all.min.css'
-import { getGroupById } from '../../lib/groupsApi'
+import { getGroupById, joinGroup, leaveGroup } from '../../lib/groupsApi'
 import './css/GroupDetails.css'
 
 export default function GroupDetails({
@@ -8,13 +9,17 @@ export default function GroupDetails({
     onClose,
     actionLabel = 'Sign up for this group',
     onAction,
+    onMembershipChange,
     actionClassName = 'group-details-button',
     actionDisabled = false,
     actionError = '',
 }) {
+    const { currentUser } = useAuth()
     const [group, setGroup] = useState(null)
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(null)
+    const [actionLoading, setActionLoading] = useState(false)
+    const [internalActionError, setInternalActionError] = useState('')
 
     useEffect(() => {
         function handleEscape(groupKey) {
@@ -84,12 +89,40 @@ export default function GroupDetails({
         )
     }
     const groupTags = Array.isArray(group.tags) ? group.tags : [];
+    const isMember = Boolean(
+        currentUser && Array.isArray(group.members) && group.members.some((memberId) => memberId.toString() === currentUser.id.toString())
+    )
+    const defaultActionLabel = currentUser ? (isMember ? 'Leave group' : 'Join Group') : 'Login to register'
+    const resolvedActionLabel = onAction ? actionLabel : defaultActionLabel
+    const resolvedActionDisabled = actionDisabled || (!onAction && !isMember)
 
     const handleActionClick = async () => {
-        if (typeof onAction === 'function') {
-            await onAction(group)
+            setInternalActionError('')
+    
+            if (typeof onAction === 'function') {
+                await onAction(group)
+                return
+            }
+    
+            if (!currentUser) {
+                setInternalActionError('You must be logged in to register for an event.')
+                return
+            }
+    
+            try {
+                setActionLoading(true)
+                const updatedGroup = isMember ? await leaveGroup(group._id) : await joinGroup(group._id)
+                setGroup(updatedGroup)
+    
+                if (typeof onMembershipChange === 'function') {
+                    onMembershipChange(updatedGroup)
+                }
+            } catch (err) {
+                setInternalActionError(err.message || 'Failed to update membership.')
+            } finally {
+                setActionLoading(false)
+            }
         }
-    }
 
     return (
         <div className="group-details-overlay" onClick={onClose}>
@@ -136,11 +169,12 @@ export default function GroupDetails({
                             type="button"
                             className={actionClassName}
                             onClick={handleActionClick}
-                            disabled={actionDisabled}
+                            disabled={resolvedActionDisabled}
                         >
-                            {actionLabel}
+                            {actionLoading ? 'Saving...' : resolvedActionLabel}
                         </button>
                         {actionError ? <p className="group-details-action-error">{actionError}</p> : null}
+                        {internalActionError ? <p className="group-details-action-error">{internalActionError}</p> : null}
                     </div>
                 </section>
             </main>

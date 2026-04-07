@@ -87,6 +87,8 @@ async function seedGroups(groupData, userIdByEmail) {
 			);
 		}
 
+		const members = (group.memberEmails.map((member) => userIdByEmail.get(member)))
+
 		return {
 			userId,
 			bannerImage: group.bannerImage,
@@ -94,7 +96,7 @@ async function seedGroups(groupData, userIdByEmail) {
 			location: group.location,
 			description: group.description,
 			tags: Array.isArray(group.tags) ? group.tags : [],
-			members: Array.isArray(group.members) ? group.members : [],
+			members: Array.isArray(members) ? members : [],
 		};
 	});
 
