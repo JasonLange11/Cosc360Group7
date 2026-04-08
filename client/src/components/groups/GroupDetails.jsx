@@ -93,9 +93,10 @@ export default function GroupDetails({
     const isMember = Boolean(
         currentUser && Array.isArray(group.members) && group.members.some((memberId) => memberId.toString() === currentUser.id.toString())
     )
-    const defaultActionLabel = currentUser ? (isMember ? 'Leave group' : 'Join Group') : 'Login to join'
+    const adminCannotJoin = Boolean(currentUser?.isAdmin && !isMember)
+    const defaultActionLabel = currentUser ? (isMember ? 'Leave group' : (adminCannotJoin ? 'Admins cannot join groups' : 'Join Group')) : 'Login to join'
     const resolvedActionLabel = onAction ? actionLabel : defaultActionLabel
-    const resolvedActionDisabled = actionDisabled || actionLoading
+    const resolvedActionDisabled = actionDisabled || actionLoading || (!onAction && adminCannotJoin)
 
     const handleActionClick = async () => {
             setInternalActionError('')
@@ -107,6 +108,11 @@ export default function GroupDetails({
     
             if (!currentUser) {
                 setInternalActionError('You must be logged in to join a group.')
+                return
+            }
+
+            if (currentUser.isAdmin && !isMember) {
+                setInternalActionError('Admins cannot join groups.')
                 return
             }
     
