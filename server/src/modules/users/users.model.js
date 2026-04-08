@@ -6,6 +6,7 @@ const userSchema = new mongoose.Schema(
     name: { type: String, required: true, trim: true },
     password: { type: String, required: true },
     isAdmin: { type: Boolean, default: false },
+    isDisabled: { type: Boolean, default: false },
     bio: { type: String, trim: true, default: "" },
     location: { type: String, trim: true, default: "" },
     favoriteTags: { type: [String], default: [] },

@@ -19,10 +19,19 @@ function toSafeUser(user){
         favoriteTags: user.favoriteTags || [],
         profileImageUrl: user.profileImageUrl || '',
         isAdmin: Boolean(user.isAdmin),
+        isDisabled: Boolean(user.isDisabled),
+    }
+}
+
+function ensureUserIsActive(user) {
+    if (user?.isDisabled) {
+        throw new Error('Account is disabled');
     }
 }
 
 function createAuthResponse(user) {
+    ensureUserIsActive(user);
+
     const safeUser = toSafeUser(user);
     const token = jwt.sign(
         {
@@ -75,6 +84,8 @@ export async function loginUser({email, password}){
         throw new Error('Invalid email or password');
     }
 
+    ensureUserIsActive(user);
+
     return createAuthResponse(user);
 }
 
@@ -87,8 +98,14 @@ export async function getCurrentUserFromToken(token) {
             throw new Error('Invalid or expired token');
         }
 
+        ensureUserIsActive(user);
+
         return toSafeUser(user);
-    } catch {
+    } catch (error) {
+        if (error?.message === 'Account is disabled') {
+            throw error;
+        }
+
         throw new Error('Invalid or expired token');
     }
 }
