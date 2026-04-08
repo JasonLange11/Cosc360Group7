@@ -66,6 +66,19 @@
     font-size: 0.78rem;
 }
 
+.a-user-status {
+    margin-top: 0.2rem;
+    font-weight: 600;
+}
+
+.a-user-status.is-active {
+    color: #2f7a44;
+}
+
+.a-user-status.is-disabled {
+    color: #b33a3a;
+}
+
 .a-icon {
     color: #60567f;
     font-size: 0.95rem;
@@ -102,6 +115,12 @@
 }
 
 .btn-danger:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
+
+.btn-secondary:disabled,
+.btn-success:disabled {
     opacity: 0.55;
     cursor: not-allowed;
 }
