@@ -65,6 +65,12 @@ function isEventExpired(eventDate) {
   return eventDay < today;
 }
 
+function ensureUserCanAttendEvents(user) {
+  if (user?.isAdmin) {
+    throw new Error("Admins cannot RSVP to events");
+  }
+}
+
 function toPlainEvent(event) {
   return typeof event.toObject === "function" ? event.toObject() : event;
 }
@@ -178,6 +184,8 @@ export async function attendEvent(user, eventId) {
   if (!user) {
     throw new Error("Authentication required");
   }
+
+  ensureUserCanAttendEvents(user);
 
   const event = await getEventById(eventId);
 

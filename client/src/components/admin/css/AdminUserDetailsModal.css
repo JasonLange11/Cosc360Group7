@@ -1,0 +1,149 @@
+.admin-user-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(34, 24, 58, 0.62);
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+  z-index: 1100;
+}
+
+.admin-user-modal {
+  width: min(640px, 100%);
+  max-height: 90vh;
+  overflow: auto;
+  background: #f7f4ff;
+  border: 1px solid #cabfe2;
+  border-radius: 0.9rem;
+  box-shadow: 0 24px 60px rgba(36, 22, 64, 0.28);
+  padding: 1.25rem;
+}
+
+.admin-user-modal-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: start;
+}
+
+.admin-user-modal-header h3,
+.admin-user-modal-header p {
+  margin: 0;
+}
+
+.admin-user-modal-header p {
+  color: #5d5872;
+  margin-top: 0.25rem;
+}
+
+.admin-user-close {
+  border: none;
+  background: transparent;
+  color: #4e4371;
+  font-size: 1.1rem;
+  cursor: pointer;
+}
+
+.admin-user-summary {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin: 1rem 0;
+}
+
+.admin-user-pill {
+  border-radius: 999px;
+  padding: 0.3rem 0.7rem;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.admin-user-pill.is-active {
+  background: #daf1df;
+  color: #1f6e2f;
+}
+
+.admin-user-pill.is-disabled {
+  background: #f8d9d9;
+  color: #9a1f2f;
+}
+
+.admin-user-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.admin-user-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-weight: 600;
+  color: #2f2942;
+}
+
+.admin-user-form input,
+.admin-user-form textarea {
+  border: 1px solid #7b69b3;
+  padding: 0.55rem;
+  border-radius: 0.45rem;
+  background: #ffffff;
+}
+
+.admin-user-preview {
+  width: 88px;
+  height: 88px;
+  object-fit: cover;
+  border-radius: 0.75rem;
+  border: 1px solid #cabfe2;
+}
+
+.admin-user-error {
+  color: #9a1f2f;
+  font-weight: 700;
+  margin: 0;
+}
+
+.admin-user-success {
+  color: #1f6e2f;
+  font-weight: 700;
+  margin: 0;
+}
+
+.admin-user-actions {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.admin-user-actions button {
+  border: 1px solid #5a4896;
+  background: #ece7f9;
+  padding: 0.65rem 0.95rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+}
+
+.admin-user-role-button.is-admin {
+  background: #fff0c4;
+  border-color: #d6b34b;
+}
+
+.admin-user-cancel {
+  background: #ffffff;
+}
+
+.admin-user-actions button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+@media (max-width: 640px) {
+  .admin-user-modal {
+    padding: 1rem;
+  }
+
+  .admin-user-actions {
+    flex-direction: column;
+  }
+}

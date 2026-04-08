@@ -133,13 +133,14 @@ export default function EventDetails({
         && event.attendees.some((attendeeId) => attendeeId.toString() === currentUser.id.toString())
     )
     const eventIsExpired = isEventExpired(event?.eventDate)
+    const adminCannotAttend = Boolean(currentUser?.isAdmin && !isAttending)
 
     const defaultActionLabel = currentUser
-        ? (isAttending ? 'Leave event' : (eventIsExpired ? 'Event has ended' : 'Register for this event'))
+        ? (isAttending ? 'Leave event' : (adminCannotAttend ? 'Admins cannot RSVP' : (eventIsExpired ? 'Event has ended' : 'Register for this event')))
         : 'Login to register'
 
     const resolvedActionLabel = onAction ? actionLabel : defaultActionLabel
-    const resolvedActionDisabled = actionDisabled || actionLoading || (!onAction && eventIsExpired && !isAttending)
+    const resolvedActionDisabled = actionDisabled || actionLoading || (!onAction && (adminCannotAttend || (eventIsExpired && !isAttending)))
 
     if (loading) {
         return (
@@ -209,6 +210,11 @@ export default function EventDetails({
 
         if (!currentUser) {
             setInternalActionError('You must be logged in to register for an event.')
+            return
+        }
+
+        if (currentUser.isAdmin && !isAttending) {
+            setInternalActionError('Admins cannot RSVP to events.')
             return
         }
 

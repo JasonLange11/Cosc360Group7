@@ -32,6 +32,12 @@ async function attachOrganizerName(group) {
   };
 }
 
+function ensureUserCanJoinGroups(user) {
+  if (user?.isAdmin) {
+    throw new Error("Admins cannot join groups");
+  }
+}
+
 export async function createUserGroup(user, groupData) {
   if (!user) {
     throw new Error("Authentication required");
@@ -178,6 +184,8 @@ export async function joinGroup(user, groupId) {
   if (!user) {
     throw new Error("Authentication required");
   }
+
+  ensureUserCanJoinGroups(user);
 
   const group = await getGroupById(groupId);
 

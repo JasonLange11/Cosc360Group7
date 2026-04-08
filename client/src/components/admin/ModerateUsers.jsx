@@ -1,14 +1,19 @@
 import { useEffect, useMemo, useState } from 'react'
 import SearchBar from '../search/SearchBar'
-import { getUsers, deleteUser } from '../../lib/usersApi'
+import { useAuth } from '../../context/AuthContext.jsx'
+import { getUsers, deleteUser, updateUserStatus } from '../../lib/usersApi'
+import AdminUserDetailsModal from './AdminUserDetailsModal.jsx'
 import './css/ModerateUsers.css'
 
 export default function ModerateUsers({ compact = false, onMore, selectedFilter = 'users' }){
+    const { currentUser } = useAuth()
     const [users, setUsers] = useState([])
     const [searchTerm, setSearchTerm] = useState('')
     const [loading, setLoading] = useState(true)
     const [deletingUserId, setDeletingUserId] = useState('')
+    const [updatingUserId, setUpdatingUserId] = useState('')
     const [removeError, setRemoveError] = useState('')
+    const [activeUser, setActiveUser] = useState(null)
 
     useEffect(() => {
         const fetchUsers = async () => {
@@ -57,6 +62,19 @@ export default function ModerateUsers({ compact = false, onMore, selectedFilter 
 
     const getUserId = (user) => user.id || user._id || ''
 
+    const handleUserUpdated = (updatedUser) => {
+        setUsers((currentUsers) => currentUsers.map((currentUser) => (
+            getUserId(currentUser) === getUserId(updatedUser) ? { ...currentUser, ...updatedUser } : currentUser
+        )))
+        setActiveUser((currentUser) => {
+            if (!currentUser || getUserId(currentUser) !== getUserId(updatedUser)) {
+                return currentUser
+            }
+
+            return { ...currentUser, ...updatedUser }
+        })
+    }
+
     const handleRemoveUser = async (userId) => {
         if (!userId) {
             return
@@ -73,6 +91,32 @@ export default function ModerateUsers({ compact = false, onMore, selectedFilter 
             } finally {
                 setDeletingUserId('')
             }
+        }
+    }
+
+    const handleToggleUserStatus = async (user) => {
+        const userId = getUserId(user)
+
+        if (!userId) {
+            return
+        }
+
+        const nextDisabledState = !Boolean(user.isDisabled)
+        const actionLabel = nextDisabledState ? 'disable' : 'activate'
+
+        if (!window.confirm(`Are you sure you want to ${actionLabel}: ${user.name}?`)) {
+            return
+        }
+
+        try {
+            setUpdatingUserId(userId)
+            setRemoveError('')
+            const updatedUser = await updateUserStatus(userId, nextDisabledState)
+                handleUserUpdated(updatedUser)
+        } catch (error) {
+            setRemoveError(error.message || 'Failed to update user status')
+        } finally {
+            setUpdatingUserId('')
         }
     }
 
@@ -114,16 +158,45 @@ export default function ModerateUsers({ compact = false, onMore, selectedFilter 
                                 <div>
                                     <strong>{user.name || 'Unnamed User'}</strong>
                                     <p>{user.email || 'No email provided'}</p>
+                                    <p className={`a-user-status ${user.isDisabled ? 'is-disabled' : 'is-active'}`}>
+                                        {user.isDisabled ? 'Disabled' : 'Active'}
+                                    </p>
                                 </div>
                             </div>
 
                             <div className="a-actions">
-                                <button type="button" className="btn-secondary" disabled>Details</button>
+                                <button
+                                    type="button"
+                                    className="btn-secondary"
+                                    onClick={() => setActiveUser(user)}
+                                    disabled={deletingUserId === getUserId(user) || updatingUserId === getUserId(user)}
+                                >
+                                    Details
+                                </button>
+                                <button
+                                    type="button"
+                                    className={user.isDisabled ? 'btn-success' : 'btn-secondary'}
+                                    onClick={() => handleToggleUserStatus(user)}
+                                    disabled={
+                                        updatingUserId === getUserId(user)
+                                        || deletingUserId === getUserId(user)
+                                        || user.isAdmin
+                                    }
+                                >
+                                    {updatingUserId === getUserId(user)
+                                        ? 'Saving...'
+                                        : (user.isDisabled ? 'Activate' : 'Disable')}
+                                </button>
                                 <button
                                     type="button"
                                     className="btn-danger"
                                     onClick={() => handleRemoveUser(getUserId(user))}
-                                    disabled={deletingUserId === getUserId(user)}
+                                    disabled={
+                                        deletingUserId === getUserId(user)
+                                        || updatingUserId === getUserId(user)
+                                        || user.isAdmin
+                                        || String(currentUser?.id || '') === String(getUserId(user))
+                                    }
                                 >
                                     {deletingUserId === getUserId(user) ? 'Removing...' : 'Remove'}
                                 </button>
@@ -132,6 +205,14 @@ export default function ModerateUsers({ compact = false, onMore, selectedFilter 
                     ))
                 )}
             </div>
+
+            {activeUser ? (
+                <AdminUserDetailsModal
+                    user={activeUser}
+                    onClose={() => setActiveUser(null)}
+                    onUserUpdated={handleUserUpdated}
+                />
+            ) : null}
         </section>
     )
 }

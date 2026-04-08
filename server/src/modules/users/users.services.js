@@ -13,6 +13,7 @@ function toSafeProfile(user) {
     favoriteTags: user.favoriteTags || [],
     profileImageUrl: user.profileImageUrl || "",
     isAdmin: Boolean(user.isAdmin),
+    isDisabled: Boolean(user.isDisabled),
   };
 }
 
@@ -26,6 +27,16 @@ function parseFavoriteTags(value) {
   }
 
   return [];
+}
+
+function ensureAdminRequest(requestUser) {
+  if (!requestUser) {
+    throw new Error("Authentication required");
+  }
+
+  if (!requestUser.isAdmin) {
+    throw new Error("Admin access required");
+  }
 }
 
 export async function fetchUsers() {
@@ -144,5 +155,83 @@ export async function updateMyProfile(user, updateData = {}) {
   }
 
   const updatedUser = await updateUserById(user.id, nextData);
+  return toSafeProfile(updatedUser);
+}
+
+export async function setUserDisabledStatus(requestUser, targetUserId, isDisabled) {
+  ensureAdminRequest(requestUser);
+
+  const existingUser = await findUserById(targetUserId);
+
+  if (!existingUser) {
+    throw new Error("User not found");
+  }
+
+  if (existingUser.isAdmin) {
+    throw new Error("Cannot disable admin user");
+  }
+
+  const updatedUser = await updateUserById(targetUserId, {
+    isDisabled: Boolean(isDisabled),
+  });
+
+  return toSafeProfile(updatedUser);
+}
+
+export async function setUserAdminStatus(requestUser, targetUserId, isAdmin) {
+  ensureAdminRequest(requestUser);
+
+  const existingUser = await findUserById(targetUserId);
+
+  if (!existingUser) {
+    throw new Error("User not found");
+  }
+
+  const nextAdminState = Boolean(isAdmin);
+  const isSelfUpdate = requestUser.id?.toString() === targetUserId.toString();
+
+  if (isSelfUpdate && !nextAdminState) {
+    throw new Error("Admins cannot remove their own admin access");
+  }
+
+  const updatedUser = await updateUserById(targetUserId, {
+    isAdmin: nextAdminState,
+  });
+
+  return toSafeProfile(updatedUser);
+}
+
+export async function updateUserProfileAsAdmin(requestUser, targetUserId, updateData = {}) {
+  ensureAdminRequest(requestUser);
+
+  const existingUser = await findUserById(targetUserId);
+
+  if (!existingUser) {
+    throw new Error("User not found");
+  }
+
+  const hasNameUpdate = typeof updateData.name === "string" && updateData.name.trim().length > 0;
+  const hasBioUpdate = typeof updateData.bio === "string";
+  const hasLocationUpdate = typeof updateData.location === "string";
+  const hasFavoriteTagsUpdate = updateData.favoriteTags !== undefined;
+
+  if (!hasNameUpdate && !hasBioUpdate && !hasLocationUpdate && !hasFavoriteTagsUpdate) {
+    throw new Error("At least one profile field is required");
+  }
+
+  const nextData = {
+    bio: updateData.bio ?? existingUser.bio,
+    location: updateData.location ?? existingUser.location,
+    favoriteTags:
+      updateData.favoriteTags === undefined
+        ? existingUser.favoriteTags || []
+        : parseFavoriteTags(updateData.favoriteTags),
+  };
+
+  if (hasNameUpdate) {
+    nextData.name = updateData.name.trim();
+  }
+
+  const updatedUser = await updateUserById(targetUserId, nextData);
   return toSafeProfile(updatedUser);
 }
