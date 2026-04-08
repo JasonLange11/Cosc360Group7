@@ -7,6 +7,7 @@ import authRouter from "./modules/auth/auth.routes.js";
 import eventsRouter from "./modules/events/events.routes.js";
 import groupsRouter from "./modules/groups/groups.routes.js"
 import commentsRouter from "./modules/comments/comments.routes.js"
+import uploadsRouter from "./modules/uploads/uploads.routes.js";
 import { errorHandler } from "./middleware/error-handler.js";
 
 const app = express();
@@ -24,6 +25,7 @@ app.use("/api/auth", authRouter)
 app.use("/api/events", eventsRouter)
 app.use("/api/groups", groupsRouter)
 app.use("/api/comments", commentsRouter);
+app.use("/api/uploads", uploadsRouter);
 app.use(errorHandler);
 
 

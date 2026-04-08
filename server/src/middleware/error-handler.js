@@ -6,6 +6,10 @@ const ERROR_STATUS_MAP = {
 	'Tag cannot be empty': 400,
 	'Parent type and parent id are required': 400,
 	'Content is required': 400,
+	'Image file is required': 400,
+	'Only image uploads are allowed': 400,
+	'Image must be 5MB or smaller': 400,
+	'Failed to upload image': 400,
 	'At least one profile field is required': 400,
 	'Old password is required to set a new password': 400,
 	'Old password is incorrect': 400,
@@ -19,6 +23,7 @@ const ERROR_STATUS_MAP = {
 	'Admins can not create events': 403,
 	'Event not found': 404,
 	'Comment not found': 404,
+	'Upload not found': 404,
 	'User not found': 404,
 };
 

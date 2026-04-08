@@ -1,9 +1,10 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import Header from '../ui/Header.jsx'
 import Footer from '../ui/Footer.jsx'
 import { getMyProfile, updateMyProfile } from '../../lib/usersApi.js'
 import { useAuth } from '../../context/AuthContext.jsx'
+import { getMaxUploadSizeBytes, uploadProfileImage } from '../../lib/uploadsApi.js'
 import './css/EditProfilePage.css'
 
 export default function EditProfilePage() {
@@ -13,6 +14,11 @@ export default function EditProfilePage() {
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
+  const [uploadingImage, setUploadingImage] = useState(false)
+  const [uploadProgress, setUploadProgress] = useState(0)
+  const [uploadError, setUploadError] = useState('')
+  const [isDragActive, setIsDragActive] = useState(false)
+  const imageInputRef = useRef(null)
   const [form, setForm] = useState({
     name: '',
     bio: '',
@@ -48,6 +54,62 @@ export default function EditProfilePage() {
 
   function updateField(field, value) {
     setForm((previous) => ({ ...previous, [field]: value }))
+  }
+
+  async function handleImageUpload(file) {
+    if (!file) {
+      return
+    }
+
+    try {
+      setUploadError('')
+      setSuccess('')
+      setUploadingImage(true)
+      setUploadProgress(0)
+
+      const response = await uploadProfileImage(file, (progressPercent) => {
+        setUploadProgress(progressPercent)
+      })
+
+      updateField('profileImageUrl', response?.imageUrl || '')
+      setSuccess('Image uploaded. Save changes to update your profile.')
+    } catch (err) {
+      setUploadError(err.message || 'Failed to upload image.')
+    } finally {
+      setUploadingImage(false)
+    }
+  }
+
+  async function handleFileInputChange(event) {
+    const file = event.target.files?.[0] || null
+    await handleImageUpload(file)
+
+    // Reset the input to allow selecting the same file again.
+    event.target.value = ''
+  }
+
+  function handleDrop(event) {
+    event.preventDefault()
+    setIsDragActive(false)
+
+    if (uploadingImage) {
+      return
+    }
+
+    const file = event.dataTransfer.files?.[0] || null
+    handleImageUpload(file)
+  }
+
+  function handleDragOver(event) {
+    event.preventDefault()
+    if (!uploadingImage) {
+      setIsDragActive(true)
+    }
+  }
+
+  function handleDragLeave(event) {
+    event.preventDefault()
+    setIsDragActive(false)
   }
 
   async function handleSubmit(event) {
@@ -140,22 +202,45 @@ export default function EditProfilePage() {
           </label>
 
           <label>
-            New Profile Picture (URL):
-            <input
-              type="url"
-              value={form.profileImageUrl}
-              onChange={(event) => updateField('profileImageUrl', event.target.value)}
-              placeholder="https://example.com/profile.jpg"
-            />
+            Profile Picture Upload:
           </label>
+
+          <div
+            className={`edit-profile-dropzone${isDragActive ? ' edit-profile-dropzone-active' : ''}${uploadingImage ? ' edit-profile-dropzone-busy' : ''}`}
+            onDrop={handleDrop}
+            onDragOver={handleDragOver}
+            onDragLeave={handleDragLeave}
+          >
+            <p>{uploadingImage ? `Uploading... ${uploadProgress}%` : 'Drag and drop an image here'}</p>
+            <p className="edit-profile-upload-hint">or</p>
+            <button
+              type="button"
+              onClick={() => imageInputRef.current?.click()}
+              disabled={uploadingImage}
+              className="edit-profile-upload-button"
+            >
+              Browse files
+            </button>
+            <p className="edit-profile-upload-hint">
+              JPG, PNG, WEBP, GIF. Max {Math.round(getMaxUploadSizeBytes() / (1024 * 1024))}MB.
+            </p>
+            <input
+              ref={imageInputRef}
+              type="file"
+              accept="image/jpeg,image/png,image/webp,image/gif"
+              onChange={handleFileInputChange}
+              hidden
+            />
+          </div>
 
           {form.profileImageUrl ? <img src={form.profileImageUrl} alt="Profile preview" className="edit-profile-preview" /> : null}
 
+          {uploadError ? <p className="edit-profile-error">{uploadError}</p> : null}
           {error ? <p className="edit-profile-error">{error}</p> : null}
           {success ? <p className="edit-profile-success">{success}</p> : null}
 
           <div className="edit-profile-actions">
-            <button type="submit" disabled={saving}>{saving ? 'Saving...' : 'Save Changes'}</button>
+            <button type="submit" disabled={saving || uploadingImage}>{saving ? 'Saving...' : 'Save Changes'}</button>
             <button type="button" onClick={() => navigate('/settings')}>Back to Settings</button>
             <Link to="/" className="edit-profile-link">&lt;- Back to Main Page</Link>
           </div>

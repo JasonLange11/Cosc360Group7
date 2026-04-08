@@ -51,6 +51,36 @@
   border-radius: 8px;
 }
 
+.edit-profile-dropzone {
+  border: 2px dashed #7b69b3;
+  background: #f7f4ff;
+  border-radius: 10px;
+  padding: 1rem;
+  text-align: center;
+}
+
+.edit-profile-dropzone-active {
+  border-color: #4f3b8f;
+  background: #ebe3ff;
+}
+
+.edit-profile-dropzone-busy {
+  opacity: 0.8;
+}
+
+.edit-profile-upload-button {
+  border: 1px solid #5a4896;
+  background: #ece7f9;
+  padding: 0.5rem 0.8rem;
+  cursor: pointer;
+}
+
+.edit-profile-upload-hint {
+  margin: 0.5rem 0 0;
+  color: #442f70;
+  font-size: 0.95rem;
+}
+
 .edit-profile-actions {
   display: flex;
   gap: 0.75rem;
