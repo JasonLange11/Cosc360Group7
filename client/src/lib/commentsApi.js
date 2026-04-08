@@ -28,3 +28,9 @@ export function deleteComment(commentId) {
     headers: getAuthHeader(),
   })
 }
+
+export function getMyComments() {
+  return apiRequest('/api/comments/mine', {
+    headers: getAuthHeader(),
+  })
+}

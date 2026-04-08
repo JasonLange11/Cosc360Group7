@@ -5,19 +5,10 @@ import Footer from '../ui/Footer.jsx'
 import CardDisplay from '../ui/CardDisplay.jsx'
 import EventDetails from '../events/EventDetails.jsx'
 import { getAttendingEvents, getMyEvents } from '../../lib/eventsApi.js'
+import { getGroupMembership } from '../../lib/groupsApi.js'
+import { getMyComments } from '../../lib/commentsApi.js'
 import { useAuth } from '../../context/AuthContext.jsx'
 import './css/SettingsPage.css'
-
-const mockGroups = [
-  { id: 'g1', name: 'Book Club' },
-  { id: 'g2', name: 'Car Club' },
-  { id: 'g3', name: 'Anime Club' },
-]
-
-const mockCommentHistory = [
-  { id: 'c1', comment: 'Hello!', date: '2026-02-26', event: 'Book Club Event' },
-  { id: 'c2', comment: 'What a good time', date: '2026-02-28', event: 'Car Meetup' },
-]
 
 function EventGridSection({ events, emptyMessage, onOpenEvent }) {
   if (!events.length) {
@@ -52,6 +43,8 @@ export default function SettingsPage() {
   const { currentUser } = useAuth()
   const [myEvents, setMyEvents] = useState([])
   const [attendingEvents, setAttendingEvents] = useState([])
+  const [joinedGroups, setJoinedGroups] = useState([])
+  const [myComments, setMyComments] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [activeEventId, setActiveEventId] = useState(null)
@@ -67,18 +60,24 @@ export default function SettingsPage() {
   async function loadProfileData() {
     try {
       setLoading(true)
-      const [created, attending] = await Promise.all([
+      const [created, attending, groups, comments] = await Promise.all([
         getMyEvents(),
         getAttendingEvents(),
+        getGroupMembership(),
+        getMyComments(),
       ])
 
       setMyEvents(created)
       setAttendingEvents(attending)
+      setJoinedGroups(Array.isArray(groups) ? groups : [])
+      setMyComments(Array.isArray(comments) ? comments : [])
       setError('')
     } catch (err) {
       setError(err.message || 'Failed to load settings data.')
       setMyEvents([])
       setAttendingEvents([])
+      setJoinedGroups([])
+      setMyComments([])
     } finally {
       setLoading(false)
     }
@@ -152,11 +151,15 @@ export default function SettingsPage() {
               Groups <span>{collapsed.groups ? 'v' : '^'}</span>
             </button>
             {collapsed.groups ? null : (
-              <ul className="settings-list">
-                {mockGroups.map((group) => (
-                  <li key={group.id} className="settings-list-item">{group.name}</li>
-                ))}
-              </ul>
+              !joinedGroups.length ? (
+                <p className="settings-empty">You have not joined any groups yet.</p>
+              ) : (
+                <ul className="settings-list">
+                  {joinedGroups.map((group) => (
+                    <li key={group._id} className="settings-list-item">{group.name}</li>
+                  ))}
+                </ul>
+              )
             )}
           </article>
 
@@ -183,17 +186,25 @@ export default function SettingsPage() {
                   <tr>
                     <th>Comment</th>
                     <th>Date</th>
-                    <th>Event</th>
+                    <th>Type</th>
+                    <th>Parent ID</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {mockCommentHistory.map((comment) => (
-                    <tr key={comment.id}>
-                      <td>{comment.comment}</td>
-                      <td>{comment.date}</td>
-                      <td>{comment.event}</td>
+                  {!myComments.length ? (
+                    <tr>
+                      <td colSpan={4} className="settings-empty">You have not posted any comments yet.</td>
                     </tr>
-                  ))}
+                  ) : (
+                    myComments.map((comment) => (
+                      <tr key={comment._id}>
+                        <td>{comment.content}</td>
+                        <td>{new Date(comment.createdAt).toLocaleString()}</td>
+                        <td>{comment.parentType}</td>
+                        <td>{String(comment.parentId || '')}</td>
+                      </tr>
+                    ))
+                  )}
                 </tbody>
               </table>
             )}
