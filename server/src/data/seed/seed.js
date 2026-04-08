@@ -22,6 +22,7 @@ async function seedUsers(usersData) {
 			name: user.name,
 			password: await bcrypt.hash(user.password, SALT_ROUNDS),
 			isAdmin: Boolean(user.isAdmin),
+			isDisabled: Boolean(user.isDisabled),
 		}))
 	);
 
