@@ -82,6 +82,21 @@
   gap: 0.75rem;
 }
 
+.settings-event-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.settings-event-edit-button {
+  border: 1px solid #6a58a3;
+  background: #f6f2ff;
+  color: #2d2050;
+  font-weight: 700;
+  padding: 0.45rem 0.6rem;
+  cursor: pointer;
+}
+
 .settings-list {
   list-style: none;
   padding: 0;

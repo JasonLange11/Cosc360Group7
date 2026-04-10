@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import SearchBar from '../search/SearchBar'
 import CardDisplay from '../ui/CardDisplay'
 import EventDetails from '../events/EventDetails'
@@ -11,6 +12,7 @@ function getEventId(event) {
 }
 
 export default function ModerateEvents({ compact = false, onMore, selectedFilter = 'all' }) {
+	const navigate = useNavigate()
 	const [events, setEvents] = useState([])
 	const [searchTerm, setSearchTerm] = useState('')
 	const [loading, setLoading] = useState(true)
@@ -120,22 +122,30 @@ export default function ModerateEvents({ compact = false, onMore, selectedFilter
 						const eventId = getEventId(event)
 
 						return (
-							<CardDisplay
-								key={eventId}
-								eventId={eventId}
-								onOpenEvent={setActiveEventId}
-								img={{
-									src: event.bannerImage,
-									alt: event.title,
-								}}
-								heading={event.title}
-								details={[
-									['fa-calendar', new Date(event.eventDate).toLocaleDateString()],
-									['fa-clock', event.eventTime || 'Time TBD'],
-									['fa-location-dot', event.location || 'Location TBD'],
-								]}
-								description={event.description || 'No description available.'}
-							/>
+								<div key={eventId} className="a-event-item">
+									<CardDisplay
+										eventId={eventId}
+										onOpenEvent={setActiveEventId}
+										img={{
+											src: event.bannerImage,
+											alt: event.title,
+										}}
+										heading={event.title}
+										details={[
+											['fa-calendar', new Date(event.eventDate).toLocaleDateString()],
+											['fa-clock', event.eventTime || 'Time TBD'],
+											['fa-location-dot', event.location || 'Location TBD'],
+										]}
+										description={event.description || 'No description available.'}
+									/>
+									<button
+										type="button"
+										className="a-edit-button"
+										onClick={() => navigate(`/events/${eventId}/edit`)}
+									>
+										Edit Event
+									</button>
+								</div>
 						)
 					})
 				)}

@@ -97,19 +97,17 @@ export default function EventForm({
       setLoading(true)
       setError('')
 
-      if (typeof onSubmit === 'function') {
-        await onSubmit({
-          title: title.trim(),
-          description: description.trim(),
-          eventDate,
-          eventTime,
-          location: location.trim(),
-          capacity: Number(capacity),
-          cost: freeAdmission ? 0 : Number(cost),
-          tags,
-          bannerFile,
-        })
-      }
+      await onSubmit({
+        title: title.trim(),
+        description: description.trim(),
+        eventDate,
+        eventTime,
+        location: location.trim(),
+        capacity: Number(capacity),
+        cost: freeAdmission ? 0 : Number(cost),
+        tags,
+        bannerFile,
+      })
     } catch (submitError) {
       setError(submitError.message || 'Failed to save event')
     } finally {
@@ -216,7 +214,7 @@ export default function EventForm({
         <div className="create-event-grid-two">
           <label>
             Organizer Name
-            <input type="text" value={organizerName} readOnly />
+            <input type="text" value={organizerName} readOnly disabled />
           </label>
 
           <label>

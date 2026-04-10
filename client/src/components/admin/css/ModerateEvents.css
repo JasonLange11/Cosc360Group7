@@ -46,6 +46,21 @@
     font-size: 0.9rem;
 }
 
+.a-event-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.a-edit-button {
+    border: 1px solid #7767a5;
+    background: #f4f1ff;
+    color: #2f2942;
+    font-weight: 600;
+    padding: 0.45rem 0.6rem;
+    cursor: pointer;
+}
+
 @media (max-width: 1000px) {
     .a-grid,
     .a-grid-c {

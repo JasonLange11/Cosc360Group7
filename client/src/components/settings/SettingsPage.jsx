@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import Header from '../ui/Header.jsx'
 import Footer from '../ui/Footer.jsx'
 import CardDisplay from '../ui/CardDisplay.jsx'
@@ -10,7 +10,7 @@ import { getMyComments } from '../../lib/commentsApi.js'
 import { useAuth } from '../../context/AuthContext.jsx'
 import './css/SettingsPage.css'
 
-function EventGridSection({ events, emptyMessage, onOpenEvent }) {
+function EventGridSection({ events, emptyMessage, onOpenEvent, onEditEvent }) {
   if (!events.length) {
     return <p className="settings-empty">{emptyMessage}</p>
   }
@@ -18,28 +18,39 @@ function EventGridSection({ events, emptyMessage, onOpenEvent }) {
   return (
     <div className="settings-events-grid">
       {events.map((event) => (
-        <CardDisplay
-          key={event._id}
-          eventId={event._id}
-          onOpenEvent={onOpenEvent}
-          img={{
-            src: event.bannerImage,
-            alt: event.title,
-          }}
-          heading={event.title}
-          details={[
-            ['fa-calendar', new Date(event.eventDate).toLocaleDateString()],
-            ['fa-clock', event.eventTime],
-            ['fa-location-dot', event.location],
-          ]}
-          description={event.description}
-        />
+        <div key={event._id} className="settings-event-item">
+          <CardDisplay
+            eventId={event._id}
+            onOpenEvent={onOpenEvent}
+            img={{
+              src: event.bannerImage,
+              alt: event.title,
+            }}
+            heading={event.title}
+            details={[
+              ['fa-calendar', new Date(event.eventDate).toLocaleDateString()],
+              ['fa-clock', event.eventTime],
+              ['fa-location-dot', event.location],
+            ]}
+            description={event.description}
+          />
+          {typeof onEditEvent === 'function' ? (
+            <button
+              type="button"
+              className="settings-event-edit-button"
+              onClick={() => onEditEvent(event._id)}
+            >
+              Edit Event
+            </button>
+          ) : null}
+        </div>
       ))}
     </div>
   )
 }
 
 export default function SettingsPage() {
+  const navigate = useNavigate()
   const { currentUser } = useAuth()
   const [myEvents, setMyEvents] = useState([])
   const [attendingEvents, setAttendingEvents] = useState([])
@@ -172,6 +183,7 @@ export default function SettingsPage() {
                 events={myEvents}
                 emptyMessage="You have not created any events yet."
                 onOpenEvent={setActiveEventId}
+                onEditEvent={(eventId) => navigate(`/events/${eventId}/edit`)}
               />
             )}
           </article>
