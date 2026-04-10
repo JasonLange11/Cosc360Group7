@@ -9,7 +9,7 @@ Group 7
 - docker compose down -v
 - docker compose up -d --build
 
-This starts the app and local MongoDB together. The server now runs the seed command every time the container starts, so `docker compose up -d` will always reset the seeded users, events, and groups.
+This starts the app and local MongoDB together. The server now runs the seed command every time the container starts, so `docker compose up -d` will always reset the seeded data.
 
 ### Atlas Method
 - In project root folder
