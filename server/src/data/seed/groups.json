@@ -1,20 +1,70 @@
-[  
+[
 	{
 		"ownerEmail": "user1@example.com",
 		"bannerImage": "https://images.unsplash.com/photo-1495446815901-a7297e633e8d?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
 		"name": "UBCO Book Club",
-		"memberEmails": ["user1@example.com", "admin@example.com"],
+		"memberEmails": [
+			"user1@example.com",
+			"alice@example.com",
+			"chloe@example.com",
+			"grace@example.com",
+			"isla@example.com",
+			"maya@example.com",
+			"quinn@example.com"
+		],
 		"location": "Library Commons",
 		"description": "Weekly meetup to discuss this month's reading list.",
 		"tags": ["free", "indoor", "student", "community"]
 	},
 	{
-		"ownerEmail": "user1@example.com",
+		"ownerEmail": "alice@example.com",
 		"bannerImage": "https://images.unsplash.com/photo-1736163034456-a283cf332081?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
 		"name": "Kelowna Hikers",
-		"memberEmails": ["user1@example.com", "admin@example.com"],
+		"memberEmails": [
+			"alice@example.com",
+			"ben@example.com",
+			"daniel@example.com",
+			"felix@example.com",
+			"jack@example.com",
+			"olivia@example.com",
+			"victor@example.com"
+		],
 		"location": "Various",
-		"description": "Weekly group hikes in and around the Kelowna Area",
+		"description": "Weekly group hikes in and around the Kelowna area.",
 		"tags": ["free", "outdoors", "active", "morning"]
+	},
+	{
+		"ownerEmail": "ben@example.com",
+		"bannerImage": "https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+		"name": "Campus Makers Collective",
+		"memberEmails": [
+			"ben@example.com",
+			"emma@example.com",
+			"henry@example.com",
+			"katie@example.com",
+			"liam@example.com",
+			"riley@example.com",
+			"sophie@example.com"
+		],
+		"location": "Engineering Lab 2",
+		"description": "A project-first group for students building games, prototypes, and side projects.",
+		"tags": ["tech", "student", "creative", "workshop"]
+	},
+	{
+		"ownerEmail": "parker@example.com",
+		"bannerImage": "https://images.unsplash.com/photo-1559339352-11d035aa65de?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+		"name": "Weekend Foodies",
+		"memberEmails": [
+			"parker@example.com",
+			"noah@example.com",
+			"olivia@example.com",
+			"uma@example.com",
+			"willow@example.com",
+			"xavier@example.com",
+			"yara@example.com"
+		],
+		"location": "Downtown Kelowna",
+		"description": "Trying new cafes, markets, and low-key dinner spots around town each week.",
+		"tags": ["food", "social", "community", "weekend"]
 	}
 ]

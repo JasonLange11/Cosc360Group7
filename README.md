@@ -2,22 +2,25 @@
 Group 7
 
 ## Start up Project
-- Go into the server folder
-- Copy the .env.example file and save it as .env in server
+- The default hand-in Docker setup does not require a server/.env file
 
-
-### Standard Method (MongoDB Atlas)
+### Hand-in Method (Local MongoDB)
 - In project root folder
-- docker compose up -d
+- docker compose down -v
+- docker compose up -d --build
 
-### Alternate Method (localhost) 
+This starts the app and local MongoDB together. The server now runs the seed command every time the container starts, so `docker compose up -d` will always reset the seeded data.
+
+### Atlas Method
 - In project root folder
-- docker compose --profile localdb up -d
+- docker compose -f docker-compose.atlas.yml up -d --build
+
+- This uses the Atlas URI from server/.env, does not start the local Mongo container.
 
 ### Website hosted at
-- [localhost:5173 ](http://localhost:5173)
+- [localhost:5173](http://localhost:5173)
 
-## Optional seed the project data
-### Note that running this will overwrite the database
+## Manual seed commands
+### Note that the overwrite command will replace existing data
 - In project root folder
 - docker compose exec server npm run seed

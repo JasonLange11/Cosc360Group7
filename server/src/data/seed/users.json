@@ -10,5 +10,185 @@
     "name": "User1",
     "password": "password123",
     "isAdmin": false
+  },
+  {
+    "email": "alice@example.com",
+    "name": "Alice",
+    "password": "password123",
+    "isAdmin": false
+  },
+  {
+    "email": "ben@example.com",
+    "name": "Ben",
+    "password": "password123",
+    "isAdmin": false
+  },
+  {
+    "email": "chloe@example.com",
+    "name": "Chloe",
+    "password": "password123",
+    "isAdmin": false
+  },
+  {
+    "email": "daniel@example.com",
+    "name": "Daniel",
+    "password": "password123",
+    "isAdmin": false
+  },
+  {
+    "email": "emma@example.com",
+    "name": "Emma",
+    "password": "password123",
+    "isAdmin": false
+  },
+  {
+    "email": "felix@example.com",
+    "name": "Felix",
+    "password": "password123",
+    "isAdmin": false
+  },
+  {
+    "email": "grace@example.com",
+    "name": "Grace",
+    "password": "password123",
+    "isAdmin": false
+  },
+  {
+    "email": "henry@example.com",
+    "name": "Henry",
+    "password": "password123",
+    "isAdmin": false
+  },
+  {
+    "email": "isla@example.com",
+    "name": "Isla",
+    "password": "password123",
+    "isAdmin": false
+  },
+  {
+    "email": "jack@example.com",
+    "name": "Jack",
+    "password": "password123",
+    "isAdmin": false
+  },
+  {
+    "email": "katie@example.com",
+    "name": "Katie",
+    "password": "password123",
+    "isAdmin": false
+  },
+  {
+    "email": "liam@example.com",
+    "name": "Liam",
+    "password": "password123",
+    "isAdmin": false
+  },
+  {
+    "email": "maya@example.com",
+    "name": "Maya",
+    "password": "password123",
+    "isAdmin": false
+  },
+  {
+    "email": "noah@example.com",
+    "name": "Noah",
+    "password": "password123",
+    "isAdmin": false
+  },
+  {
+    "email": "olivia@example.com",
+    "name": "Olivia",
+    "password": "password123",
+    "isAdmin": false
+  },
+  {
+    "email": "parker@example.com",
+    "name": "Parker",
+    "password": "password123",
+    "isAdmin": false
+  },
+  {
+    "email": "quinn@example.com",
+    "name": "Quinn",
+    "password": "password123",
+    "isAdmin": false
+  },
+  {
+    "email": "riley@example.com",
+    "name": "Riley",
+    "password": "password123",
+    "isAdmin": false
+  },
+  {
+    "email": "sophie@example.com",
+    "name": "Sophie",
+    "password": "password123",
+    "isAdmin": false
+  },
+  {
+    "email": "theo@example.com",
+    "name": "Theo",
+    "password": "password123",
+    "isAdmin": false
+  },
+  {
+    "email": "uma@example.com",
+    "name": "Uma",
+    "password": "password123",
+    "isAdmin": false
+  },
+  {
+    "email": "victor@example.com",
+    "name": "Victor",
+    "password": "password123",
+    "isAdmin": false
+  },
+  {
+    "email": "willow@example.com",
+    "name": "Willow",
+    "password": "password123",
+    "isAdmin": false
+  },
+  {
+    "email": "xavier@example.com",
+    "name": "Xavier",
+    "password": "password123",
+    "isAdmin": false
+  },
+  {
+    "email": "yara@example.com",
+    "name": "Yara",
+    "password": "password123",
+    "isAdmin": false
+  },
+  {
+    "email": "aiden@example.com",
+    "name": "Aiden",
+    "password": "password123",
+    "isAdmin": false
+  },
+  {
+    "email": "brianna@example.com",
+    "name": "Brianna",
+    "password": "password123",
+    "isAdmin": false
+  },
+  {
+    "email": "caleb@example.com",
+    "name": "Caleb",
+    "password": "password123",
+    "isAdmin": false
+  },
+  {
+    "email": "daisy@example.com",
+    "name": "Daisy",
+    "password": "password123",
+    "isAdmin": false
+  },
+  {
+    "email": "ethan@example.com",
+    "name": "Ethan",
+    "password": "password123",
+    "isAdmin": false
   }
 ]
