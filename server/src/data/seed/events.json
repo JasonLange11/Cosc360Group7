@@ -1,4 +1,4 @@
-[  
+[
 	{
 		"ownerEmail": "user1@example.com",
 		"bannerImage": "https://images.unsplash.com/photo-1495446815901-a7297e633e8d?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
@@ -12,7 +12,7 @@
 		"tags": ["free", "indoor", "student", "community"]
 	},
 	{
-		"ownerEmail": "user1@example.com",
+		"ownerEmail": "alice@example.com",
 		"bannerImage": "https://images.unsplash.com/photo-1736163034456-a283cf332081?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
 		"title": "Morning Trail Walk",
 		"eventDate": "2026-04-08T00:00:00.000Z",
@@ -24,7 +24,7 @@
 		"tags": ["outdoors", "active", "morning"]
 	},
 	{
-		"ownerEmail": "user1@example.com",
+		"ownerEmail": "ben@example.com",
 		"bannerImage": "https://images.unsplash.com/photo-1556438064-2d7646166914?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
 		"title": "Indie Game Development Jam",
 		"eventDate": "2026-04-10T00:00:00.000Z",
@@ -36,7 +36,7 @@
 		"tags": ["tech", "gaming", "workshop", "student"]
 	},
 	{
-		"ownerEmail": "user1@example.com",
+		"ownerEmail": "chloe@example.com",
 		"bannerImage": "https://images.stockcake.com/public/3/a/a/3aa9cdcb-f5bd-49f1-b1df-a49d46764afc_large/sunset-yoga-park-stockcake.jpg",
 		"title": "Sunset Yoga on the Lawn",
 		"eventDate": "2026-04-12T00:00:00.000Z",
@@ -48,7 +48,7 @@
 		"tags": ["free", "outdoors", "wellness", "evening"]
 	},
 	{
-		"ownerEmail": "user1@example.com",
+		"ownerEmail": "daniel@example.com",
 		"bannerImage": "https://images.unsplash.com/photo-1560439514-4e9645039924?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
 		"title": "Career Networking Night",
 		"eventDate": "2026-04-15T00:00:00.000Z",
@@ -60,7 +60,7 @@
 		"tags": ["career", "networking", "indoor", "professional"]
 	},
 	{
-		"ownerEmail": "user1@example.com",
+		"ownerEmail": "emma@example.com",
 		"bannerImage": "https://plus.unsplash.com/premium_photo-1679689588323-4e932e23a35e?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
 		"title": "Community Beach Cleanup",
 		"eventDate": "2026-04-18T00:00:00.000Z",
@@ -72,7 +72,7 @@
 		"tags": ["free", "outdoors", "volunteer", "community"]
 	},
 	{
-		"ownerEmail": "user1@example.com",
+		"ownerEmail": "felix@example.com",
 		"bannerImage": "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?q=80&w=764&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
 		"title": "Intro to Digital Photography",
 		"eventDate": "2026-04-20T00:00:00.000Z",
@@ -84,7 +84,7 @@
 		"tags": ["photography", "workshop", "indoor", "creative"]
 	},
 	{
-		"ownerEmail": "user1@example.com",
+		"ownerEmail": "grace@example.com",
 		"bannerImage": "https://images.unsplash.com/photo-1635520356736-90cb46f73413?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
 		"title": "Live Jazz and Open Mic",
 		"eventDate": "2026-04-22T00:00:00.000Z",
@@ -96,7 +96,7 @@
 		"tags": ["music", "nightlife", "indoor", "community"]
 	},
 	{
-		"ownerEmail": "user1@example.com",
+		"ownerEmail": "henry@example.com",
 		"bannerImage": "https://images.unsplash.com/photo-1672309558498-cfcc89afff25?q=80&w=735&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
 		"title": "Coding Interview Prep Workshop",
 		"eventDate": "2026-04-25T00:00:00.000Z",
@@ -108,7 +108,7 @@
 		"tags": ["free", "tech", "career", "workshop"]
 	},
 	{
-		"ownerEmail": "user1@example.com",
+		"ownerEmail": "isla@example.com",
 		"bannerImage": "https://images.unsplash.com/photo-1485637701894-09ad422f6de6?q=80&w=1136&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
 		"title": "Spring Farmers Market",
 		"eventDate": "2026-04-27T00:00:00.000Z",
@@ -118,5 +118,125 @@
 		"capacity": 35,
 		"description": "Explore local produce stalls and small-batch food vendors.",
 		"tags": ["free", "outdoors", "family-friendly", "community"]
+	},
+	{
+		"ownerEmail": "jack@example.com",
+		"bannerImage": "https://plus.unsplash.com/premium_photo-1661380954234-13d98a83577c?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+		"title": "Pottery Basics Studio Night",
+		"eventDate": "2026-04-29T00:00:00.000Z",
+		"eventTime": "6:30 PM",
+		"location": "Arts Annex Studio B",
+		"cost": 18,
+		"capacity": 24,
+		"description": "A beginner-friendly clay workshop with tools and materials provided.",
+		"tags": ["creative", "workshop", "indoor", "evening"]
+	},
+	{
+		"ownerEmail": "katie@example.com",
+		"bannerImage": "https://images.unsplash.com/photo-1529699211952-734e80c4d42b?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+		"title": "Campus Chess Ladder",
+		"eventDate": "2026-05-01T00:00:00.000Z",
+		"eventTime": "4:30 PM",
+		"location": "Student Union Lounge",
+		"cost": 0,
+		"capacity": 28,
+		"description": "Casual matches, timed rounds, and a beginner table for anyone learning the game.",
+		"tags": ["free", "strategy", "indoor", "student"]
+	},
+	{
+		"ownerEmail": "liam@example.com",
+		"bannerImage": "https://images.unsplash.com/photo-1469765963395-079139b8f151?q=80&w=2069&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+		"title": "Lakeside Picnic Social",
+		"eventDate": "2026-05-03T00:00:00.000Z",
+		"eventTime": "1:00 PM",
+		"location": "Waterfront Park",
+		"cost": 0,
+		"capacity": 55,
+		"description": "Bring snacks, blankets, and a few games for a relaxed afternoon by the water.",
+		"tags": ["free", "outdoors", "social", "weekend"]
+	},
+	{
+		"ownerEmail": "maya@example.com",
+		"bannerImage": "https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+		"title": "Startup Pitch Practice",
+		"eventDate": "2026-05-05T00:00:00.000Z",
+		"eventTime": "5:00 PM",
+		"location": "Innovation Hub 3",
+		"cost": 0,
+		"capacity": 45,
+		"description": "Test your startup or class project pitch and get fast feedback from peers.",
+		"tags": ["career", "business", "presentation", "indoor"]
+	},
+	{
+		"ownerEmail": "noah@example.com",
+		"bannerImage": "https://images.unsplash.com/photo-1629760946220-5693ee4c46ac?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+		"title": "Board Game Marathon",
+		"eventDate": "2026-05-07T00:00:00.000Z",
+		"eventTime": "6:00 PM",
+		"location": "Residence Commons",
+		"cost": 3,
+		"capacity": 48,
+		"description": "Strategy games, party games, and a late-night snack table for everyone attending.",
+		"tags": ["games", "indoor", "evening", "community"]
+	},
+	{
+		"ownerEmail": "olivia@example.com",
+		"bannerImage": "https://images.unsplash.com/photo-1486218119243-13883505764c?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+		"title": "Charity 5K Training Run",
+		"eventDate": "2026-05-09T00:00:00.000Z",
+		"eventTime": "8:30 AM",
+		"location": "Mission Creek Trail",
+		"cost": 0,
+		"capacity": 40,
+		"description": "A steady group run for all paces ahead of the local charity race.",
+		"tags": ["fitness", "outdoors", "morning", "community"]
+	},
+	{
+		"ownerEmail": "parker@example.com",
+		"bannerImage": "https://images.unsplash.com/photo-1603088549155-6ae9395b928f?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+		"title": "Street Food Crawl",
+		"eventDate": "2026-05-11T00:00:00.000Z",
+		"eventTime": "6:00 PM",
+		"location": "Bernard Avenue",
+		"cost": 10,
+		"capacity": 32,
+		"description": "Walk downtown together and try a few local spots without planning the route yourself.",
+		"tags": ["food", "social", "evening", "outdoors"]
+	},
+	{
+		"ownerEmail": "quinn@example.com",
+		"bannerImage": "https://images.unsplash.com/photo-1455390582262-044cdead277a?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+		"title": "Final Exam Study Sprint",
+		"eventDate": "2026-05-13T00:00:00.000Z",
+		"eventTime": "2:00 PM",
+		"location": "Library Quiet Floor",
+		"cost": 0,
+		"capacity": 65,
+		"description": "Focused study blocks, shared break times, and a quiet accountability space for finals prep.",
+		"tags": ["study", "free", "student", "indoor"]
+	},
+	{
+		"ownerEmail": "riley@example.com",
+		"bannerImage": "https://images.unsplash.com/photo-1504609813442-a8924e83f76e?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+		"title": "Beginner Salsa Night",
+		"eventDate": "2026-05-14T00:00:00.000Z",
+		"eventTime": "7:00 PM",
+		"location": "Community Rec Hall",
+		"cost": 8,
+		"capacity": 50,
+		"description": "An intro lesson followed by open dancing for anyone who wants to stay.",
+		"tags": ["dance", "social", "evening", "indoor"]
+	},
+	{
+		"ownerEmail": "sophie@example.com",
+		"bannerImage": "https://plus.unsplash.com/premium_photo-1714060723761-70690aa56915?q=80&w=1171&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+		"title": "Makers Market Showcase",
+		"eventDate": "2026-05-15T00:00:00.000Z",
+		"eventTime": "12:00 PM",
+		"location": "Innovation Courtyard",
+		"cost": 0,
+		"capacity": 90,
+		"description": "A daytime showcase of handmade goods, student side projects, and mini demos.",
+		"tags": ["market", "creative", "community", "outdoors"]
 	}
 ]
