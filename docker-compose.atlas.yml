@@ -25,29 +25,9 @@ services:
     volumes:
       - ./server:/app
       - server_node_modules:/app/node_modules
-    environment:
-      MONGODB_URI: mongodb://mongo:27017/cosc360
-      PORT: "4000"
-      JWT_SECRET: anyrandomstring
-    depends_on:
-      mongo:
-        condition: service_healthy
-    command: sh -c "npm run seed && npm run dev"
-
-  mongo:
-    image: mongo:7
-    ports:
-      - "27017:27017"
-    volumes:
-      - mongo_data:/data/db
-    healthcheck:
-      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
-      interval: 5s
-      timeout: 5s
-      retries: 10
-      start_period: 10s
+    env_file:
+      - ./server/.env
 
 volumes:
-  mongo_data:
   client_node_modules:
   server_node_modules:
