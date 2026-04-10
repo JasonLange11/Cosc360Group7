@@ -55,8 +55,10 @@ function Navbar(){
                     <>  
                         {!currentUser.isAdmin ? (
                         <li>
-                            <i className="fa-solid fa-calendar-plus"></i>
-                            Create Event
+                            <NavLink to="/events/new">
+                                <i className="fa-solid fa-calendar-plus"></i>
+                                Create Event
+                            </NavLink>
                         </li>
                         ) : null}      
                         {!currentUser.isAdmin ? (
