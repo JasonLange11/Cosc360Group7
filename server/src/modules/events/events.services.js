@@ -24,6 +24,30 @@ function cleanTag(tag) {
   return value;
 }
 
+function normalizeEventTags(tags) {
+  if (!Array.isArray(tags)) {
+    return [];
+  }
+
+  const normalized = [];
+
+  for (const tag of tags) {
+    const value = String(tag ?? "").trim().toLowerCase();
+
+    if (!value || normalized.includes(value)) {
+      continue;
+    }
+
+    normalized.push(value);
+
+    if (normalized.length === 10) {
+      break;
+    }
+  }
+
+  return normalized;
+}
+
 function normalizeEventStatus(status) {
   const normalizedStatus = String(status || "upcoming").trim().toLowerCase();
 
@@ -114,6 +138,7 @@ export async function createUserEvent(user, eventData) {
 
   const event = await createEvent({
     ...eventData,
+    tags: normalizeEventTags(eventData?.tags),
     userId: user.id,
   });
 
