@@ -97,6 +97,15 @@
   cursor: pointer;
 }
 
+.settings-event-delete-button {
+  border: 1px solid #a33a3a;
+  background: #fff2f2;
+  color: #5c1a1a;
+  font-weight: 700;
+  padding: 0.45rem 0.6rem;
+  cursor: pointer;
+}
+
 .settings-list {
   list-style: none;
   padding: 0;

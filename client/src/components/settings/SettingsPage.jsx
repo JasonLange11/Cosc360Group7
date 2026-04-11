@@ -5,7 +5,7 @@ import Footer from '../ui/Footer.jsx'
 import CardDisplay from '../ui/CardDisplay.jsx'
 import EventDetails from '../events/EventDetails.jsx'
 import { getAttendingEvents, getMyEvents } from '../../lib/eventsApi.js'
-import { getGroupMembership, getMyGroups } from '../../lib/groupsApi.js'
+import { getGroupMembership, getMyGroups, deleteGroup } from '../../lib/groupsApi.js'
 import { getMyComments } from '../../lib/commentsApi.js'
 import { useAuth } from '../../context/AuthContext.jsx'
 import './css/SettingsPage.css'
@@ -108,6 +108,18 @@ export default function SettingsPage() {
       ...previous,
       [sectionKey]: !previous[sectionKey],
     }))
+  }
+
+  async function handleDeleteGroup(groupId, groupName) {
+    if (!window.confirm(`Are you sure you want to delete "${groupName}"? This cannot be undone.`)) {
+      return
+    }
+    try {
+      await deleteGroup(groupId)
+      setMyGroups((previous) => previous.filter((g) => g._id !== groupId))
+    } catch (err) {
+      alert(err.message || 'Failed to delete group')
+    }
   }
 
   if (loading) {
@@ -221,6 +233,13 @@ export default function SettingsPage() {
                         onClick={() => navigate(`/groups/${group._id}/edit`)}
                       >
                         Edit Group
+                      </button>
+                      <button
+                        type="button"
+                        className="settings-event-delete-button"
+                        onClick={() => handleDeleteGroup(group._id, group.name)}
+                      >
+                        Delete Group
                       </button>
                     </div>
                   ))}
