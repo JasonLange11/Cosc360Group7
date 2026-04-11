@@ -12,7 +12,7 @@ const uploadSchema = new mongoose.Schema(
     },
     context: {
       type: String,
-      enum: ["profile", "event-banner"],
+      enum: ["profile", "event-banner", "group-banner"],
       required: true,
       index: true,
     },
