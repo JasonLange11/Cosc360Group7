@@ -3,6 +3,7 @@ import '@fortawesome/fontawesome-free/css/all.min.css'
 import { attendEvent, getEventById, unattendEvent } from '../../lib/eventsApi'
 import { addTagToEvent, removeTagFromEvent } from '../../lib/eventsApi'
 import { isEventExpired } from '../../lib/eventDates'
+import { createFlag } from '../../lib/flagsApi.js'
 import { useAuth } from '../../context/AuthContext.jsx'
 import CommentSection from '../comments/CommentSection'
 import './css/EventDetails.css'
@@ -69,6 +70,8 @@ export default function EventDetails({
     const [newTag, setNewTag] = useState('')
     const [tagBusy, setTagBusy] = useState(false)
     const [tagError, setTagError] = useState('')
+    const [flagBusy, setFlagBusy] = useState(false)
+    const [flagMessage, setFlagMessage] = useState('')
 
     useEffect(() => {
         function handleEscape(eventKey) {
@@ -238,6 +241,25 @@ export default function EventDetails({
         }
     }
 
+    const handleFlag = async () => {
+        if (!currentUser) {
+            setFlagMessage('You must be logged in to flag content.')
+            return
+        }
+
+        const reason = window.prompt('Optional reason for flagging this event:') || ''
+
+        try {
+            setFlagBusy(true)
+            await createFlag({ targetType: 'event', targetId: event._id, reason })
+            setFlagMessage('Event flagged for admin review.')
+        } catch (err) {
+            setFlagMessage(err.message || 'Failed to flag event.')
+        } finally {
+            setFlagBusy(false)
+        }
+    }
+
     return (
         <div className="event-details-overlay" onClick={onClose}>
             <main className="event-details-shell" onClick={(clickEvent) => clickEvent.stopPropagation()}>
@@ -352,6 +374,19 @@ export default function EventDetails({
                         </button>
                         {actionError ? <p className="event-details-action-error">{actionError}</p> : null}
                         {internalActionError ? <p className="event-details-action-error">{internalActionError}</p> : null}
+
+                        <button
+                            type="button"
+                            className="event-details-button"
+                            onClick={handleFlag}
+                            disabled={flagBusy}
+                            title="Flag event"
+                            aria-label="Flag event"
+                        >
+                            <i className={`fa-regular ${flagBusy ? 'fa-hourglass-half' : 'fa-flag'}`}></i>
+                            {flagBusy ? ' Flagging...' : ' Flag'}
+                        </button>
+                        {flagMessage ? <p className="event-details-action-error">{flagMessage}</p> : null}
 
                         <CommentSection parentType="event" parentId={event._id} pageSize={5} />
                     </div>

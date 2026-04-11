@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
+import '@fortawesome/fontawesome-free/css/all.min.css'
 import { useAuth } from '../../context/AuthContext'
 import { createComment, deleteComment, getComments } from '../../lib/commentsApi'
+import { createFlag } from '../../lib/flagsApi.js'
 import './css/CommentSection.css'
 
 export default function CommentSection({ parentType, parentId, pageSize = 5 }) {
@@ -12,6 +14,7 @@ export default function CommentSection({ parentType, parentId, pageSize = 5 }) {
   const [error, setError] = useState('')
   const [newComment, setNewComment] = useState('')
   const [submitting, setSubmitting] = useState(false)
+  const [flagBusyCommentId, setFlagBusyCommentId] = useState('')
 
   const totalPages = Math.max(1, Math.ceil(total / pageSize))
 
@@ -114,6 +117,28 @@ export default function CommentSection({ parentType, parentId, pageSize = 5 }) {
     return currentUser.isAdmin || String(comment.userId || '') === String(currentUser.id || '')
   }
 
+  const canFlagComment = (comment) => {
+    if (!currentUser) {
+      return false
+    }
+
+    return String(comment.userId || '') !== String(currentUser.id || '')
+  }
+
+  const handleFlag = async (commentId) => {
+    const reason = window.prompt('Optional reason for flagging this comment:') || ''
+
+    try {
+      setFlagBusyCommentId(commentId)
+      setError('')
+      await createFlag({ targetType: 'comment', targetId: commentId, reason })
+    } catch (err) {
+      setError(err.message || 'Failed to flag comment')
+    } finally {
+      setFlagBusyCommentId('')
+    }
+  }
+
   return (
     <section className="comment-section">
       <h3 className="comment-section-title">Comments</h3>
@@ -139,6 +164,19 @@ export default function CommentSection({ parentType, parentId, pageSize = 5 }) {
                 onClick={() => handleDelete(comment._id)}
               >
                 Delete
+              </button>
+            ) : null}
+            {canFlagComment(comment) ? (
+              <button
+                type="button"
+                className="comment-delete"
+                onClick={() => handleFlag(comment._id)}
+                disabled={flagBusyCommentId === comment._id}
+                title="Flag comment"
+                aria-label="Flag comment"
+              >
+                <i className={`fa-regular ${flagBusyCommentId === comment._id ? 'fa-hourglass-half' : 'fa-flag'}`}></i>
+                {flagBusyCommentId === comment._id ? ' Flagging...' : ' Flag'}
               </button>
             ) : null}
           </li>
