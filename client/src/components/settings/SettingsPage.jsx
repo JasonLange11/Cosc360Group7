@@ -7,6 +7,7 @@ import EventDetails from '../events/EventDetails.jsx'
 import { deleteEvent, getAttendingEvents, getEventById, getMyEvents } from '../../lib/eventsApi.js'
 import { getGroupById, getGroupMembership, getMyGroups, deleteGroup, leaveGroup } from '../../lib/groupsApi.js'
 import { deleteComment as deleteCommentById, getMyComments, updateComment } from '../../lib/commentsApi.js'
+import { isEventExpired } from '../../lib/eventDates.js'
 import { useAuth } from '../../context/AuthContext.jsx'
 import './css/SettingsPage.css'
 
@@ -64,6 +65,7 @@ export default function SettingsPage() {
   const { currentUser } = useAuth()
   const [myEvents, setMyEvents] = useState([])
   const [attendingEvents, setAttendingEvents] = useState([])
+  const [pastAttendingEvents, setPastAttendingEvents] = useState([])
   const [joinedGroups, setJoinedGroups] = useState([])
   const [myGroups, setMyGroups] = useState([])
   const [myComments, setMyComments] = useState([])
@@ -80,6 +82,7 @@ export default function SettingsPage() {
   const [commentActionError, setCommentActionError] = useState('')
   const [collapsed, setCollapsed] = useState({
     attending: false,
+    pastEvents: false,
     groups: false,
     created: false,
     createdGroups: false,
@@ -154,9 +157,13 @@ export default function SettingsPage() {
         getMyGroups(),
         getMyComments(),
       ])
+      const attendingEventList = Array.isArray(attending) ? attending : []
+      const currentAttendingEvents = attendingEventList.filter((event) => !isEventExpired(event.eventDate))
+      const expiredAttendingEvents = attendingEventList.filter((event) => isEventExpired(event.eventDate))
 
       setMyEvents(created)
-      setAttendingEvents(attending)
+      setAttendingEvents(currentAttendingEvents)
+      setPastAttendingEvents(expiredAttendingEvents)
       setJoinedGroups(Array.isArray(groups) ? groups : [])
       setMyGroups(Array.isArray(createdGroups) ? createdGroups : [])
       setMyComments(Array.isArray(comments) ? comments : [])
@@ -173,6 +180,7 @@ export default function SettingsPage() {
       setError(err.message || 'Failed to load settings data.')
       setMyEvents([])
       setAttendingEvents([])
+      setPastAttendingEvents([])
       setJoinedGroups([])
       setMyGroups([])
       setMyComments([])
@@ -349,6 +357,19 @@ export default function SettingsPage() {
               <EventGridSection
                 events={attendingEvents}
                 emptyMessage="You are not attending any events yet."
+                onOpenEvent={setActiveEventId}
+              />
+            )}
+          </article>
+
+          <article className="settings-card-section">
+            <button type="button" className="settings-section-title" onClick={() => toggleSection('pastEvents')}>
+              Past Events <span>{collapsed.pastEvents ? 'v' : '^'}</span>
+            </button>
+            {collapsed.pastEvents ? null : (
+              <EventGridSection
+                events={pastAttendingEvents}
+                emptyMessage="You have not attended any past events yet."
                 onOpenEvent={setActiveEventId}
               />
             )}
