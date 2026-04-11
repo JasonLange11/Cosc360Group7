@@ -103,7 +103,7 @@ function Navbar(){
                             {isMenuOpen ? (
                                 <div className="nav-dropdown" role="menu">
                                     <NavLink to="/settings" className="nav-dropdown-item" onClick={handleSettingsClick}>
-                                        Settings
+                                        User Profile
                                     </NavLink>
                                     <button type="button" className="nav-dropdown-item" onClick={handleLogoutClick}>
                                         Logout
