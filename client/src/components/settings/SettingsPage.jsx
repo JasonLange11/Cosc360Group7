@@ -4,13 +4,13 @@ import Header from '../ui/Header.jsx'
 import Footer from '../ui/Footer.jsx'
 import CardDisplay from '../ui/CardDisplay.jsx'
 import EventDetails from '../events/EventDetails.jsx'
-import { getAttendingEvents, getEventById, getMyEvents } from '../../lib/eventsApi.js'
+import { deleteEvent, getAttendingEvents, getEventById, getMyEvents } from '../../lib/eventsApi.js'
 import { getGroupById, getGroupMembership, getMyGroups, deleteGroup, leaveGroup } from '../../lib/groupsApi.js'
 import { deleteComment as deleteCommentById, getMyComments, updateComment } from '../../lib/commentsApi.js'
 import { useAuth } from '../../context/AuthContext.jsx'
 import './css/SettingsPage.css'
 
-function EventGridSection({ events, emptyMessage, onOpenEvent, onEditEvent }) {
+function EventGridSection({ events, emptyMessage, onOpenEvent, onEditEvent, onDeleteEvent, deletingEventId = '' }) {
   if (!events.length) {
     return <p className="settings-empty">{emptyMessage}</p>
   }
@@ -43,6 +43,16 @@ function EventGridSection({ events, emptyMessage, onOpenEvent, onEditEvent }) {
               Edit Event
             </button>
           ) : null}
+          {typeof onDeleteEvent === 'function' ? (
+            <button
+              type="button"
+              className="settings-event-delete-button"
+              onClick={() => onDeleteEvent(event._id, event.title)}
+              disabled={deletingEventId === event._id}
+            >
+              {deletingEventId === event._id ? 'Deleting...' : 'Delete Event'}
+            </button>
+          ) : null}
         </div>
       ))}
     </div>
@@ -66,6 +76,7 @@ export default function SettingsPage() {
   const [savingCommentId, setSavingCommentId] = useState('')
   const [deletingCommentId, setDeletingCommentId] = useState('')
   const [leavingGroupId, setLeavingGroupId] = useState('')
+  const [deletingEventId, setDeletingEventId] = useState('')
   const [commentActionError, setCommentActionError] = useState('')
   const [collapsed, setCollapsed] = useState({
     attending: false,
@@ -208,6 +219,22 @@ export default function SettingsPage() {
       alert(err.message || 'Failed to leave group')
     } finally {
       setLeavingGroupId('')
+    }
+  }
+
+  async function handleDeleteEvent(eventId, eventTitle) {
+    if (!window.confirm(`Are you sure you want to delete "${eventTitle}"? This cannot be undone.`)) {
+      return
+    }
+
+    try {
+      setDeletingEventId(eventId)
+      await deleteEvent(eventId)
+      setMyEvents((previous) => previous.filter((event) => event._id !== eventId))
+    } catch (err) {
+      alert(err.message || 'Failed to delete event')
+    } finally {
+      setDeletingEventId('')
     }
   }
 
@@ -366,6 +393,8 @@ export default function SettingsPage() {
                 emptyMessage="You have not created any events yet."
                 onOpenEvent={setActiveEventId}
                 onEditEvent={(eventId) => navigate(`/events/${eventId}/edit`)}
+                onDeleteEvent={handleDeleteEvent}
+                deletingEventId={deletingEventId}
               />
             )}
           </article>
