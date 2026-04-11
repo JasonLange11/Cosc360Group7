@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useAuth } from '../../context/AuthContext'
 import '@fortawesome/fontawesome-free/css/all.min.css'
 import { getGroupById, joinGroup, leaveGroup } from '../../lib/groupsApi'
+import { createFlag } from '../../lib/flagsApi.js'
 import CommentSection from '../comments/CommentSection'
 import './css/GroupDetails.css'
 
@@ -21,6 +22,8 @@ export default function GroupDetails({
     const [error, setError] = useState(null)
     const [actionLoading, setActionLoading] = useState(false)
     const [internalActionError, setInternalActionError] = useState('')
+    const [flagBusy, setFlagBusy] = useState(false)
+    const [flagMessage, setFlagMessage] = useState('')
 
     useEffect(() => {
         function handleEscape(groupKey) {
@@ -131,6 +134,25 @@ export default function GroupDetails({
             }
         }
 
+    const handleFlag = async () => {
+            if (!currentUser) {
+                setFlagMessage('You must be logged in to flag content.')
+                return
+            }
+
+            const reason = window.prompt('Optional reason for flagging this group:') || ''
+
+            try {
+                setFlagBusy(true)
+                await createFlag({ targetType: 'group', targetId: group._id, reason })
+                setFlagMessage('Group flagged for admin review.')
+            } catch (err) {
+                setFlagMessage(err.message || 'Failed to flag group.')
+            } finally {
+                setFlagBusy(false)
+            }
+    }
+
     return (
         <div className="group-details-overlay" onClick={onClose}>
             <main className="group-details-shell" onClick={(clickGroup) => clickGroup.stopPropagation()}>
@@ -182,6 +204,19 @@ export default function GroupDetails({
                         </button>
                         {actionError ? <p className="group-details-action-error">{actionError}</p> : null}
                         {internalActionError ? <p className="group-details-action-error">{internalActionError}</p> : null}
+
+                        <button
+                            type="button"
+                            className="group-details-button"
+                            onClick={handleFlag}
+                            disabled={flagBusy}
+                            title="Flag group"
+                            aria-label="Flag group"
+                        >
+                            <i className={`fa-regular ${flagBusy ? 'fa-hourglass-half' : 'fa-flag'}`}></i>
+                            {flagBusy ? ' Flagging...' : ' Flag'}
+                        </button>
+                        {flagMessage ? <p className="group-details-action-error">{flagMessage}</p> : null}
 
                         <CommentSection parentType="group" parentId={group._id} pageSize={5} />
                     </div>

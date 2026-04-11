@@ -82,7 +82,7 @@ export default function AdminPage() {
               <QuickOverview />
               <section className="a-dash a-top">
                 <ModerateUsers compact onMore={() => setActiveTab('users')} />
-                <FlaggedContent compact />
+                <FlaggedContent compact onMore={() => setActiveTab('flagged')} selectedFilter="open" />
               </section>
               <section className="a-dash a-bottom">
                 <ModerateEvents compact onMore={() => setActiveTab('events')} />
@@ -95,6 +95,7 @@ export default function AdminPage() {
 
           {activeTab === 'users' ? <ModerateUsers selectedFilter={selectedFilters.users} /> : null}
           {activeTab === 'events' ? <ModerateEvents selectedFilter={selectedFilters.events} /> : null}
+          {activeTab === 'flagged' ? <FlaggedContent selectedFilter="open" /> : null}
           {activeTab === 'reports' ? <Reports selectedFilter={selectedFilters.reports} /> : null}
           {activeTab === 'groups' ? <ModerateGroups selectedFilter={selectedFilters.groups} /> : null}
           

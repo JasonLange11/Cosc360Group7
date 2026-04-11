@@ -61,14 +61,14 @@ function Navbar(){
                             </NavLink>
                         </li>
                         ) : null}      
-                        {!currentUser.isAdmin ? (
+                        
                             <li>
                                 <NavLink to="/groups">
                                     <i className="fa-solid fa-users"></i>
                                     Group
                                 </NavLink>
                             </li>
-                        ) : null}   
+                         
                         {!currentUser.isAdmin ? (
                             <li>
                                 <NavLink to="/groups/new">
@@ -112,13 +112,22 @@ function Navbar(){
                             ) : null}
                         </li>
                     </>
-                ) : (
+                ) :
+                 (
+                <>
+                    <li>
+                        <NavLink to="/groups">
+                            <i className="fa-solid fa-users"></i>
+                             Group
+                        </NavLink>
+                    </li>
                     <li>
                         <NavLink to='/login'>
                             <i className="fa-regular fa-circle-user"></i>
                             Login
                         </NavLink>
                     </li>
+                </>
                 )}
             </ul>
         </nav>
