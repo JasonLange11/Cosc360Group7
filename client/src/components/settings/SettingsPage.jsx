@@ -4,8 +4,8 @@ import Header from '../ui/Header.jsx'
 import Footer from '../ui/Footer.jsx'
 import CardDisplay from '../ui/CardDisplay.jsx'
 import EventDetails from '../events/EventDetails.jsx'
-import { getAttendingEvents, getMyEvents } from '../../lib/eventsApi.js'
-import { getGroupMembership, getMyGroups, deleteGroup } from '../../lib/groupsApi.js'
+import { getAttendingEvents, getEventById, getMyEvents } from '../../lib/eventsApi.js'
+import { getGroupById, getGroupMembership, getMyGroups, deleteGroup } from '../../lib/groupsApi.js'
 import { getMyComments } from '../../lib/commentsApi.js'
 import { useAuth } from '../../context/AuthContext.jsx'
 import './css/SettingsPage.css'
@@ -60,6 +60,7 @@ export default function SettingsPage() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [activeEventId, setActiveEventId] = useState(null)
+  const [commentParentNames, setCommentParentNames] = useState({})
   const [collapsed, setCollapsed] = useState({
     attending: false,
     groups: false,
@@ -69,6 +70,62 @@ export default function SettingsPage() {
   })
 
   const profile = useMemo(() => currentUser || null, [currentUser])
+
+  async function resolveCommentParentNames(comments, { created, attending, groups, createdGroups }) {
+    const namesByKey = {}
+
+    const registerName = (parentType, parentId, name) => {
+      if (!parentType || !parentId || !name) {
+        return
+      }
+      namesByKey[`${parentType}:${parentId}`] = name
+    }
+
+    const knownEvents = [...(Array.isArray(created) ? created : []), ...(Array.isArray(attending) ? attending : [])]
+    knownEvents.forEach((event) => {
+      registerName('event', event?._id, event?.title)
+    })
+
+    const knownGroups = [...(Array.isArray(groups) ? groups : []), ...(Array.isArray(createdGroups) ? createdGroups : [])]
+    knownGroups.forEach((group) => {
+      registerName('group', group?._id, group?.name)
+    })
+
+    const missingTargets = []
+    const seenMissingKeys = new Set()
+    const commentList = Array.isArray(comments) ? comments : []
+    commentList.forEach((comment) => {
+      const key = `${comment?.parentType}:${comment?.parentId}`
+      const isMissing =
+        (comment?.parentType === 'event' || comment?.parentType === 'group') &&
+        comment?.parentId &&
+        !namesByKey[key]
+      if (isMissing && !seenMissingKeys.has(key)) {
+        seenMissingKeys.add(key)
+        missingTargets.push(comment)
+      }
+    })
+
+    await Promise.all(
+      missingTargets.map(async (comment) => {
+        const key = `${comment.parentType}:${comment.parentId}`
+        try {
+          if (comment.parentType === 'event') {
+            const event = await getEventById(comment.parentId)
+            registerName(comment.parentType, comment.parentId, event?.title)
+            return
+          }
+
+          const group = await getGroupById(comment.parentId)
+          registerName(comment.parentType, comment.parentId, group?.name)
+        } catch {
+          namesByKey[key] = comment.parentType === 'event' ? 'Unknown event' : 'Unknown group'
+        }
+      })
+    )
+
+    return namesByKey
+  }
 
   async function loadProfileData() {
     try {
@@ -86,6 +143,13 @@ export default function SettingsPage() {
       setJoinedGroups(Array.isArray(groups) ? groups : [])
       setMyGroups(Array.isArray(createdGroups) ? createdGroups : [])
       setMyComments(Array.isArray(comments) ? comments : [])
+      const resolvedCommentParentNames = await resolveCommentParentNames(comments, {
+        created,
+        attending,
+        groups,
+        createdGroups,
+      })
+      setCommentParentNames(resolvedCommentParentNames)
       setError('')
     } catch (err) {
       setError(err.message || 'Failed to load settings data.')
@@ -94,6 +158,7 @@ export default function SettingsPage() {
       setJoinedGroups([])
       setMyGroups([])
       setMyComments([])
+      setCommentParentNames({})
     } finally {
       setLoading(false)
     }
@@ -258,7 +323,7 @@ export default function SettingsPage() {
                     <th>Comment</th>
                     <th>Date</th>
                     <th>Type</th>
-                    <th>Parent ID</th>
+                    <th>Commented On</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -272,7 +337,7 @@ export default function SettingsPage() {
                         <td>{comment.content}</td>
                         <td>{new Date(comment.createdAt).toLocaleString()}</td>
                         <td>{comment.parentType}</td>
-                        <td>{String(comment.parentId || '')}</td>
+                        <td>{commentParentNames[`${comment.parentType}:${comment.parentId}`] || 'Unknown'}</td>
                       </tr>
                     ))
                   )}
