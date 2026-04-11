@@ -16,6 +16,7 @@ router.get("/mine", authenticateUser, getMyComments);
 router.get("/:commentId", getComment);
 
 router.post("/", optionalAuthenticateUser, createComment);
+router.patch("/:commentId", authenticateUser, updateComment);
 router.put("/:commentId", authenticateUser, updateComment);
 router.delete("/:commentId", authenticateUser, deleteComment);
 

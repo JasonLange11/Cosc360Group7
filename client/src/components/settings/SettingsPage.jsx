@@ -4,14 +4,15 @@ import Header from '../ui/Header.jsx'
 import Footer from '../ui/Footer.jsx'
 import CardDisplay from '../ui/CardDisplay.jsx'
 import EventDetails from '../events/EventDetails.jsx'
-import { getAttendingEvents, getEventById, getMyEvents } from '../../lib/eventsApi.js'
-import { getGroupById, getGroupMembership, getMyGroups, deleteGroup } from '../../lib/groupsApi.js'
-import { deleteComment as deleteCommentById, getMyComments, updateComment } from '../../lib/commentsApi.js'
+import { deleteEvent, getAttendingEvents, getEventById, getMyEvents } from '../../lib/eventsApi.js'
+import { getGroupById, getGroupMembership, getMyGroups, deleteGroup, leaveGroup } from '../../lib/groupsApi.js'
+import { createComment, deleteComment as deleteCommentById, getMyComments, updateComment } from '../../lib/commentsApi.js'
+import { isEventExpired } from '../../lib/eventDates.js'
 import { useAuth } from '../../context/AuthContext.jsx'
 import { usePopup } from '../ui/PopupProvider'
 import './css/SettingsPage.css'
 
-function EventGridSection({ events, emptyMessage, onOpenEvent, onEditEvent }) {
+function EventGridSection({ events, emptyMessage, onOpenEvent, onEditEvent, onDeleteEvent, deletingEventId = '' }) {
   if (!events.length) {
     return <p className="settings-empty">{emptyMessage}</p>
   }
@@ -44,6 +45,16 @@ function EventGridSection({ events, emptyMessage, onOpenEvent, onEditEvent }) {
               Edit Event
             </button>
           ) : null}
+          {typeof onDeleteEvent === 'function' ? (
+            <button
+              type="button"
+              className="settings-event-delete-button"
+              onClick={() => onDeleteEvent(event._id, event.title)}
+              disabled={deletingEventId === event._id}
+            >
+              {deletingEventId === event._id ? 'Deleting...' : 'Delete Event'}
+            </button>
+          ) : null}
         </div>
       ))}
     </div>
@@ -56,6 +67,7 @@ export default function SettingsPage() {
   const { showConfirm, showToast } = usePopup()
   const [myEvents, setMyEvents] = useState([])
   const [attendingEvents, setAttendingEvents] = useState([])
+  const [pastAttendingEvents, setPastAttendingEvents] = useState([])
   const [joinedGroups, setJoinedGroups] = useState([])
   const [myGroups, setMyGroups] = useState([])
   const [myComments, setMyComments] = useState([])
@@ -67,9 +79,12 @@ export default function SettingsPage() {
   const [editingCommentContent, setEditingCommentContent] = useState('')
   const [savingCommentId, setSavingCommentId] = useState('')
   const [deletingCommentId, setDeletingCommentId] = useState('')
+  const [leavingGroupId, setLeavingGroupId] = useState('')
+  const [deletingEventId, setDeletingEventId] = useState('')
   const [commentActionError, setCommentActionError] = useState('')
   const [collapsed, setCollapsed] = useState({
     attending: false,
+    pastEvents: false,
     groups: false,
     created: false,
     createdGroups: false,
@@ -77,6 +92,34 @@ export default function SettingsPage() {
   })
 
   const profile = useMemo(() => currentUser || null, [currentUser])
+  const favoriteTagFromPastEvents = useMemo(() => {
+    const tagCounts = new Map()
+
+    pastAttendingEvents.forEach((event) => {
+      const tags = Array.isArray(event?.tags) ? event.tags : []
+      tags.forEach((tag) => {
+        const normalizedTag = String(tag || '').trim().toLowerCase()
+        if (!normalizedTag) {
+          return
+        }
+
+        const currentCount = tagCounts.get(normalizedTag) || 0
+        tagCounts.set(normalizedTag, currentCount + 1)
+      })
+    })
+
+    if (!tagCounts.size) {
+      return ''
+    }
+
+    return Array.from(tagCounts.entries())
+      .sort((a, b) => {
+        if (b[1] !== a[1]) {
+          return b[1] - a[1]
+        }
+        return a[0].localeCompare(b[0])
+      })[0][0]
+  }, [pastAttendingEvents])
 
   async function resolveCommentParentNames(comments, { created, attending, groups, createdGroups }) {
     const namesByKey = {}
@@ -144,9 +187,13 @@ export default function SettingsPage() {
         getMyGroups(),
         getMyComments(),
       ])
+      const attendingEventList = Array.isArray(attending) ? attending : []
+      const currentAttendingEvents = attendingEventList.filter((event) => !isEventExpired(event.eventDate))
+      const expiredAttendingEvents = attendingEventList.filter((event) => isEventExpired(event.eventDate))
 
       setMyEvents(created)
-      setAttendingEvents(attending)
+      setAttendingEvents(currentAttendingEvents)
+      setPastAttendingEvents(expiredAttendingEvents)
       setJoinedGroups(Array.isArray(groups) ? groups : [])
       setMyGroups(Array.isArray(createdGroups) ? createdGroups : [])
       setMyComments(Array.isArray(comments) ? comments : [])
@@ -163,6 +210,7 @@ export default function SettingsPage() {
       setError(err.message || 'Failed to load settings data.')
       setMyEvents([])
       setAttendingEvents([])
+      setPastAttendingEvents([])
       setJoinedGroups([])
       setMyGroups([])
       setMyComments([])
@@ -213,6 +261,38 @@ export default function SettingsPage() {
     }
   }
 
+  async function handleLeaveGroup(groupId, groupName) {
+    if (!window.confirm(`Are you sure you want to leave "${groupName}"?`)) {
+      return
+    }
+
+    try {
+      setLeavingGroupId(groupId)
+      await leaveGroup(groupId)
+      setJoinedGroups((previous) => previous.filter((group) => group._id !== groupId))
+    } catch (err) {
+      alert(err.message || 'Failed to leave group')
+    } finally {
+      setLeavingGroupId('')
+    }
+  }
+
+  async function handleDeleteEvent(eventId, eventTitle) {
+    if (!window.confirm(`Are you sure you want to delete "${eventTitle}"? This cannot be undone.`)) {
+      return
+    }
+
+    try {
+      setDeletingEventId(eventId)
+      await deleteEvent(eventId)
+      setMyEvents((previous) => previous.filter((event) => event._id !== eventId))
+    } catch (err) {
+      alert(err.message || 'Failed to delete event')
+    } finally {
+      setDeletingEventId('')
+    }
+  }
+
   function canManageComment(comment) {
     if (!currentUser) {
       return false
@@ -251,6 +331,28 @@ export default function SettingsPage() {
       setEditingCommentId('')
       setEditingCommentContent('')
     } catch (err) {
+      const activeComment = myComments.find((comment) => comment._id === commentId)
+
+      if (activeComment?.parentType && activeComment?.parentId) {
+        try {
+          const replacementComment = await createComment({
+            parentType: activeComment.parentType,
+            parentId: activeComment.parentId,
+            content,
+          })
+          await deleteCommentById(commentId)
+          setMyComments((previous) => previous.map((comment) => (
+            comment._id === commentId ? { ...comment, ...replacementComment } : comment
+          )))
+          setEditingCommentId('')
+          setEditingCommentContent('')
+          setCommentActionError('')
+          return
+        } catch {
+          // Fall through to show the original update failure below.
+        }
+      }
+
       setCommentActionError(err.message || 'Failed to update comment')
     } finally {
       setSavingCommentId('')
@@ -307,7 +409,7 @@ export default function SettingsPage() {
             <p className="settings-user">{profile?.name || 'User'}</p>
             <p>{profile?.bio || 'No bio added yet.'}</p>
             <p><strong>Location:</strong> {profile?.location || 'Not set'}</p>
-            <p><strong>Favorite Tags:</strong> {Array.isArray(profile?.favoriteTags) && profile.favoriteTags.length ? profile.favoriteTags.join(', ') : 'None'}</p>
+            <p><strong>Favorite Tag:</strong> {favoriteTagFromPastEvents || 'you have not attended any events yet'}</p>
           </div>
           <div className="settings-top-actions">
             <Link to="/settings/edit" className="settings-btn-primary">Edit Profile</Link>
@@ -330,6 +432,19 @@ export default function SettingsPage() {
           </article>
 
           <article className="settings-card-section">
+            <button type="button" className="settings-section-title" onClick={() => toggleSection('pastEvents')}>
+              Past Events <span>{collapsed.pastEvents ? 'v' : '^'}</span>
+            </button>
+            {collapsed.pastEvents ? null : (
+              <EventGridSection
+                events={pastAttendingEvents}
+                emptyMessage="You have not attended any past events yet."
+                onOpenEvent={setActiveEventId}
+              />
+            )}
+          </article>
+
+          <article className="settings-card-section">
             <button type="button" className="settings-section-title" onClick={() => toggleSection('groups')}>
               Groups <span>{collapsed.groups ? 'v' : '^'}</span>
             </button>
@@ -339,7 +454,19 @@ export default function SettingsPage() {
               ) : (
                 <ul className="settings-list">
                   {joinedGroups.map((group) => (
-                    <li key={group._id} className="settings-list-item">{group.name}</li>
+                    <li key={group._id} className="settings-list-item">
+                      <div className="settings-list-item-row">
+                        <span>{group.name}</span>
+                        <button
+                          type="button"
+                          className="settings-group-leave-button"
+                          onClick={() => handleLeaveGroup(group._id, group.name)}
+                          disabled={leavingGroupId === group._id}
+                        >
+                          {leavingGroupId === group._id ? 'Leaving...' : 'Leave Group'}
+                        </button>
+                      </div>
+                    </li>
                   ))}
                 </ul>
               )
@@ -356,6 +483,8 @@ export default function SettingsPage() {
                 emptyMessage="You have not created any events yet."
                 onOpenEvent={setActiveEventId}
                 onEditEvent={(eventId) => navigate(`/events/${eventId}/edit`)}
+                onDeleteEvent={handleDeleteEvent}
+                deletingEventId={deletingEventId}
               />
             )}
           </article>
