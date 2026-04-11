@@ -24,3 +24,7 @@ This starts the app and local MongoDB together. The server now runs the seed com
 ### Note that the overwrite command will replace existing data
 - In project root folder
 - docker compose exec server npm run seed
+
+## Testing
+- In the server or client folder
+- npm test
