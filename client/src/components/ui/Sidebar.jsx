@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react'
 import { getGroups } from '../../lib/groupsApi'
+import { TAG_OPTIONS } from '../../lib/tagOptions.js'
 import './css/Sidebar.css'
 
 function Sidebar({
   onOpenGroup,
-  availableTags = [],
+  availableTags = TAG_OPTIONS,
   selectedTags = [],
   onSelectedTagsChange,
 }) {

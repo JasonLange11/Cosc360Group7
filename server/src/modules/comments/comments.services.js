@@ -5,6 +5,7 @@ import {
   getCommentsCountByParent,
   getCommentsByUserId,
   deleteCommentById,
+  updateCommentContentById,
 } from "./comments.repository.js";
 
 function toPlainComment(comment) {
@@ -86,6 +87,38 @@ export async function removeComment(requestUser, targetCommentId) {
   }
 
   await deleteCommentById(targetCommentId);
+}
+
+export async function updateComment(requestUser, targetCommentId, contentInput) {
+  if (!requestUser) {
+    throw new Error("Authentication required");
+  }
+
+  const comment = await getCommentById(targetCommentId);
+
+  if (!comment) {
+    throw new Error("Comment not found");
+  }
+
+  const content = contentInput?.trim();
+
+  if (!content) {
+    throw new Error("Content is required");
+  }
+
+  const isOwnComment = requestUser.id?.toString() === comment.userId?.toString();
+
+  if (!isOwnComment && !requestUser.isAdmin) {
+    throw new Error("Forbidden");
+  }
+
+  const updatedComment = await updateCommentContentById(targetCommentId, content);
+
+  if (!updatedComment) {
+    throw new Error("Comment not found");
+  }
+
+  return toPlainComment(updatedComment);
 }
 
 export async function fetchUserComments(user) {

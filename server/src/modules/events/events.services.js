@@ -95,6 +95,14 @@ function ensureUserCanAttendEvents(user) {
   }
 }
 
+function validateEventCapacity(capacityValue) {
+  const parsedCapacity = Number(capacityValue);
+
+  if (!Number.isInteger(parsedCapacity) || parsedCapacity < 1 || parsedCapacity > 10000) {
+    throw new Error("Capacity must be between 1 and 10000");
+  }
+}
+
 function toPlainEvent(event) {
   return typeof event.toObject === "function" ? event.toObject() : event;
 }
@@ -135,6 +143,8 @@ export async function createUserEvent(user, eventData) {
   if(user.isAdmin){
     throw new Error("Admins can not create events");
   }
+
+  validateEventCapacity(eventData?.capacity);
 
   const event = await createEvent({
     ...eventData,
@@ -258,6 +268,10 @@ export async function editEvent(user, eventId, updateData) {
 
   if (!canModifyEvent(user, existingEvent)) {
     throw new Error("Forbidden");
+  }
+
+  if (Object.prototype.hasOwnProperty.call(updateData || {}, "capacity")) {
+    validateEventCapacity(updateData.capacity);
   }
 
   const updatedEvent = await updateEventById(eventId, updateData);

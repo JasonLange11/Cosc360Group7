@@ -132,6 +132,49 @@
   vertical-align: top;
 }
 
+.settings-comment-edit-input {
+  width: 100%;
+  min-height: 5.2rem;
+  border: 1px solid #8a7cb5;
+  background: #fff;
+  color: #2d2050;
+  padding: 0.45rem 0.5rem;
+  resize: vertical;
+  font: inherit;
+}
+
+.settings-comment-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.settings-comment-action-button {
+  border: 1px solid #6a58a3;
+  background: #f6f2ff;
+  color: #2d2050;
+  font-weight: 700;
+  padding: 0.3rem 0.5rem;
+  cursor: pointer;
+}
+
+.settings-comment-action-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.settings-comment-action-delete {
+  border-color: #a33a3a;
+  background: #fff2f2;
+  color: #5c1a1a;
+}
+
+.settings-comment-action-error {
+  margin-top: 0.6rem;
+  color: #9a1f2f;
+  font-weight: 600;
+}
+
 .settings-empty,
 .settings-error {
   color: #442f70;

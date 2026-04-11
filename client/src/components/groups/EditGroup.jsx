@@ -5,12 +5,14 @@ import Footer from '../ui/Footer'
 import { getGroupById, updateGroup } from '../../lib/groupsApi'
 import { uploadGroupBannerImage } from '../../lib/uploadsApi'
 import { useAuth } from '../../context/AuthContext'
+import { usePopup } from '../ui/PopupProvider'
 import './css/GroupCreate.css'
 
 export default function EditGroup() {
   const navigate = useNavigate()
   const { groupId } = useParams()
   const { currentUser } = useAuth()
+  const { showToast } = usePopup()
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
@@ -111,9 +113,19 @@ export default function EditGroup() {
         location,
         bannerImage,
       })
+      showToast({
+        type: 'success',
+        title: 'Update Successful',
+        message: 'Group updated successfully.',
+      })
       navigate(currentUser?.isAdmin ? '/admin' : '/settings')
     } catch (err) {
       setError(err.message || 'Failed to update group')
+      showToast({
+        type: 'error',
+        title: 'Update Failed',
+        message: err.message || 'Failed to update group',
+      })
     } finally {
       setSaving(false)
     }
@@ -249,7 +261,7 @@ export default function EditGroup() {
                 />
               </div>
 
-              <button type="submit" className="form-submit-button" disabled={saving || !groupName.trim()}>
+                <button type="submit" className="form-submit-button" disabled={saving || !groupName.trim()}>
                   {saving ? 'Saving...' : 'Save Changes'}
               </button>
               <button type="button" className="form-cancel-button" onClick={handleCancel} disabled={saving}>

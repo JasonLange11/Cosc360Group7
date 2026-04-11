@@ -3,10 +3,12 @@ import '@fortawesome/fontawesome-free/css/all.min.css'
 import { useAuth } from '../../context/AuthContext'
 import { createComment, deleteComment, getComments } from '../../lib/commentsApi'
 import { createFlag } from '../../lib/flagsApi.js'
+import { usePopup } from '../ui/PopupProvider'
 import './css/CommentSection.css'
 
 export default function CommentSection({ parentType, parentId, pageSize = 5 }) {
   const { currentUser } = useAuth()
+  const { showConfirm, showPrompt, showToast } = usePopup()
   const [items, setItems] = useState([])
   const [total, setTotal] = useState(0)
   const [page, setPage] = useState(1)
@@ -97,6 +99,17 @@ export default function CommentSection({ parentType, parentId, pageSize = 5 }) {
   }
 
   const handleDelete = async (commentId) => {
+    const confirmed = await showConfirm({
+      title: 'Delete Comment',
+      message: 'Are you sure you want to delete this comment?',
+      confirmText: 'Delete',
+      cancelText: 'Cancel',
+    })
+
+    if (!confirmed) {
+      return
+    }
+
     try {
       await deleteComment(commentId)
 
@@ -109,6 +122,11 @@ export default function CommentSection({ parentType, parentId, pageSize = 5 }) {
       setTotal(Number.isFinite(data?.total) ? data.total : 0)
       setPage(nextPage)
       setError('')
+      showToast({
+        type: 'success',
+        title: 'Comment Deleted',
+        message: 'Your comment was deleted successfully.',
+      })
     } catch (err) {
       setError(err.message || 'Failed to delete comment')
     }
@@ -131,14 +149,36 @@ export default function CommentSection({ parentType, parentId, pageSize = 5 }) {
   }
 
   const handleFlag = async (commentId) => {
-    const reason = window.prompt('Optional reason for flagging this comment:') || ''
+    const reasonResponse = await showPrompt({
+      title: 'Flag Comment',
+      message: 'Optional reason for flagging this comment:',
+      placeholder: 'Reason (optional)',
+      confirmText: 'Submit Flag',
+      cancelText: 'Cancel',
+    })
+
+    if (reasonResponse === null) {
+      return
+    }
+
+    const reason = reasonResponse.trim()
 
     try {
       setFlagBusyCommentId(commentId)
       setError('')
       await createFlag({ targetType: 'comment', targetId: commentId, reason })
+      showToast({
+        type: 'success',
+        title: 'Flag Submitted',
+        message: 'Comment flagged for admin review.',
+      })
     } catch (err) {
       setError(err.message || 'Failed to flag comment')
+      showToast({
+        type: 'error',
+        title: 'Flag Failed',
+        message: err.message || 'Failed to flag comment',
+      })
     } finally {
       setFlagBusyCommentId('')
     }
