@@ -86,6 +86,7 @@ export default function ModerateUsers({ compact = false, onMore, selectedFilter 
                 setRemoveError('')
                 await deleteUser(userId)
                 setUsers((currentUsers) => currentUsers.filter((user) => getUserId(user) !== userId))
+                window.dispatchEvent(new CustomEvent('admin:user-removed'))
             } catch (error) {
                 setRemoveError(error.message || 'Failed to remove user')
             } finally {

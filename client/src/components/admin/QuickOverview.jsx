@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react';
 import { getEvents } from '../../lib/eventsApi';
 import { getUsers } from '../../lib/usersApi';
+import { getFlags } from '../../lib/flagsApi.js';
 import './css/QuickOverview.css';
 
 export default function QuickOverview(){
@@ -13,20 +14,45 @@ export default function QuickOverview(){
     useEffect(() => {
     const fetchData = async () => {
         try {
-            const eventsData = await getEvents();
-            const usersData = await getUsers();
+            const [eventsData, usersData, flagsData] = await Promise.all([
+                getEvents(),
+                getUsers(),
+                getFlags(),
+            ]);
 
             setUsers(usersData.length);
             setEvents(eventsData.length);
+            setFlagged(Array.isArray(flagsData) ? flagsData.filter((flag) => flag.status === 'open').length : 0);
         } catch(err){
             console.log("Failed to fetch events", err);
         }
-
-        // Placeholder for future moderation data source.
-        setFlagged(0);
     };
 
     fetchData();
+    }, []);
+
+    useEffect(() => {
+        function handleUserRemoved() {
+            setUsers((currentUsers) => Math.max(0, currentUsers - 1));
+        }
+
+        function handleFlagCountDelta(event) {
+            const delta = Number(event?.detail?.delta || 0);
+
+            if (!Number.isFinite(delta) || delta === 0) {
+                return;
+            }
+
+            setFlagged((currentFlags) => Math.max(0, currentFlags + delta));
+        }
+
+        window.addEventListener('admin:user-removed', handleUserRemoved);
+        window.addEventListener('admin:open-flag-count-delta', handleFlagCountDelta);
+
+        return () => {
+            window.removeEventListener('admin:user-removed', handleUserRemoved);
+            window.removeEventListener('admin:open-flag-count-delta', handleFlagCountDelta);
+        };
     }, []);
 
     return(

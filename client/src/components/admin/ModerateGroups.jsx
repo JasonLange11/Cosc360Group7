@@ -1,5 +1,6 @@
 
 import { useEffect, useMemo, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import SearchBar from '../search/SearchBar'
 import CardDisplay from '../ui/CardDisplay'
 import GroupDetails from '../groups/GroupDetails'
@@ -11,6 +12,7 @@ function getGroupId(group) {
 }
 
 export default function ModerateGroups({ compact = false, onMore }) {
+    const navigate = useNavigate()
     const [groups, setGroups] = useState([])
     const [searchTerm, setSearchTerm] = useState('')
     const [loading, setLoading] = useState(true)
@@ -108,21 +110,29 @@ export default function ModerateGroups({ compact = false, onMore }) {
                         const groupId = getGroupId(group)
 
                         return (
-                            <CardDisplay
-                                key={groupId}
-                                groupId={groupId}
-                                onOpenGroup={setActiveGroupId}
-                                img={{
-                                    src: group.bannerImage,
-                                    alt: group.name,
-                                }}
-                                heading={group.name}
-                                details={[
-                                    ['fa-location-dot', group.location || 'Location TBD'],
-                                    ['fa-person', group.organizerName || 'Organizer TBD'],
-                                ]}
-                                description={group.description || 'No description available.'}
-                            />
+                            <div key={groupId} className="a-event-item">
+                                <CardDisplay
+                                    groupId={groupId}
+                                    onOpenGroup={setActiveGroupId}
+                                    img={{
+                                        src: group.bannerImage,
+                                        alt: group.name,
+                                    }}
+                                    heading={group.name}
+                                    details={[
+                                        ['fa-location-dot', group.location || 'Location TBD'],
+                                        ['fa-person', group.organizerName || 'Organizer TBD'],
+                                    ]}
+                                    description={group.description || 'No description available.'}
+                                />
+                                <button
+                                    type="button"
+                                    className="a-edit-button"
+                                    onClick={() => navigate(`/groups/${groupId}/edit`)}
+                                >
+                                    Edit Group
+                                </button>
+                            </div>
                         )
                     })
                 )}

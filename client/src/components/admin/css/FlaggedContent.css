@@ -60,6 +60,17 @@
     color: #2f2942;
 }
 
+.a-main p {
+    margin: 0.2rem 0 0;
+    font-size: 0.8rem;
+    color: #4c4561;
+}
+
+.a-flag-meta {
+    font-size: 0.76rem;
+    color: #665f7d;
+}
+
 .a-icon {
     color: #60567f;
     font-size: 0.95rem;
@@ -99,6 +110,31 @@
     margin: 0.4rem 0;
     color: #5d5872;
     font-size: 0.9rem;
+}
+
+.a-flag-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(24, 17, 41, 0.45);
+    display: grid;
+    place-items: center;
+    padding: 1rem;
+    z-index: 1000;
+}
+
+.a-flag-modal {
+    width: min(640px, 95vw);
+    max-height: 85vh;
+    overflow: auto;
+    border: 1px solid #d2cce3;
+    border-radius: 0.6rem;
+    background: #ffffff;
+    padding: 1rem;
+}
+
+.a-flag-modal p {
+    margin: 0.5rem 0;
+    color: #413b57;
 }
 
 @media (max-width: 1000px) {

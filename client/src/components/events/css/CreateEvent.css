@@ -28,6 +28,10 @@
   font-weight: 600;
 }
 
+.required {
+  color: #e74c3c;
+}
+
 .create-event-form input,
 .create-event-form select,
 .create-event-form textarea {

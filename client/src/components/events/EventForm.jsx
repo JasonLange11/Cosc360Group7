@@ -123,7 +123,7 @@ export default function EventForm({
 
       <form className="create-event-form" onSubmit={handleSubmit}>
         <label>
-          Event Title *
+          <span>Event Title <span className="required">*</span></span>
           <input
             type="text"
             value={title}
@@ -135,7 +135,7 @@ export default function EventForm({
         </label>
 
         <label>
-          Description *
+          <span>Description <span className="required">*</span></span>
           <textarea
             value={description}
             onChange={(changeEvent) => setDescription(changeEvent.target.value)}
@@ -173,7 +173,7 @@ export default function EventForm({
 
         <div className="create-event-grid-two">
           <label>
-            Event Date *
+            <span>Event Date <span className="required">*</span></span>
             <input
               type="date"
               value={eventDate}
@@ -183,7 +183,7 @@ export default function EventForm({
           </label>
 
           <label>
-            Start Time *
+            <span>Start Time <span className="required">*</span></span>
             <select
               value={eventTime}
               onChange={(changeEvent) => setEventTime(changeEvent.target.value)}
@@ -200,7 +200,7 @@ export default function EventForm({
         </div>
 
         <label>
-          Venue Address *
+          <span>Venue Address <span className="required">*</span></span>
           <input
             type="text"
             value={location}
@@ -218,7 +218,7 @@ export default function EventForm({
           </label>
 
           <label>
-            Event Capacity *
+            <span>Event Capacity <span className="required">*</span></span>
             <input
               type="number"
               min="1"
@@ -243,7 +243,7 @@ export default function EventForm({
             </label>
 
             <label>
-              Ticket Price {!freeAdmission ? '*' : ''}
+              <span>Ticket Price {!freeAdmission ? <span className="required">*</span> : ''}</span>
               <input
                 type="number"
                 min="0"
@@ -257,7 +257,7 @@ export default function EventForm({
           </div>
 
           <label>
-            Event Banner Image {requireBannerImage ? '*' : ''}
+            <span>Event Banner Image {requireBannerImage ? <span className="required">*</span> : ''}</span>
             <input
               type="file"
               accept="image/jpeg,image/png,image/webp,image/gif"
