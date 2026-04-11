@@ -67,6 +67,11 @@ export default function CommentSection({ parentType, parentId, pageSize = 5 }) {
   const handleSubmit = async (event) => {
     event.preventDefault()
 
+    if (!currentUser) {
+      setError('You must be logged in to post a comment')
+      return
+    }
+
     const content = newComment.trim()
 
     if (!content) {
@@ -197,18 +202,24 @@ export default function CommentSection({ parentType, parentId, pageSize = 5 }) {
 
       {error ? <p className="comment-error">{error}</p> : null}
 
-      <form className="comment-form" onSubmit={handleSubmit}>
-        <textarea
-          className="comment-input"
-          rows={3}
-          value={newComment}
-          onChange={(event) => setNewComment(event.target.value)}
-          placeholder="Write a comment..."
-        />
-        <button className="comment-submit" type="submit" disabled={submitting}>
-          {submitting ? 'Posting...' : 'Post Comment'}
-        </button>
-      </form>
+      {currentUser ? (
+        <form className="comment-form" onSubmit={handleSubmit}>
+          <textarea
+            className="comment-input"
+            rows={3}
+            value={newComment}
+            onChange={(event) => setNewComment(event.target.value)}
+            placeholder="Write a comment..."
+          />
+          <button className="comment-submit" type="submit" disabled={submitting}>
+            {submitting ? 'Posting...' : 'Post Comment'}
+          </button>
+        </form>
+      ) : (
+        <p className="comment-login-prompt">
+          <a href="/login">Log in</a> to leave a comment.
+        </p>
+      )}
     </section>
   )
 }

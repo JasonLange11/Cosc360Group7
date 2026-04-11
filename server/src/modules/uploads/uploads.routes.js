@@ -4,6 +4,7 @@ import { authenticateUser } from "../../middleware/auth.js";
 import {
   getUploadContent,
   uploadEventBanner,
+  uploadGroupBanner,
   uploadProfileImage,
   uploadProfileImageMulter,
 } from "./uploads.controller.js";
@@ -43,6 +44,14 @@ router.post(
   uploadProfileImageMulter,
   handleUploadMulterErrors,
   uploadEventBanner
+);
+
+router.post(
+  "/group-banner",
+  authenticateUser,
+  uploadProfileImageMulter,
+  handleUploadMulterErrors,
+  uploadGroupBanner
 );
 
 router.get("/:uploadId/content", getUploadContent);

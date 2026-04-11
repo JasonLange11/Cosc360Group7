@@ -6,6 +6,7 @@ import AdminPage from '../components/admin/AdminPage.jsx'
 import SettingsPage from '../components/settings/SettingsPage.jsx'
 import EditProfilePage from '../components/settings/EditProfilePage.jsx'
 import GroupCreate from '../components/groups/GroupCreate.jsx'
+import EditGroup from '../components/groups/EditGroup.jsx'
 import CreateEvent from '../components/events/CreateEvent.jsx'
 import EditEvent from '../components/events/EditEvent.jsx'
 
@@ -31,6 +32,7 @@ export default function App(){
       <Route path="/events/:eventId/edit" element={currentUser ? <EditEvent /> : <Navigate to="/" replace />} />
       <Route path="/groups" element={<GroupsPage />} />
       <Route path="/groups/new" element={currentUser ? <GroupCreate /> : <HomePage authModal="login" />} />
+      <Route path="/groups/:groupId/edit" element={currentUser ? <EditGroup /> : <Navigate to="/" replace />} />
     </Routes>
   )
 }

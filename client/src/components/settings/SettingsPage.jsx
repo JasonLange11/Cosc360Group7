@@ -5,7 +5,7 @@ import Footer from '../ui/Footer.jsx'
 import CardDisplay from '../ui/CardDisplay.jsx'
 import EventDetails from '../events/EventDetails.jsx'
 import { getAttendingEvents, getMyEvents } from '../../lib/eventsApi.js'
-import { getGroupMembership } from '../../lib/groupsApi.js'
+import { getGroupMembership, getMyGroups, deleteGroup } from '../../lib/groupsApi.js'
 import { getMyComments } from '../../lib/commentsApi.js'
 import { useAuth } from '../../context/AuthContext.jsx'
 import './css/SettingsPage.css'
@@ -55,6 +55,7 @@ export default function SettingsPage() {
   const [myEvents, setMyEvents] = useState([])
   const [attendingEvents, setAttendingEvents] = useState([])
   const [joinedGroups, setJoinedGroups] = useState([])
+  const [myGroups, setMyGroups] = useState([])
   const [myComments, setMyComments] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -63,6 +64,7 @@ export default function SettingsPage() {
     attending: false,
     groups: false,
     created: false,
+    createdGroups: false,
     comments: false,
   })
 
@@ -71,16 +73,18 @@ export default function SettingsPage() {
   async function loadProfileData() {
     try {
       setLoading(true)
-      const [created, attending, groups, comments] = await Promise.all([
+      const [created, attending, groups, createdGroups, comments] = await Promise.all([
         getMyEvents(),
         getAttendingEvents(),
         getGroupMembership(),
+        getMyGroups(),
         getMyComments(),
       ])
 
       setMyEvents(created)
       setAttendingEvents(attending)
       setJoinedGroups(Array.isArray(groups) ? groups : [])
+      setMyGroups(Array.isArray(createdGroups) ? createdGroups : [])
       setMyComments(Array.isArray(comments) ? comments : [])
       setError('')
     } catch (err) {
@@ -88,6 +92,7 @@ export default function SettingsPage() {
       setMyEvents([])
       setAttendingEvents([])
       setJoinedGroups([])
+      setMyGroups([])
       setMyComments([])
     } finally {
       setLoading(false)
@@ -103,6 +108,18 @@ export default function SettingsPage() {
       ...previous,
       [sectionKey]: !previous[sectionKey],
     }))
+  }
+
+  async function handleDeleteGroup(groupId, groupName) {
+    if (!window.confirm(`Are you sure you want to delete "${groupName}"? This cannot be undone.`)) {
+      return
+    }
+    try {
+      await deleteGroup(groupId)
+      setMyGroups((previous) => previous.filter((g) => g._id !== groupId))
+    } catch (err) {
+      alert(err.message || 'Failed to delete group')
+    }
   }
 
   if (loading) {
@@ -185,6 +202,49 @@ export default function SettingsPage() {
                 onOpenEvent={setActiveEventId}
                 onEditEvent={(eventId) => navigate(`/events/${eventId}/edit`)}
               />
+            )}
+          </article>
+
+          <article className="settings-card-section">
+            <button type="button" className="settings-section-title" onClick={() => toggleSection('createdGroups')}>
+              Groups Created <span>{collapsed.createdGroups ? 'v' : '^'}</span>
+            </button>
+            {collapsed.createdGroups ? null : (
+              !myGroups.length ? (
+                <p className="settings-empty">You have not created any groups yet.</p>
+              ) : (
+                <div className="settings-events-grid">
+                  {myGroups.map((group) => (
+                    <div key={group._id} className="settings-event-item">
+                      <CardDisplay
+                        img={{
+                          src: group.bannerImage,
+                          alt: group.name,
+                        }}
+                        heading={group.name}
+                        details={[
+                          ['fa-location-dot', group.location],
+                        ]}
+                        description={group.description}
+                      />
+                      <button
+                        type="button"
+                        className="settings-event-edit-button"
+                        onClick={() => navigate(`/groups/${group._id}/edit`)}
+                      >
+                        Edit Group
+                      </button>
+                      <button
+                        type="button"
+                        className="settings-event-delete-button"
+                        onClick={() => handleDeleteGroup(group._id, group.name)}
+                      >
+                        Delete Group
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )
             )}
           </article>
 
