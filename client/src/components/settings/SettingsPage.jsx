@@ -5,7 +5,7 @@ import Footer from '../ui/Footer.jsx'
 import CardDisplay from '../ui/CardDisplay.jsx'
 import EventDetails from '../events/EventDetails.jsx'
 import { getAttendingEvents, getEventById, getMyEvents } from '../../lib/eventsApi.js'
-import { getGroupById, getGroupMembership, getMyGroups, deleteGroup } from '../../lib/groupsApi.js'
+import { getGroupById, getGroupMembership, getMyGroups, deleteGroup, leaveGroup } from '../../lib/groupsApi.js'
 import { deleteComment as deleteCommentById, getMyComments, updateComment } from '../../lib/commentsApi.js'
 import { useAuth } from '../../context/AuthContext.jsx'
 import './css/SettingsPage.css'
@@ -65,6 +65,7 @@ export default function SettingsPage() {
   const [editingCommentContent, setEditingCommentContent] = useState('')
   const [savingCommentId, setSavingCommentId] = useState('')
   const [deletingCommentId, setDeletingCommentId] = useState('')
+  const [leavingGroupId, setLeavingGroupId] = useState('')
   const [commentActionError, setCommentActionError] = useState('')
   const [collapsed, setCollapsed] = useState({
     attending: false,
@@ -194,6 +195,22 @@ export default function SettingsPage() {
     }
   }
 
+  async function handleLeaveGroup(groupId, groupName) {
+    if (!window.confirm(`Are you sure you want to leave "${groupName}"?`)) {
+      return
+    }
+
+    try {
+      setLeavingGroupId(groupId)
+      await leaveGroup(groupId)
+      setJoinedGroups((previous) => previous.filter((group) => group._id !== groupId))
+    } catch (err) {
+      alert(err.message || 'Failed to leave group')
+    } finally {
+      setLeavingGroupId('')
+    }
+  }
+
   function canManageComment(comment) {
     if (!currentUser) {
       return false
@@ -320,7 +337,19 @@ export default function SettingsPage() {
               ) : (
                 <ul className="settings-list">
                   {joinedGroups.map((group) => (
-                    <li key={group._id} className="settings-list-item">{group.name}</li>
+                    <li key={group._id} className="settings-list-item">
+                      <div className="settings-list-item-row">
+                        <span>{group.name}</span>
+                        <button
+                          type="button"
+                          className="settings-group-leave-button"
+                          onClick={() => handleLeaveGroup(group._id, group.name)}
+                          disabled={leavingGroupId === group._id}
+                        >
+                          {leavingGroupId === group._id ? 'Leaving...' : 'Leave Group'}
+                        </button>
+                      </div>
+                    </li>
                   ))}
                 </ul>
               )
