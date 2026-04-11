@@ -1,9 +1,10 @@
 import { 
-    fetchComments,
-    fetchUserComments,
+  fetchComments,
+  fetchUserComments,
   createComment as createCommentService,
   fetchCommentById,
-    removeComment
+  removeComment,
+  updateComment as updateCommentService,
 } from "./comments.services.js";
 
 export async function getComments(req, res, next) {
@@ -51,6 +52,19 @@ export async function deleteComment(req, res, next) {
   try {
     await removeComment(req.user, req.params.commentId);
     res.status(204).send();
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function updateComment(req, res, next) {
+  try {
+    const updatedComment = await updateCommentService(
+      req.user,
+      req.params.commentId,
+      req.body?.content
+    );
+    res.status(200).json(updatedComment);
   } catch (error) {
     next(error);
   }

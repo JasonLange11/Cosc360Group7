@@ -24,6 +24,14 @@ export async function deleteCommentById(commentId) {
   return Comment.findByIdAndDelete(commentId);
 }
 
+export async function updateCommentContentById(commentId, content) {
+  return Comment.findByIdAndUpdate(
+    commentId,
+    { content },
+    { new: true, runValidators: true }
+  );
+}
+
 export async function getCommentsByUserId(userId) {
   return Comment.find({ userId }).sort({ createdAt: -1 }).lean();
 }

@@ -29,6 +29,14 @@ export function deleteComment(commentId) {
   })
 }
 
+export function updateComment(commentId, content) {
+  return apiRequest(`/api/comments/${commentId}`, {
+    method: 'PUT',
+    body: JSON.stringify({ content }),
+    headers: getAuthHeader(),
+  })
+}
+
 export function getMyComments() {
   return apiRequest('/api/comments/mine', {
     headers: getAuthHeader(),

@@ -4,9 +4,9 @@ import Header from '../ui/Header.jsx'
 import Footer from '../ui/Footer.jsx'
 import CardDisplay from '../ui/CardDisplay.jsx'
 import EventDetails from '../events/EventDetails.jsx'
-import { getAttendingEvents, getMyEvents } from '../../lib/eventsApi.js'
-import { getGroupMembership, getMyGroups, deleteGroup } from '../../lib/groupsApi.js'
-import { getMyComments } from '../../lib/commentsApi.js'
+import { getAttendingEvents, getEventById, getMyEvents } from '../../lib/eventsApi.js'
+import { getGroupById, getGroupMembership, getMyGroups, deleteGroup } from '../../lib/groupsApi.js'
+import { deleteComment as deleteCommentById, getMyComments, updateComment } from '../../lib/commentsApi.js'
 import { useAuth } from '../../context/AuthContext.jsx'
 import './css/SettingsPage.css'
 
@@ -60,6 +60,12 @@ export default function SettingsPage() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [activeEventId, setActiveEventId] = useState(null)
+  const [commentParentNames, setCommentParentNames] = useState({})
+  const [editingCommentId, setEditingCommentId] = useState('')
+  const [editingCommentContent, setEditingCommentContent] = useState('')
+  const [savingCommentId, setSavingCommentId] = useState('')
+  const [deletingCommentId, setDeletingCommentId] = useState('')
+  const [commentActionError, setCommentActionError] = useState('')
   const [collapsed, setCollapsed] = useState({
     attending: false,
     groups: false,
@@ -69,6 +75,62 @@ export default function SettingsPage() {
   })
 
   const profile = useMemo(() => currentUser || null, [currentUser])
+
+  async function resolveCommentParentNames(comments, { created, attending, groups, createdGroups }) {
+    const namesByKey = {}
+
+    const registerName = (parentType, parentId, name) => {
+      if (!parentType || !parentId || !name) {
+        return
+      }
+      namesByKey[`${parentType}:${parentId}`] = name
+    }
+
+    const knownEvents = [...(Array.isArray(created) ? created : []), ...(Array.isArray(attending) ? attending : [])]
+    knownEvents.forEach((event) => {
+      registerName('event', event?._id, event?.title)
+    })
+
+    const knownGroups = [...(Array.isArray(groups) ? groups : []), ...(Array.isArray(createdGroups) ? createdGroups : [])]
+    knownGroups.forEach((group) => {
+      registerName('group', group?._id, group?.name)
+    })
+
+    const missingTargets = []
+    const seenMissingKeys = new Set()
+    const commentList = Array.isArray(comments) ? comments : []
+    commentList.forEach((comment) => {
+      const key = `${comment?.parentType}:${comment?.parentId}`
+      const isMissing =
+        (comment?.parentType === 'event' || comment?.parentType === 'group') &&
+        comment?.parentId &&
+        !namesByKey[key]
+      if (isMissing && !seenMissingKeys.has(key)) {
+        seenMissingKeys.add(key)
+        missingTargets.push(comment)
+      }
+    })
+
+    await Promise.all(
+      missingTargets.map(async (comment) => {
+        const key = `${comment.parentType}:${comment.parentId}`
+        try {
+          if (comment.parentType === 'event') {
+            const event = await getEventById(comment.parentId)
+            registerName(comment.parentType, comment.parentId, event?.title)
+            return
+          }
+
+          const group = await getGroupById(comment.parentId)
+          registerName(comment.parentType, comment.parentId, group?.name)
+        } catch {
+          namesByKey[key] = comment.parentType === 'event' ? 'Unknown event' : 'Unknown group'
+        }
+      })
+    )
+
+    return namesByKey
+  }
 
   async function loadProfileData() {
     try {
@@ -86,6 +148,14 @@ export default function SettingsPage() {
       setJoinedGroups(Array.isArray(groups) ? groups : [])
       setMyGroups(Array.isArray(createdGroups) ? createdGroups : [])
       setMyComments(Array.isArray(comments) ? comments : [])
+      const resolvedCommentParentNames = await resolveCommentParentNames(comments, {
+        created,
+        attending,
+        groups,
+        createdGroups,
+      })
+      setCommentParentNames(resolvedCommentParentNames)
+      setCommentActionError('')
       setError('')
     } catch (err) {
       setError(err.message || 'Failed to load settings data.')
@@ -94,6 +164,8 @@ export default function SettingsPage() {
       setJoinedGroups([])
       setMyGroups([])
       setMyComments([])
+      setCommentParentNames({})
+      setCommentActionError('')
     } finally {
       setLoading(false)
     }
@@ -119,6 +191,71 @@ export default function SettingsPage() {
       setMyGroups((previous) => previous.filter((g) => g._id !== groupId))
     } catch (err) {
       alert(err.message || 'Failed to delete group')
+    }
+  }
+
+  function canManageComment(comment) {
+    if (!currentUser) {
+      return false
+    }
+
+    return currentUser.isAdmin || String(comment.userId || '') === String(currentUser.id || '')
+  }
+
+  function handleStartEditComment(comment) {
+    setCommentActionError('')
+    setEditingCommentId(comment._id)
+    setEditingCommentContent(comment.content || '')
+  }
+
+  function handleCancelEditComment() {
+    setEditingCommentId('')
+    setEditingCommentContent('')
+    setCommentActionError('')
+  }
+
+  async function handleSaveComment(commentId) {
+    const content = editingCommentContent.trim()
+
+    if (!content) {
+      setCommentActionError('Content is required')
+      return
+    }
+
+    try {
+      setSavingCommentId(commentId)
+      setCommentActionError('')
+      const updatedComment = await updateComment(commentId, content)
+      setMyComments((previous) => previous.map((comment) => (
+        comment._id === commentId ? { ...comment, ...updatedComment } : comment
+      )))
+      setEditingCommentId('')
+      setEditingCommentContent('')
+    } catch (err) {
+      setCommentActionError(err.message || 'Failed to update comment')
+    } finally {
+      setSavingCommentId('')
+    }
+  }
+
+  async function handleDeleteComment(commentId) {
+    if (!window.confirm('Are you sure you want to delete this comment? This cannot be undone.')) {
+      return
+    }
+
+    try {
+      setDeletingCommentId(commentId)
+      setCommentActionError('')
+      await deleteCommentById(commentId)
+      setMyComments((previous) => previous.filter((comment) => comment._id !== commentId))
+      if (editingCommentId === commentId) {
+        setEditingCommentId('')
+        setEditingCommentContent('')
+      }
+    } catch (err) {
+      setCommentActionError(err.message || 'Failed to delete comment')
+    } finally {
+      setDeletingCommentId('')
     }
   }
 
@@ -148,8 +285,7 @@ export default function SettingsPage() {
       <main className="settings-page">
         <section className="settings-top-row">
           <div>
-            <h2>Settings</h2>
-            <p className="settings-user">@{profile?.name || 'User'}</p>
+            <p className="settings-user">{profile?.name || 'User'}</p>
             <p>{profile?.bio || 'No bio added yet.'}</p>
             <p><strong>Location:</strong> {profile?.location || 'Not set'}</p>
             <p><strong>Favorite Tags:</strong> {Array.isArray(profile?.favoriteTags) && profile.favoriteTags.length ? profile.favoriteTags.join(', ') : 'None'}</p>
@@ -259,27 +395,87 @@ export default function SettingsPage() {
                     <th>Comment</th>
                     <th>Date</th>
                     <th>Type</th>
-                    <th>Parent ID</th>
+                    <th>Commented On</th>
+                    <th>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
                   {!myComments.length ? (
                     <tr>
-                      <td colSpan={4} className="settings-empty">You have not posted any comments yet.</td>
+                      <td colSpan={5} className="settings-empty">You have not posted any comments yet.</td>
                     </tr>
                   ) : (
                     myComments.map((comment) => (
                       <tr key={comment._id}>
-                        <td>{comment.content}</td>
+                        <td>
+                          {editingCommentId === comment._id ? (
+                            <textarea
+                              className="settings-comment-edit-input"
+                              rows={3}
+                              value={editingCommentContent}
+                              onChange={(event) => setEditingCommentContent(event.target.value)}
+                            />
+                          ) : (
+                            comment.content
+                          )}
+                        </td>
                         <td>{new Date(comment.createdAt).toLocaleString()}</td>
                         <td>{comment.parentType}</td>
-                        <td>{String(comment.parentId || '')}</td>
+                        <td>{commentParentNames[`${comment.parentType}:${comment.parentId}`] || 'Unknown'}</td>
+                        <td>
+                          {canManageComment(comment) ? (
+                            <div className="settings-comment-actions">
+                              {editingCommentId === comment._id ? (
+                                <>
+                                  <button
+                                    type="button"
+                                    className="settings-comment-action-button"
+                                    onClick={() => handleSaveComment(comment._id)}
+                                    disabled={savingCommentId === comment._id || deletingCommentId === comment._id}
+                                  >
+                                    {savingCommentId === comment._id ? 'Saving...' : 'Save'}
+                                  </button>
+                                  <button
+                                    type="button"
+                                    className="settings-comment-action-button"
+                                    onClick={handleCancelEditComment}
+                                    disabled={savingCommentId === comment._id || deletingCommentId === comment._id}
+                                  >
+                                    Cancel
+                                  </button>
+                                </>
+                              ) : (
+                                <>
+                                  <button
+                                    type="button"
+                                    className="settings-comment-action-button"
+                                    onClick={() => handleStartEditComment(comment)}
+                                    disabled={deletingCommentId === comment._id}
+                                  >
+                                    Edit
+                                  </button>
+                                  <button
+                                    type="button"
+                                    className="settings-comment-action-button settings-comment-action-delete"
+                                    onClick={() => handleDeleteComment(comment._id)}
+                                    disabled={deletingCommentId === comment._id}
+                                  >
+                                    {deletingCommentId === comment._id ? 'Deleting...' : 'Delete'}
+                                  </button>
+                                </>
+                              )}
+                            </div>
+                          ) : (
+                            '-'
+                          )}
+                        </td>
                       </tr>
                     ))
                   )}
                 </tbody>
               </table>
             )}
+            {commentActionError ? <p className="settings-comment-action-error">{commentActionError}</p> : null}
           </article>
         </section>
 
