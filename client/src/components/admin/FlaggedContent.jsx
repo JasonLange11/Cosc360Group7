@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import SearchBar from '../search/SearchBar'
 import { approveFlag, getFlags, removeFlaggedTarget } from '../../lib/flagsApi.js'
+import { usePopup } from '../ui/PopupProvider'
 import './css/FlaggedContent.css'
 
 function matchesFilter(flag, selectedFilter) {
@@ -15,6 +16,7 @@ function matchesFilter(flag, selectedFilter) {
 }
 
 export default function FlaggedContent({ compact = false, onMore, selectedFilter = 'open' }) {
+	const { showConfirm } = usePopup()
 	const [searchTerm, setSearchTerm] = useState('')
 	const [items, setItems] = useState([])
 	const [loading, setLoading] = useState(true)
@@ -111,9 +113,20 @@ export default function FlaggedContent({ compact = false, onMore, selectedFilter
 	}
 
 	const handleRemoveTarget = async (flagId) => {
+		const currentFlag = items.find((item) => item._id === flagId)
+		const confirmed = await showConfirm({
+			title: 'Remove Flagged Content',
+			message: `Are you sure you want to remove this ${currentFlag?.targetType || 'item'}?`,
+			confirmText: 'Remove',
+			cancelText: 'Cancel',
+		})
+
+		if (!confirmed) {
+			return
+		}
+
 		try {
 			setActionBusy(true)
-			const currentFlag = items.find((item) => item._id === flagId)
 			const updatedFlag = await removeFlaggedTarget(flagId)
 			setItems((currentItems) => currentItems.map((item) => (item._id === flagId ? { ...item, ...updatedFlag } : item)))
 			setActiveFlag((currentFlag) => (currentFlag?._id === flagId ? { ...currentFlag, ...updatedFlag } : currentFlag))
