@@ -88,6 +88,35 @@ export async function createEventBannerUpload(user, file) {
   });
 }
 
+export async function createGroupBannerUpload(user, file) {
+  if (!user) {
+    throw new Error("Authentication required");
+  }
+
+  if (!file) {
+    throw new Error("Image file is required");
+  }
+
+  assertAllowedMimeType(file.mimetype);
+
+  if (!Buffer.isBuffer(file.buffer) || !file.buffer.length) {
+    throw new Error("Image file is required");
+  }
+
+  if (file.size > MAX_UPLOAD_SIZE_BYTES) {
+    throw new Error("Image must be 5MB or smaller");
+  }
+
+  return createUpload({
+    ownerUserId: user.id,
+    context: "group-banner",
+    mimeType: file.mimetype,
+    sizeBytes: file.size,
+    filename: file.originalname || "upload",
+    data: file.buffer,
+  });
+}
+
 export async function fetchUploadContent(uploadId) {
   const upload = await getUploadById(uploadId);
 

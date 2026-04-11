@@ -2,6 +2,7 @@ import multer from "multer";
 import {
   createProfileImageUpload,
   createEventBannerUpload,
+  createGroupBannerUpload,
   getMaxUploadSizeBytes,
   isAllowedImageMimeType,
   fetchUploadContent,
@@ -46,6 +47,21 @@ export async function uploadProfileImage(req, res, next) {
 export async function uploadEventBanner(req, res, next) {
   try {
     const upload = await createEventBannerUpload(req.user, req.file);
+
+    res.status(201).json({
+      uploadId: upload._id,
+      imageUrl: buildUploadUrl(req, upload._id),
+      mimeType: upload.mimeType,
+      sizeBytes: upload.sizeBytes,
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function uploadGroupBanner(req, res, next) {
+  try {
+    const upload = await createGroupBannerUpload(req.user, req.file);
 
     res.status(201).json({
       uploadId: upload._id,

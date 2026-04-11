@@ -4,6 +4,7 @@ import Header from '../ui/Header'
 import Footer from '../ui/Footer'
 import './css/GroupCreate.css'
 import { createGroup } from '../../lib/groupsApi';
+import { uploadGroupBannerImage } from '../../lib/uploadsApi';
 
 export default function GroupsPage() {
   const navigate = useNavigate()
@@ -12,6 +13,7 @@ export default function GroupsPage() {
   const [description, setDescription] = useState('')
   const [tags, setTags] = useState([])
   const [tagInput, setTagInput] = useState('')
+  const [bannerFile, setBannerFile] = useState(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState(false)
@@ -48,6 +50,10 @@ export default function GroupsPage() {
       setError('Location is required')
       return false
     }
+    if (!bannerFile) {
+      setError('Banner image is required')
+      return false
+    }
     return true
   }
 
@@ -61,13 +67,19 @@ export default function GroupsPage() {
     setError('')
   
     try {
+      let bannerImage = "https://images.unsplash.com/photo-1495446815901-a7297e633e8d?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+
+      if (bannerFile) {
+        const uploaded = await uploadGroupBannerImage(bannerFile)
+        bannerImage = uploaded.imageUrl
+      }
+
       const groupData = {
         name: groupName,
         description: description,
         tags: tags,
         location: location,
-        bannerImage: "https://images.unsplash.com/photo-1495446815901-a7297e633e8d?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-        //TODO: Implement image file upload
+        bannerImage,
       }
       await createGroup(groupData)
       setSuccess(true)
@@ -190,6 +202,28 @@ export default function GroupsPage() {
               )}
               
               <span className="char-count">{tags.length}/10 tags</span>
+            </div>
+
+            {/* Banner Image */}
+            <div className="form-group">
+              <label htmlFor="bannerImage" className="form-label">
+                Banner Image <span className="required">*</span>
+              </label>
+              <input
+                id="bannerImage"
+                type="file"
+                className="form-input"
+                accept="image/jpeg,image/png,image/webp,image/gif"
+                onChange={(e) => setBannerFile(e.target.files?.[0] || null)}
+                disabled={loading}
+              />
+              {bannerFile ? (
+                <img
+                  src={URL.createObjectURL(bannerFile)}
+                  alt="Banner preview"
+                  style={{ marginTop: '0.5rem', maxHeight: '160px', objectFit: 'cover', borderRadius: '6px', width: '100%' }}
+                />
+              ) : null}
             </div>
 
             {/* 
