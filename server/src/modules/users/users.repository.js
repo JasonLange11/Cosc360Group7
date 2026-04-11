@@ -17,7 +17,7 @@ export async function findUserById(userId) {
 }
 
 export async function updateUserById(userId, updateData) {
-  return User.findByIdAndUpdate(userId, updateData, { new: true, runValidators: true });
+  return User.findByIdAndUpdate(userId, updateData, { returnDocument: 'after', runValidators: true });
 }
 
 export async function deleteUserById(userId) {

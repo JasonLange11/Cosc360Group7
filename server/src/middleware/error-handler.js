@@ -6,6 +6,7 @@ const ERROR_STATUS_MAP = {
 	'Tag cannot be empty': 400,
 	'Parent type and parent id are required': 400,
 	'Content is required': 400,
+	'Invalid event status': 400,
 	'Capacity must be between 1 and 10000': 400,
 	'Image file is required': 400,
 	'Only image uploads are allowed': 400,

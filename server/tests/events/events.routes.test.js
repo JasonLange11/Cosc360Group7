@@ -98,9 +98,9 @@ describe('GET /api/events', () => {
     expect(res.status).toBe(403);
   });
 
-  test('returns 500 for invalid status value', async () => {
+  test('returns 400 for invalid status value', async () => {
     const res = await request(app).get('/api/events?status=not-valid');
-    expect(res.status).toBe(500);
+    expect(res.status).toBe(400);
   });
 });
 
