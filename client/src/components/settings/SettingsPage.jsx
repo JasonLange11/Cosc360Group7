@@ -6,7 +6,7 @@ import CardDisplay from '../ui/CardDisplay.jsx'
 import EventDetails from '../events/EventDetails.jsx'
 import { deleteEvent, getAttendingEvents, getEventById, getMyEvents } from '../../lib/eventsApi.js'
 import { getGroupById, getGroupMembership, getMyGroups, deleteGroup, leaveGroup } from '../../lib/groupsApi.js'
-import { deleteComment as deleteCommentById, getMyComments, updateComment } from '../../lib/commentsApi.js'
+import { createComment, deleteComment as deleteCommentById, getMyComments, updateComment } from '../../lib/commentsApi.js'
 import { isEventExpired } from '../../lib/eventDates.js'
 import { useAuth } from '../../context/AuthContext.jsx'
 import './css/SettingsPage.css'
@@ -90,6 +90,34 @@ export default function SettingsPage() {
   })
 
   const profile = useMemo(() => currentUser || null, [currentUser])
+  const favoriteTagFromPastEvents = useMemo(() => {
+    const tagCounts = new Map()
+
+    pastAttendingEvents.forEach((event) => {
+      const tags = Array.isArray(event?.tags) ? event.tags : []
+      tags.forEach((tag) => {
+        const normalizedTag = String(tag || '').trim().toLowerCase()
+        if (!normalizedTag) {
+          return
+        }
+
+        const currentCount = tagCounts.get(normalizedTag) || 0
+        tagCounts.set(normalizedTag, currentCount + 1)
+      })
+    })
+
+    if (!tagCounts.size) {
+      return ''
+    }
+
+    return Array.from(tagCounts.entries())
+      .sort((a, b) => {
+        if (b[1] !== a[1]) {
+          return b[1] - a[1]
+        }
+        return a[0].localeCompare(b[0])
+      })[0][0]
+  }, [pastAttendingEvents])
 
   async function resolveCommentParentNames(comments, { created, attending, groups, createdGroups }) {
     const namesByKey = {}
@@ -284,6 +312,28 @@ export default function SettingsPage() {
       setEditingCommentId('')
       setEditingCommentContent('')
     } catch (err) {
+      const activeComment = myComments.find((comment) => comment._id === commentId)
+
+      if (activeComment?.parentType && activeComment?.parentId) {
+        try {
+          const replacementComment = await createComment({
+            parentType: activeComment.parentType,
+            parentId: activeComment.parentId,
+            content,
+          })
+          await deleteCommentById(commentId)
+          setMyComments((previous) => previous.map((comment) => (
+            comment._id === commentId ? { ...comment, ...replacementComment } : comment
+          )))
+          setEditingCommentId('')
+          setEditingCommentContent('')
+          setCommentActionError('')
+          return
+        } catch {
+          // Fall through to show the original update failure below.
+        }
+      }
+
       setCommentActionError(err.message || 'Failed to update comment')
     } finally {
       setSavingCommentId('')
@@ -340,7 +390,7 @@ export default function SettingsPage() {
             <p className="settings-user">{profile?.name || 'User'}</p>
             <p>{profile?.bio || 'No bio added yet.'}</p>
             <p><strong>Location:</strong> {profile?.location || 'Not set'}</p>
-            <p><strong>Favorite Tags:</strong> {Array.isArray(profile?.favoriteTags) && profile.favoriteTags.length ? profile.favoriteTags.join(', ') : 'None'}</p>
+            <p><strong>Favorite Tag:</strong> {favoriteTagFromPastEvents || 'you have not attended any events yet'}</p>
           </div>
           <div className="settings-top-actions">
             <Link to="/settings/edit" className="settings-btn-primary">Edit Profile</Link>

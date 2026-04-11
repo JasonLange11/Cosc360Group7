@@ -31,7 +31,7 @@ export function deleteComment(commentId) {
 
 export function updateComment(commentId, content) {
   return apiRequest(`/api/comments/${commentId}`, {
-    method: 'PUT',
+    method: 'PATCH',
     body: JSON.stringify({ content }),
     headers: getAuthHeader(),
   })

@@ -25,7 +25,6 @@ export default function EditProfilePage() {
     oldPassword: '',
     newPassword: '',
     location: '',
-    favoriteTags: '',
     profileImageUrl: '',
   })
 
@@ -39,7 +38,6 @@ export default function EditProfilePage() {
           name: profile?.name || '',
           bio: profile?.bio || '',
           location: profile?.location || '',
-          favoriteTags: Array.isArray(profile?.favoriteTags) ? profile.favoriteTags.join(', ') : '',
           profileImageUrl: profile?.profileImageUrl || '',
         }))
       } catch (err) {
@@ -131,7 +129,6 @@ export default function EditProfilePage() {
         oldPassword: form.oldPassword,
         newPassword: form.newPassword,
         location: form.location,
-        favoriteTags: form.favoriteTags,
         profileImageUrl: form.profileImageUrl,
       }
 
@@ -190,15 +187,6 @@ export default function EditProfilePage() {
           <label>
             Location:
             <input value={form.location} onChange={(event) => updateField('location', event.target.value)} />
-          </label>
-
-          <label>
-            Favorite Tags/topics:
-            <input
-              value={form.favoriteTags}
-              onChange={(event) => updateField('favoriteTags', event.target.value)}
-              placeholder="book club, hiking, coding"
-            />
           </label>
 
           <label>
