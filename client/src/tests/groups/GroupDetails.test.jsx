@@ -4,6 +4,7 @@ import GroupDetails from '../../components/groups/GroupDetails';
 import { getGroupById, joinGroup, leaveGroup } from '../../lib/groupsApi';
 import { createFlag } from '../../lib/flagsApi';
 import { useAuth } from '../../context/AuthContext';
+import { PopupProvider } from '../../components/ui/PopupProvider';
 
 vi.mock('../../lib/groupsApi', () => ({
   getGroupById: vi.fn(),
@@ -40,7 +41,11 @@ const baseGroup = {
 const groupWithUser = { ...baseGroup, members: [USER_ID] };
 
 function renderDetails(props = {}) {
-  return render(<GroupDetails groupId="group-xyz" onClose={vi.fn()} {...props} />);
+  return render(
+    <PopupProvider>
+      <GroupDetails groupId="group-xyz" onClose={vi.fn()} {...props} />
+    </PopupProvider>
+  );
 }
 
 // -------------------------------------------------------------------------
@@ -210,13 +215,16 @@ describe('GroupDetails — flag action', () => {
     vi.mocked(useAuth).mockReturnValue({ currentUser: regularUser });
     vi.mocked(getGroupById).mockResolvedValue(baseGroup);
     vi.mocked(createFlag).mockResolvedValue({});
-    vi.spyOn(window, 'prompt').mockReturnValue('inappropriate content');
 
     const user = userEvent.setup();
     renderDetails();
 
     await waitFor(() => expect(screen.getByLabelText(/flag group/i)).toBeInTheDocument());
     await user.click(screen.getByLabelText(/flag group/i));
+
+    // Popup dialog opens — click "Submit Flag" to confirm
+    await waitFor(() => expect(screen.getByRole('button', { name: /submit flag/i })).toBeInTheDocument());
+    await user.click(screen.getByRole('button', { name: /submit flag/i }));
 
     await waitFor(() => {
       expect(vi.mocked(createFlag)).toHaveBeenCalledWith(

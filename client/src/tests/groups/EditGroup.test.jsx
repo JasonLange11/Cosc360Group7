@@ -5,6 +5,7 @@ import EditGroup from '../../components/groups/EditGroup';
 import { getGroupById, updateGroup } from '../../lib/groupsApi';
 import { uploadGroupBannerImage } from '../../lib/uploadsApi';
 import { useAuth } from '../../context/AuthContext';
+import { PopupProvider } from '../../components/ui/PopupProvider';
 
 const mockNavigate = vi.fn();
 
@@ -47,7 +48,9 @@ const existingGroup = {
 function renderEdit() {
   return render(
     <MemoryRouter>
-      <EditGroup />
+      <PopupProvider>
+        <EditGroup />
+      </PopupProvider>
     </MemoryRouter>
   );
 }
@@ -230,7 +233,7 @@ describe('EditGroup — form submission', () => {
     await waitFor(() => expect(screen.getByLabelText(/group name/i)).toHaveValue('Original Name'));
     await user.click(screen.getByRole('button', { name: /save changes/i }));
 
-    await waitFor(() => expect(screen.getByText(/Save failed/i)).toBeInTheDocument());
+    await waitFor(() => expect(document.querySelector('.form-error')).toHaveTextContent(/Save failed/i));
   });
 });
 
