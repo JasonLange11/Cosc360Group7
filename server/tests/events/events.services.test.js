@@ -17,7 +17,7 @@ const LOCAL_MONGO_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/co
 function makeUser(overrides = {}) {
   return {
     email: `user_${Date.now()}_${Math.random()}@example.com`,
-    password: 'hashed_password',
+    password: 'hashed_pw',
     name: 'Event Test User',
     isAdmin: false,
     ...overrides,
@@ -44,6 +44,7 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
+  await mongoose.connection.dropDatabase();
   await mongoose.connection.close(true);
 });
 
