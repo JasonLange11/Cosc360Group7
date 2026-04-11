@@ -9,12 +9,12 @@ import EventDetails from '../events/EventDetails'
 import GroupDetails from '../groups/GroupDetails'
 import Login from '../auth/Login'
 import Signup from '../auth/Registration'
+import { TAG_OPTIONS } from '../../lib/tagOptions.js'
 import './css/Homepage.css'
 
 export default function HomePage({ authModal = null }) {
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedTags, setSelectedTags] = useState([])
-  const [availableTags, setAvailableTags] = useState([])
   const [activeEventId, setActiveEventId] = useState(null)
   const [activeGroupId, setActiveGroupId] = useState(null)
   const navigate = useNavigate()
@@ -70,7 +70,7 @@ export default function HomePage({ authModal = null }) {
           <aside className="home-sidebar">
             <Sidebar
               onOpenGroup={handleOpenGroup}
-              availableTags={availableTags}
+              availableTags={TAG_OPTIONS}
               selectedTags={selectedTags}
               onSelectedTagsChange={handleTagsChange}
             />
@@ -81,7 +81,6 @@ export default function HomePage({ authModal = null }) {
             <EventsList
               searchTerm={searchTerm}
               onOpenEvent={handleOpenEvent}
-              onTagsLoaded={setAvailableTags}
               selectedTags={selectedTags}
             />
           </main>

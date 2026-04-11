@@ -3,7 +3,7 @@ import CardDisplay from '../ui/CardDisplay';
 import { getEvents, searchEvents } from '../../lib/eventsApi';
 import './css/EventsList.css';
 
-function EventsList({ searchTerm, onOpenEvent, onTagsLoaded = () => {}, selectedTags = [] }) {
+function EventsList({ searchTerm, onOpenEvent, selectedTags = [] }) {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -23,11 +23,6 @@ function EventsList({ searchTerm, onOpenEvent, onTagsLoaded = () => {}, selected
         const term = searchTerm.trim();
         const data = term ? await searchEvents(term) : await getEvents();
 
-        const tags = [...new Set(
-          data.flatMap((event) => Array.isArray(event.tags) ? event.tags : [])
-        )].sort();
-        onTagsLoaded(tags);
-
         setEvents(data);
         setError(null);
       } catch (err) {
@@ -39,7 +34,7 @@ function EventsList({ searchTerm, onOpenEvent, onTagsLoaded = () => {}, selected
     };
 
     loadEvents();
-  }, [searchTerm, onTagsLoaded]);
+  }, [searchTerm]);
 
   if (loading) {
     return <div className="events-list-container">Loading events...</div>;

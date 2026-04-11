@@ -5,6 +5,7 @@ import { addTagToEvent, removeTagFromEvent } from '../../lib/eventsApi'
 import { isEventExpired } from '../../lib/eventDates'
 import { createFlag } from '../../lib/flagsApi.js'
 import { useAuth } from '../../context/AuthContext.jsx'
+import { usePopup } from '../ui/PopupProvider'
 import CommentSection from '../comments/CommentSection'
 import './css/EventDetails.css'
 
@@ -61,17 +62,16 @@ export default function EventDetails({
     enableTagEdit = false,
 }) {
     const { currentUser } = useAuth()
+    const { showPrompt, showToast } = usePopup()
     const [event, setEvent] = useState(null)
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(null)
     const [actionLoading, setActionLoading] = useState(false)
-    const [internalActionError, setInternalActionError] = useState('')
 
     const [newTag, setNewTag] = useState('')
     const [tagBusy, setTagBusy] = useState(false)
     const [tagError, setTagError] = useState('')
     const [flagBusy, setFlagBusy] = useState(false)
-    const [flagMessage, setFlagMessage] = useState('')
 
     useEffect(() => {
         function handleEscape(eventKey) {
@@ -204,25 +204,35 @@ export default function EventDetails({
 
 
     const handleActionClick = async () => {
-        setInternalActionError('')
-
         if (typeof onAction === 'function') {
             await onAction(event)
             return
         }
 
         if (!currentUser) {
-            setInternalActionError('You must be logged in to register for an event.')
+            showToast({
+                type: 'error',
+                title: 'Login Required',
+                message: 'You must be logged in to register for an event.',
+            })
             return
         }
 
         if (currentUser.isAdmin && !isAttending) {
-            setInternalActionError('Admins cannot RSVP to events.')
+            showToast({
+                type: 'error',
+                title: 'Action Not Allowed',
+                message: 'Admins cannot RSVP to events.',
+            })
             return
         }
 
         if (eventIsExpired && !isAttending) {
-            setInternalActionError('This event has already ended.')
+            showToast({
+                type: 'error',
+                title: 'Event Ended',
+                message: 'This event has already ended.',
+            })
             return
         }
 
@@ -230,12 +240,21 @@ export default function EventDetails({
             setActionLoading(true)
             const updatedEvent = isAttending ? await unattendEvent(event._id) : await attendEvent(event._id)
             setEvent(updatedEvent)
+            showToast({
+                type: 'success',
+                title: isAttending ? 'Left Event' : 'RSVP Successful',
+                message: isAttending ? 'You have left this event.' : 'You are now registered for this event.',
+            })
 
             if (typeof onAttendanceChange === 'function') {
                 onAttendanceChange(updatedEvent)
             }
         } catch (err) {
-            setInternalActionError(err.message || 'Failed to update attendance.')
+            showToast({
+                type: 'error',
+                title: 'Update Failed',
+                message: err.message || 'Failed to update attendance.',
+            })
         } finally {
             setActionLoading(false)
         }
@@ -243,18 +262,42 @@ export default function EventDetails({
 
     const handleFlag = async () => {
         if (!currentUser) {
-            setFlagMessage('You must be logged in to flag content.')
+            showToast({
+                type: 'error',
+                title: 'Login Required',
+                message: 'You must be logged in to flag content.',
+            })
             return
         }
 
-        const reason = window.prompt('Optional reason for flagging this event:') || ''
+        const reasonResponse = await showPrompt({
+            title: 'Flag Event',
+            message: 'Optional reason for flagging this event:',
+            placeholder: 'Reason (optional)',
+            confirmText: 'Submit Flag',
+            cancelText: 'Cancel',
+        })
+
+        if (reasonResponse === null) {
+            return
+        }
+
+        const reason = reasonResponse.trim()
 
         try {
             setFlagBusy(true)
             await createFlag({ targetType: 'event', targetId: event._id, reason })
-            setFlagMessage('Event flagged for admin review.')
+            showToast({
+                type: 'success',
+                title: 'Flag Submitted',
+                message: 'Event flagged for admin review.',
+            })
         } catch (err) {
-            setFlagMessage(err.message || 'Failed to flag event.')
+            showToast({
+                type: 'error',
+                title: 'Flag Failed',
+                message: err.message || 'Failed to flag event.',
+            })
         } finally {
             setFlagBusy(false)
         }
@@ -373,7 +416,6 @@ export default function EventDetails({
                             {actionLoading ? 'Saving...' : resolvedActionLabel}
                         </button>
                         {actionError ? <p className="event-details-action-error">{actionError}</p> : null}
-                        {internalActionError ? <p className="event-details-action-error">{internalActionError}</p> : null}
 
                         <button
                             type="button"
@@ -386,7 +428,6 @@ export default function EventDetails({
                             <i className={`fa-regular ${flagBusy ? 'fa-hourglass-half' : 'fa-flag'}`}></i>
                             {flagBusy ? ' Flagging...' : ' Flag'}
                         </button>
-                        {flagMessage ? <p className="event-details-action-error">{flagMessage}</p> : null}
 
                         <CommentSection parentType="event" parentId={event._id} pageSize={5} />
                     </div>

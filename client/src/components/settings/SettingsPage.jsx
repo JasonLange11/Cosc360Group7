@@ -9,6 +9,7 @@ import { getGroupById, getGroupMembership, getMyGroups, deleteGroup, leaveGroup 
 import { createComment, deleteComment as deleteCommentById, getMyComments, updateComment } from '../../lib/commentsApi.js'
 import { isEventExpired } from '../../lib/eventDates.js'
 import { useAuth } from '../../context/AuthContext.jsx'
+import { usePopup } from '../ui/PopupProvider'
 import './css/SettingsPage.css'
 
 function EventGridSection({ events, emptyMessage, onOpenEvent, onEditEvent, onDeleteEvent, deletingEventId = '' }) {
@@ -63,6 +64,7 @@ function EventGridSection({ events, emptyMessage, onOpenEvent, onEditEvent, onDe
 export default function SettingsPage() {
   const navigate = useNavigate()
   const { currentUser } = useAuth()
+  const { showConfirm, showToast } = usePopup()
   const [myEvents, setMyEvents] = useState([])
   const [attendingEvents, setAttendingEvents] = useState([])
   const [pastAttendingEvents, setPastAttendingEvents] = useState([])
@@ -231,14 +233,31 @@ export default function SettingsPage() {
   }
 
   async function handleDeleteGroup(groupId, groupName) {
-    if (!window.confirm(`Are you sure you want to delete "${groupName}"? This cannot be undone.`)) {
+    const confirmed = await showConfirm({
+      title: 'Delete Group',
+      message: `Are you sure you want to delete "${groupName}"? This cannot be undone.`,
+      confirmText: 'Delete',
+      cancelText: 'Cancel',
+    })
+
+    if (!confirmed) {
       return
     }
+
     try {
       await deleteGroup(groupId)
       setMyGroups((previous) => previous.filter((g) => g._id !== groupId))
+      showToast({
+        type: 'success',
+        title: 'Group Deleted',
+        message: 'The group was deleted successfully.',
+      })
     } catch (err) {
-      alert(err.message || 'Failed to delete group')
+      showToast({
+        type: 'error',
+        title: 'Delete Failed',
+        message: err.message || 'Failed to delete group',
+      })
     }
   }
 

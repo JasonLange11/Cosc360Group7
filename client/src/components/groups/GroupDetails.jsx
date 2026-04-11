@@ -3,6 +3,7 @@ import { useAuth } from '../../context/AuthContext'
 import '@fortawesome/fontawesome-free/css/all.min.css'
 import { getGroupById, joinGroup, leaveGroup } from '../../lib/groupsApi'
 import { createFlag } from '../../lib/flagsApi.js'
+import { usePopup } from '../ui/PopupProvider'
 import CommentSection from '../comments/CommentSection'
 import './css/GroupDetails.css'
 
@@ -17,13 +18,12 @@ export default function GroupDetails({
     actionError = '',
 }) {
     const { currentUser } = useAuth()
+    const { showPrompt, showToast } = usePopup()
     const [group, setGroup] = useState(null)
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(null)
     const [actionLoading, setActionLoading] = useState(false)
-    const [internalActionError, setInternalActionError] = useState('')
     const [flagBusy, setFlagBusy] = useState(false)
-    const [flagMessage, setFlagMessage] = useState('')
 
     useEffect(() => {
         function handleEscape(groupKey) {
@@ -102,20 +102,26 @@ export default function GroupDetails({
     const resolvedActionDisabled = actionDisabled || actionLoading || (!onAction && adminCannotJoin)
 
     const handleActionClick = async () => {
-            setInternalActionError('')
-    
             if (typeof onAction === 'function') {
                 await onAction(group)
                 return
             }
     
             if (!currentUser) {
-                setInternalActionError('You must be logged in to join a group.')
+                showToast({
+                    type: 'error',
+                    title: 'Login Required',
+                    message: 'You must be logged in to join a group.',
+                })
                 return
             }
 
             if (currentUser.isAdmin && !isMember) {
-                setInternalActionError('Admins cannot join groups.')
+                showToast({
+                    type: 'error',
+                    title: 'Action Not Allowed',
+                    message: 'Admins cannot join groups.',
+                })
                 return
             }
     
@@ -123,12 +129,21 @@ export default function GroupDetails({
                 setActionLoading(true)
                 const updatedGroup = isMember ? await leaveGroup(group._id) : await joinGroup(group._id)
                 setGroup(updatedGroup)
+                showToast({
+                    type: 'success',
+                    title: isMember ? 'Left Group' : 'Joined Group',
+                    message: isMember ? 'You have left this group.' : 'You have joined this group.',
+                })
     
                 if (typeof onMembershipChange === 'function') {
                     onMembershipChange(updatedGroup)
                 }
             } catch (err) {
-                setInternalActionError(err.message || 'Failed to update membership.')
+                showToast({
+                    type: 'error',
+                    title: 'Update Failed',
+                    message: err.message || 'Failed to update membership.',
+                })
             } finally {
                 setActionLoading(false)
             }
@@ -136,18 +151,42 @@ export default function GroupDetails({
 
     const handleFlag = async () => {
             if (!currentUser) {
-                setFlagMessage('You must be logged in to flag content.')
+                showToast({
+                    type: 'error',
+                    title: 'Login Required',
+                    message: 'You must be logged in to flag content.',
+                })
                 return
             }
 
-            const reason = window.prompt('Optional reason for flagging this group:') || ''
+            const reasonResponse = await showPrompt({
+                title: 'Flag Group',
+                message: 'Optional reason for flagging this group:',
+                placeholder: 'Reason (optional)',
+                confirmText: 'Submit Flag',
+                cancelText: 'Cancel',
+            })
+
+            if (reasonResponse === null) {
+                return
+            }
+
+            const reason = reasonResponse.trim()
 
             try {
                 setFlagBusy(true)
                 await createFlag({ targetType: 'group', targetId: group._id, reason })
-                setFlagMessage('Group flagged for admin review.')
+                showToast({
+                    type: 'success',
+                    title: 'Flag Submitted',
+                    message: 'Group flagged for admin review.',
+                })
             } catch (err) {
-                setFlagMessage(err.message || 'Failed to flag group.')
+                showToast({
+                    type: 'error',
+                    title: 'Flag Failed',
+                    message: err.message || 'Failed to flag group.',
+                })
             } finally {
                 setFlagBusy(false)
             }
@@ -203,7 +242,6 @@ export default function GroupDetails({
                             {actionLoading ? 'Saving...' : resolvedActionLabel}
                         </button>
                         {actionError ? <p className="group-details-action-error">{actionError}</p> : null}
-                        {internalActionError ? <p className="group-details-action-error">{internalActionError}</p> : null}
 
                         <button
                             type="button"
@@ -216,7 +254,6 @@ export default function GroupDetails({
                             <i className={`fa-regular ${flagBusy ? 'fa-hourglass-half' : 'fa-flag'}`}></i>
                             {flagBusy ? ' Flagging...' : ' Flag'}
                         </button>
-                        {flagMessage ? <p className="group-details-action-error">{flagMessage}</p> : null}
 
                         <CommentSection parentType="group" parentId={group._id} pageSize={5} />
                     </div>

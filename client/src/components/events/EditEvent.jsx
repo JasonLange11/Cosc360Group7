@@ -6,6 +6,8 @@ import EventForm from './EventForm.jsx'
 import { getEventById, updateEvent } from '../../lib/eventsApi.js'
 import { uploadEventBannerImage } from '../../lib/uploadsApi.js'
 import { useAuth } from '../../context/AuthContext.jsx'
+import { TAG_OPTIONS } from '../../lib/tagOptions.js'
+import { usePopup } from '../ui/PopupProvider'
 import './css/CreateEvent.css'
 
 function toDateInputValue(value) {
@@ -41,6 +43,7 @@ export default function EditEvent() {
   const navigate = useNavigate()
   const { eventId } = useParams()
   const { currentUser } = useAuth()
+  const { showToast } = usePopup()
   const [event, setEvent] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -96,6 +99,12 @@ export default function EditEvent() {
       bannerImage,
     })
 
+    showToast({
+      type: 'success',
+      title: 'Update Successful',
+      message: 'Event updated successfully.',
+    })
+
     navigate(currentUser?.isAdmin ? '/admin' : '/settings')
   }
 
@@ -125,6 +134,7 @@ export default function EditEvent() {
               cost: typeof event.cost === 'number' ? event.cost : '',
               tags: Array.isArray(event.tags) ? event.tags : [],
             }}
+            tagOptions={TAG_OPTIONS}
           />
         ) : null}
       </main>
