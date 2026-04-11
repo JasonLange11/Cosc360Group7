@@ -5,6 +5,7 @@ import SearchBar from '../search/SearchBar'
 import CardDisplay from '../ui/CardDisplay'
 import GroupDetails from '../groups/GroupDetails'
 import { deleteGroup, getGroups } from '../../lib/groupsApi'
+import { usePopup } from '../ui/PopupProvider'
 import './css/ModerateEvents.css'
 
 function getGroupId(group) {
@@ -13,6 +14,7 @@ function getGroupId(group) {
 
 export default function ModerateGroups({ compact = false, onMore }) {
     const navigate = useNavigate()
+    const { showConfirm, showToast } = usePopup()
     const [groups, setGroups] = useState([])
     const [searchTerm, setSearchTerm] = useState('')
     const [loading, setLoading] = useState(true)
@@ -58,18 +60,37 @@ export default function ModerateGroups({ compact = false, onMore }) {
             return
         }
 
-        if (window.confirm('Are you sure you want to remove this group?')) {
-            try {
-                setIsRemoving(true)
-                setRemoveError('')
-                await deleteGroup(activeGroupId)
-                setGroups((currentGroups) => currentGroups.filter((group) => getGroupId(group) !== activeGroupId))
-                setActiveGroupId(null)
-            } catch (error) {
-                setRemoveError(error.message || 'Failed to remove group')
-            } finally {
-                setIsRemoving(false)
-            }
+        const confirmed = await showConfirm({
+            title: 'Remove Group',
+            message: 'Are you sure you want to remove this group?',
+            confirmText: 'Remove',
+            cancelText: 'Cancel',
+        })
+
+        if (!confirmed) {
+            return
+        }
+
+        try {
+            setIsRemoving(true)
+            setRemoveError('')
+            await deleteGroup(activeGroupId)
+            setGroups((currentGroups) => currentGroups.filter((group) => getGroupId(group) !== activeGroupId))
+            setActiveGroupId(null)
+            showToast({
+                type: 'success',
+                title: 'Group Removed',
+                message: 'The group was removed successfully.',
+            })
+        } catch (error) {
+            setRemoveError(error.message || 'Failed to remove group')
+            showToast({
+                type: 'error',
+                title: 'Remove Failed',
+                message: error.message || 'Failed to remove group',
+            })
+        } finally {
+            setIsRemoving(false)
         }
     }
 

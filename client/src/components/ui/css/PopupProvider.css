@@ -1,0 +1,119 @@
+.popup-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 20, 31, 0.45);
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+  z-index: 3000;
+}
+
+.popup-card {
+  width: min(460px, 95vw);
+  border: 1px solid #d4d9e2;
+  border-radius: 10px;
+  background: #ffffff;
+  padding: 1rem;
+  box-shadow: 0 10px 30px rgba(15, 20, 31, 0.2);
+}
+
+.popup-card h3 {
+  margin: 0;
+  color: #1f2937;
+}
+
+.popup-card p {
+  margin: 0.7rem 0 0;
+  color: #374151;
+}
+
+.popup-card input {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  margin-top: 0.9rem;
+  border: 1px solid #c7cdd8;
+  border-radius: 6px;
+  padding: 0.6rem 0.7rem;
+}
+
+.popup-actions {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+.popup-actions button {
+  border-radius: 6px;
+  padding: 0.5rem 0.8rem;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.popup-cancel {
+  border: 1px solid #c2c7d2;
+  background: #ffffff;
+  color: #374151;
+}
+
+.popup-confirm {
+  border: 1px solid #2f6fdb;
+  background: #2f6fdb;
+  color: #ffffff;
+}
+
+.popup-toast-stack {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  z-index: 3100;
+}
+
+.popup-toast {
+  min-width: 260px;
+  max-width: 380px;
+  border-radius: 8px;
+  border: 1px solid #d4d9e2;
+  background: #ffffff;
+  box-shadow: 0 8px 20px rgba(15, 20, 31, 0.14);
+  padding: 0.6rem 0.75rem;
+}
+
+.popup-toast strong {
+  display: block;
+  font-size: 0.9rem;
+}
+
+.popup-toast p {
+  margin: 0.2rem 0 0;
+  font-size: 0.86rem;
+}
+
+.popup-toast-success {
+  border-left: 4px solid #2f9e44;
+}
+
+.popup-toast-error {
+  border-left: 4px solid #d9534f;
+}
+
+.popup-toast-info {
+  border-left: 4px solid #2f6fdb;
+}
+
+@media (max-width: 640px) {
+  .popup-toast-stack {
+    left: 0.7rem;
+    right: 0.7rem;
+    top: 0.7rem;
+  }
+
+  .popup-toast {
+    min-width: 0;
+    max-width: none;
+  }
+}

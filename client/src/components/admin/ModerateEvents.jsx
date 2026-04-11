@@ -5,6 +5,7 @@ import CardDisplay from '../ui/CardDisplay'
 import EventDetails from '../events/EventDetails'
 import { deleteEvent, getEvents } from '../../lib/eventsApi'
 import { isEventExpired } from '../../lib/eventDates'
+import { usePopup } from '../ui/PopupProvider'
 import './css/ModerateEvents.css'
 
 function getEventId(event) {
@@ -13,6 +14,7 @@ function getEventId(event) {
 
 export default function ModerateEvents({ compact = false, onMore, selectedFilter = 'all' }) {
 	const navigate = useNavigate()
+	const { showConfirm, showToast } = usePopup()
 	const [events, setEvents] = useState([])
 	const [searchTerm, setSearchTerm] = useState('')
 	const [loading, setLoading] = useState(true)
@@ -70,18 +72,37 @@ export default function ModerateEvents({ compact = false, onMore, selectedFilter
 			return
 		}
 
-		if(window.confirm("Are you sure you want to remove this event?")){
-			try {
-				setIsRemoving(true)
-				setRemoveError('')
-				await deleteEvent(activeEventId)
-				setEvents((currentEvents) => currentEvents.filter((event) => getEventId(event) !== activeEventId))
-				setActiveEventId(null)
-			} catch (error) {
-				setRemoveError(error.message || 'Failed to remove event')
-			} finally {
-				setIsRemoving(false)
-			}
+		const confirmed = await showConfirm({
+			title: 'Remove Event',
+			message: 'Are you sure you want to remove this event?',
+			confirmText: 'Remove',
+			cancelText: 'Cancel',
+		})
+
+		if (!confirmed) {
+			return
+		}
+
+		try {
+			setIsRemoving(true)
+			setRemoveError('')
+			await deleteEvent(activeEventId)
+			setEvents((currentEvents) => currentEvents.filter((event) => getEventId(event) !== activeEventId))
+			setActiveEventId(null)
+			showToast({
+				type: 'success',
+				title: 'Event Removed',
+				message: 'The event was removed successfully.',
+			})
+		} catch (error) {
+			setRemoveError(error.message || 'Failed to remove event')
+			showToast({
+				type: 'error',
+				title: 'Remove Failed',
+				message: error.message || 'Failed to remove event',
+			})
+		} finally {
+			setIsRemoving(false)
 		}
 	}
 

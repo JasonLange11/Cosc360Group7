@@ -3,10 +3,12 @@ import SearchBar from '../search/SearchBar'
 import { useAuth } from '../../context/AuthContext.jsx'
 import { getUsers, deleteUser, updateUserStatus } from '../../lib/usersApi'
 import AdminUserDetailsModal from './AdminUserDetailsModal.jsx'
+import { usePopup } from '../ui/PopupProvider'
 import './css/ModerateUsers.css'
 
 export default function ModerateUsers({ compact = false, onMore, selectedFilter = 'users' }){
     const { currentUser } = useAuth()
+    const { showConfirm, showToast } = usePopup()
     const [users, setUsers] = useState([])
     const [searchTerm, setSearchTerm] = useState('')
     const [loading, setLoading] = useState(true)
@@ -58,7 +60,7 @@ export default function ModerateUsers({ compact = false, onMore, selectedFilter 
         })
     }, [users, searchTerm, selectedFilter])
 
-    const visibleUsers = compact ? filteredUsers.slice(0, 6) : filteredUsers
+    const visibleUsers = compact ? filteredUsers.slice(0, 4) : filteredUsers
 
     const getUserId = (user) => user.id || user._id || ''
 
@@ -80,18 +82,38 @@ export default function ModerateUsers({ compact = false, onMore, selectedFilter 
             return
         }
 
-        if(window.confirm("Are you sure you want to delete: " + (users.find(user => (user._id || user.id) === userId)).name)){
-            try {
-                setDeletingUserId(userId)
-                setRemoveError('')
-                await deleteUser(userId)
-                setUsers((currentUsers) => currentUsers.filter((user) => getUserId(user) !== userId))
-                window.dispatchEvent(new CustomEvent('admin:user-removed'))
-            } catch (error) {
-                setRemoveError(error.message || 'Failed to remove user')
-            } finally {
-                setDeletingUserId('')
-            }
+        const targetUser = users.find((user) => (user._id || user.id) === userId)
+        const confirmed = await showConfirm({
+            title: 'Remove User',
+            message: `Are you sure you want to delete ${targetUser?.name || 'this user'}?`,
+            confirmText: 'Remove',
+            cancelText: 'Cancel',
+        })
+
+        if (!confirmed) {
+            return
+        }
+
+        try {
+            setDeletingUserId(userId)
+            setRemoveError('')
+            await deleteUser(userId)
+            setUsers((currentUsers) => currentUsers.filter((user) => getUserId(user) !== userId))
+            window.dispatchEvent(new CustomEvent('admin:user-removed'))
+            showToast({
+                type: 'success',
+                title: 'User Removed',
+                message: 'The user was removed successfully.',
+            })
+        } catch (error) {
+            setRemoveError(error.message || 'Failed to remove user')
+            showToast({
+                type: 'error',
+                title: 'Remove Failed',
+                message: error.message || 'Failed to remove user',
+            })
+        } finally {
+            setDeletingUserId('')
         }
     }
 
@@ -105,7 +127,14 @@ export default function ModerateUsers({ compact = false, onMore, selectedFilter 
         const nextDisabledState = !Boolean(user.isDisabled)
         const actionLabel = nextDisabledState ? 'disable' : 'activate'
 
-        if (!window.confirm(`Are you sure you want to ${actionLabel}: ${user.name}?`)) {
+        const confirmed = await showConfirm({
+            title: `${nextDisabledState ? 'Disable' : 'Activate'} User`,
+            message: `Are you sure you want to ${actionLabel} ${user.name}?`,
+            confirmText: nextDisabledState ? 'Disable' : 'Activate',
+            cancelText: 'Cancel',
+        })
+
+        if (!confirmed) {
             return
         }
 
@@ -116,6 +145,11 @@ export default function ModerateUsers({ compact = false, onMore, selectedFilter 
                 handleUserUpdated(updatedUser)
         } catch (error) {
             setRemoveError(error.message || 'Failed to update user status')
+            showToast({
+                type: 'error',
+                title: 'Update Failed',
+                message: error.message || 'Failed to update user status',
+            })
         } finally {
             setUpdatingUserId('')
         }
