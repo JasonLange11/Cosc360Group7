@@ -71,6 +71,9 @@ export default function EventForm({
     if (!Number.isInteger(parsedCapacity) || parsedCapacity < 1) {
       return 'Capacity must be at least 1'
     }
+    if (parsedCapacity > 10000) {
+      return 'Capacity cannot exceed 10000'
+    }
 
     if (!freeAdmission) {
       if (cost === '') return 'Ticket price is required unless event is free'
@@ -222,6 +225,7 @@ export default function EventForm({
             <input
               type="number"
               min="1"
+              max="10000"
               value={capacity}
               onChange={(changeEvent) => setCapacity(changeEvent.target.value)}
               disabled={loading}

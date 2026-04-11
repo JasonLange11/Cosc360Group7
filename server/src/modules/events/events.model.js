@@ -55,6 +55,7 @@ const eventSchema = new mongoose.Schema(
       type: Number,
       required: true,
       min: 1,
+      max: 10000,
     },
     description: {
       type: String,
