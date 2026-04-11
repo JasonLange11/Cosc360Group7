@@ -5,6 +5,7 @@ import Footer from '../ui/Footer'
 import './css/GroupCreate.css'
 import { createGroup } from '../../lib/groupsApi';
 import { uploadGroupBannerImage } from '../../lib/uploadsApi';
+import { TAG_OPTIONS } from '../../lib/tagOptions.js'
 import { usePopup } from '../ui/PopupProvider'
 
 export default function GroupsPage() {
@@ -14,23 +15,26 @@ export default function GroupsPage() {
   const [location, setLocation] = useState('')
   const [description, setDescription] = useState('')
   const [tags, setTags] = useState([])
-  const [tagInput, setTagInput] = useState('')
+  const [selectedTag, setSelectedTag] = useState('')
   const [bannerFile, setBannerFile] = useState(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState(false)
 
-  // Handle adding a tag
-  const handleAddTag = (e) => {
-    if (e.key === 'Enter' && tagInput.trim()) {
-      e.preventDefault()
-      const newTag = tagInput.trim().toLowerCase()
-      
-      if (!tags.includes(newTag)) {
-        setTags([...tags, newTag])
-      }
-      setTagInput('')
+  const normalizedTagOptions = Array.from(new Set([
+    ...TAG_OPTIONS,
+    ...tags,
+  ].map((tag) => String(tag || '').trim().toLowerCase()).filter(Boolean))).sort()
+
+  const handleAddTag = () => {
+    const nextTag = selectedTag.trim().toLowerCase()
+
+    if (!nextTag || tags.includes(nextTag) || tags.length >= 10) {
+      return
     }
+
+    setTags([...tags, nextTag])
+    setSelectedTag('')
   }
 
   // Handle removing a tag
@@ -176,34 +180,45 @@ export default function GroupsPage() {
               <label htmlFor="tagInput" className="form-label">
                 Tags
               </label>
-              <input
+              <div className="create-event-tag-select-row">
+                <select
                   id="tagInput"
-                  type="text"
                   className="form-input"
-                  placeholder="Type a tag and press Enter"
-                  value={tagInput}
-                  onChange={(e) => setTagInput(e.target.value)}
-                  onKeyDown={handleAddTag}
-                  disabled={loading || tags.length >= 10}
-                  maxLength="30"
-                />
+                  value={selectedTag}
+                  onChange={(e) => setSelectedTag(e.target.value)}
+                  disabled={loading || tags.length >= 10 || normalizedTagOptions.length === 0}
+                >
+                  <option value="">Select a tag</option>
+                  {normalizedTagOptions.map((option) => (
+                    <option key={option} value={option}>
+                      {option}
+                    </option>
+                  ))}
+                </select>
+                <button
+                  type="button"
+                  className="create-event-tag-add-button"
+                  onClick={handleAddTag}
+                  disabled={loading || tags.length >= 10 || !selectedTag}
+                >
+                  Add tag
+                </button>
+              </div>
               
               {/* Tags Display */}
               {tags.length > 0 && (
-                <div className="tags-container">
+                <div className="create-event-tags">
                   {tags.map((tag) => (
-                    <div key={tag} className="tag-badge">
-                      <span className="tag-text">#{tag}</span>
+                    <span key={tag} className="create-event-tag">
+                      {tag}
                       <button
                         type="button"
-                        className="tag-remove-button"
                         onClick={() => handleRemoveTag(tag)}
                         disabled={loading}
-                        title="Remove tag"
                       >
-                        ✕
+                        x
                       </button>
-                    </div>
+                    </span>
                   ))}
                 </div>
               )}

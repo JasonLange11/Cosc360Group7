@@ -5,6 +5,7 @@ import Footer from '../ui/Footer'
 import { useAuth } from '../../context/AuthContext.jsx'
 import { createEvent } from '../../lib/eventsApi.js'
 import { uploadEventBannerImage } from '../../lib/uploadsApi.js'
+import { TAG_OPTIONS } from '../../lib/tagOptions.js'
 import { usePopup } from '../ui/PopupProvider'
 import EventForm from './EventForm.jsx'
 import './css/CreateEvent.css'
@@ -50,6 +51,7 @@ export default function CreateEvent() {
           onSubmit={handleCreateEvent}
           onCancel={() => navigate('/')}
           requireBannerImage
+          tagOptions={TAG_OPTIONS}
         />
       </main>
       <Footer />

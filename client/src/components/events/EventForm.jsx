@@ -21,6 +21,7 @@ export default function EventForm({
   onCancel,
   requireBannerImage = true,
   initialValues = {},
+  tagOptions = [],
 }) {
   const [title, setTitle] = useState(initialValues.title || '')
   const [description, setDescription] = useState(initialValues.description || '')
@@ -32,26 +33,24 @@ export default function EventForm({
   const [cost, setCost] = useState(initialValues.cost === 0 ? '' : (initialValues.cost ?? ''))
   const [bannerFile, setBannerFile] = useState(null)
   const [tags, setTags] = useState(Array.isArray(initialValues.tags) ? initialValues.tags : [])
-  const [tagInput, setTagInput] = useState('')
+  const [selectedTag, setSelectedTag] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 
-  function handleTagKeyDown(event) {
-    if (event.key !== 'Enter') {
-      return
-    }
+  const normalizedTagOptions = Array.from(new Set([
+    ...tagOptions,
+    ...tags,
+  ].map((tag) => String(tag || '').trim().toLowerCase()).filter(Boolean))).sort()
 
-    event.preventDefault()
-
-    const nextTag = tagInput.trim().toLowerCase()
+  function handleAddSelectedTag() {
+    const nextTag = selectedTag.trim().toLowerCase()
 
     if (!nextTag || tags.includes(nextTag) || tags.length >= 10) {
-      setTagInput('')
       return
     }
 
     setTags((currentTags) => [...currentTags, nextTag])
-    setTagInput('')
+    setSelectedTag('')
   }
 
   function handleRemoveTag(tagToRemove) {
@@ -148,14 +147,28 @@ export default function EventForm({
 
         <label>
           Tags
-          <input
-            type="text"
-            value={tagInput}
-            onChange={(changeEvent) => setTagInput(changeEvent.target.value)}
-            onKeyDown={handleTagKeyDown}
-            disabled={loading || tags.length >= 10}
-            placeholder="Type a tag and press Enter"
-          />
+          <div className="create-event-tag-select-row">
+            <select
+              value={selectedTag}
+              onChange={(changeEvent) => setSelectedTag(changeEvent.target.value)}
+              disabled={loading || tags.length >= 10 || normalizedTagOptions.length === 0}
+            >
+              <option value="">Select a tag</option>
+              {normalizedTagOptions.map((option) => (
+                <option key={option} value={option}>
+                  {option}
+                </option>
+              ))}
+            </select>
+            <button
+              type="button"
+              className="create-event-tag-add-button"
+              onClick={handleAddSelectedTag}
+              disabled={loading || tags.length >= 10 || !selectedTag}
+            >
+              Add tag
+            </button>
+          </div>
         </label>
 
         {tags.length ? (

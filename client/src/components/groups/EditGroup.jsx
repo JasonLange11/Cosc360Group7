@@ -261,7 +261,7 @@ export default function EditGroup() {
                 />
               </div>
 
-              <button type="submit" className="form-submit-button" disabled={saving || !groupName.trim()}>
+                <button type="submit" className="form-submit-button" disabled={saving || !groupName.trim()}>
                   {saving ? 'Saving...' : 'Save Changes'}
               </button>
               <button type="button" className="form-cancel-button" onClick={handleCancel} disabled={saving}>
