@@ -6,6 +6,7 @@
     "start": "npx concurrently \"npm run dev --prefix client\" \"npm run dev --prefix server\""
   },
   "dependencies": {
+    "jest": "^30.3.0",
     "mongodb": "^7.1.1",
     "react": "^19.2.4"
   }
