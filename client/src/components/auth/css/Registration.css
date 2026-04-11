@@ -99,6 +99,36 @@
   box-shadow: 0 0 4px red;
 }
 
+.picture-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.picture-input-hidden {
+  display: none;
+}
+
+.picture-button {
+  border: 1px solid #4f4273;
+  background: #b6a5d7;
+  color: #2f244f;
+  border-radius: 5px;
+  padding: 4px 10px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.picture-button:hover {
+  background: #a48ecf;
+}
+
+.picture-filename {
+  font-size: 1rem;
+  color: #2b2b2b;
+  word-break: break-word;
+}
+
 .signup-button {
   margin-top: 10px;
   border: 1px solid #4f4273;

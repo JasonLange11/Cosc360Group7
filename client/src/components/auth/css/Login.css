@@ -96,6 +96,9 @@
   background: #b6a5d7;
   color: #2f244f;
   border-radius: 5px;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
 }
 
 .login-button-secondary:hover {

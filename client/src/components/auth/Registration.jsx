@@ -3,10 +3,14 @@ import { HeaderWithoutNav } from '../ui/Header.jsx'
 import { useEffect, useState } from 'react'
 import { registerUser } from '../../lib/auth.js'
 import { useNavigate } from 'react-router-dom'
+import { uploadProfileImage } from '../../lib/uploadsApi.js'
+import { updateMyProfile } from '../../lib/usersApi.js'
+import { useAuth } from '../../context/AuthContext.jsx'
 
 // TODO: Need to make a good css look for formError. Should probably be a error next to the signup button.
 
 function Registration({ modal = false, onClose }) {
+  const { completeLogin, refreshCurrentUser } = useAuth()
   
   const [email, setEmail] = useState("");
   const [verifyEmail, setVerifyEmail] = useState("");
@@ -24,6 +28,7 @@ function Registration({ modal = false, onClose }) {
   const [invalidVerifyPassword, setInvalidVerifyPassword] = useState(false);
   const [invalidName, setInvalidName] = useState(false);
   const [invalidTerms, setInvalidTerms] = useState(false);
+  const [profileImageFile, setProfileImageFile] = useState(null);
 
   const emailsMatch = email.trim() === verifyEmail.trim();
   const passwordsMatch = password.trim() === verifyPassword.trim();
@@ -116,11 +121,21 @@ function Registration({ modal = false, onClose }) {
     
     try{
       const result = await registerUser({email, password, name});
-      console.log('Registered: ', result)
+      completeLogin(result, true)
+
+      if (profileImageFile) {
+        const uploadedImage = await uploadProfileImage(profileImageFile)
+
+        if (uploadedImage?.imageUrl) {
+          await updateMyProfile({ profileImageUrl: uploadedImage.imageUrl })
+          await refreshCurrentUser()
+        }
+      }
+
       navigate('/');
 
     }catch(error){
-      setFormError(error.message);
+      setFormError(error.message || 'Failed to sign up');
       setInvalidEmail(true);
     }
     
@@ -209,6 +224,25 @@ function Registration({ modal = false, onClose }) {
                   }}
                 />I agree to the Terms of Service
               </label>
+            </div>
+          </section>
+
+          <section className="field-section">
+            <p className="field-label">Profile Picture (optional)</p>
+            <div className="picture-row">
+              <label className="picture-button" htmlFor="signup-picture-input">
+                Choose picture
+              </label>
+              <input
+                id="signup-picture-input"
+                type="file"
+                accept="image/jpeg,image/png,image/webp,image/gif"
+                className="picture-input-hidden"
+                onChange={(event) => setProfileImageFile(event.target.files?.[0] || null)}
+              />
+              <span className="picture-filename">
+                {profileImageFile ? profileImageFile.name : 'No file selected'}
+              </span>
             </div>
           </section>
 
