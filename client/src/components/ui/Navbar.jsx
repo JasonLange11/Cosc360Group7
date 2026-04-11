@@ -11,7 +11,12 @@ import { useAuth } from '../../context/AuthContext.jsx'
 function Navbar(){
     const { currentUser, logout } = useAuth()
     const [isMenuOpen, setIsMenuOpen] = useState(false)
+    const [profileImageFailed, setProfileImageFailed] = useState(false)
     const menuRef = useRef(null)
+
+    useEffect(() => {
+        setProfileImageFailed(false)
+    }, [currentUser?.profileImageUrl])
 
     useEffect(() => {
         function handleWindowClick(event) {
@@ -94,7 +99,16 @@ function Navbar(){
                                 aria-haspopup="menu"
                             >
                                 <span>
-                                    <i className="fa-regular fa-circle-user"></i>
+                                    {currentUser.profileImageUrl && !profileImageFailed ? (
+                                        <img
+                                            src={currentUser.profileImageUrl}
+                                            alt={`${currentUser.name} profile`}
+                                            className="nav-profile-image"
+                                            onError={() => setProfileImageFailed(true)}
+                                        />
+                                    ) : (
+                                        <i className="fa-regular fa-circle-user"></i>
+                                    )}
                                     {currentUser.name}
                                 </span>
                                 <i className={`fa-solid ${isMenuOpen ? 'fa-chevron-up' : 'fa-chevron-down'}`}></i>

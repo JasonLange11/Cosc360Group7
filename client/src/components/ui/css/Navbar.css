@@ -25,9 +25,14 @@
 
 .nav-button {
     background: transparent;
-    border: 1px solid #333333;
+    border: none;
     padding: 0.2rem 1rem;
     cursor: pointer;
+}
+
+.nav-button:focus,
+.nav-button:focus-visible {
+    outline: none;
 }
 
 .nav-account-menu {
@@ -45,6 +50,7 @@
 .nav-account-button span {
     display: inline-flex;
     align-items: center;
+    gap: 0.4rem;
 }
 
 .nav-account-button > i {
@@ -87,4 +93,12 @@
 
 .headerNav i {
     margin-right: 0.25rem;
+}
+
+.nav-profile-image {
+    width: 1.9rem;
+    height: 1.9rem;
+    border-radius: 999px;
+    object-fit: cover;
+    border: 1px solid #333333;
 }
