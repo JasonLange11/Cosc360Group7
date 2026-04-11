@@ -5,12 +5,14 @@ import Footer from '../ui/Footer'
 import { useAuth } from '../../context/AuthContext.jsx'
 import { createEvent } from '../../lib/eventsApi.js'
 import { uploadEventBannerImage } from '../../lib/uploadsApi.js'
+import { usePopup } from '../ui/PopupProvider'
 import EventForm from './EventForm.jsx'
 import './css/CreateEvent.css'
 
 export default function CreateEvent() {
   const navigate = useNavigate()
   const { currentUser } = useAuth()
+  const { showToast } = usePopup()
 
   async function handleCreateEvent(formData) {
     const uploadedBanner = await uploadEventBannerImage(formData.bannerFile)
@@ -25,6 +27,12 @@ export default function CreateEvent() {
       cost: formData.cost,
       bannerImage: uploadedBanner.imageUrl,
       tags: formData.tags,
+    })
+
+    showToast({
+      type: 'success',
+      title: 'Event Created',
+      message: 'Your event was created successfully.',
     })
 
     navigate('/')

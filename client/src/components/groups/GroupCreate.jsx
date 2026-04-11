@@ -5,9 +5,11 @@ import Footer from '../ui/Footer'
 import './css/GroupCreate.css'
 import { createGroup } from '../../lib/groupsApi';
 import { uploadGroupBannerImage } from '../../lib/uploadsApi';
+import { usePopup } from '../ui/PopupProvider'
 
 export default function GroupsPage() {
   const navigate = useNavigate()
+  const { showToast } = usePopup()
   const [groupName, setGroupName] = useState('')
   const [location, setLocation] = useState('')
   const [description, setDescription] = useState('')
@@ -83,6 +85,11 @@ export default function GroupsPage() {
       }
       await createGroup(groupData)
       setSuccess(true)
+      showToast({
+        type: 'success',
+        title: 'Group Created',
+        message: 'Your group was created successfully.',
+      })
       // Navigate to groups list or new group page
       navigate('/groups')
     } catch (err) {
