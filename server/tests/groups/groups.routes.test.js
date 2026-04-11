@@ -1,5 +1,4 @@
 import { describe, test, expect, beforeAll, afterAll, beforeEach } from '@jest/globals';
-import { MongoMemoryServer } from 'mongodb-memory-server';
 import mongoose from 'mongoose';
 import request from 'supertest';
 import express from 'express';
@@ -55,16 +54,15 @@ function makeGroupPayload(overrides = {}) {
 // --------------------------------------------------------------------------
 // DB lifecycle
 // --------------------------------------------------------------------------
-let mongoServer;
+const LOCAL_MONGO_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/cosc360_test';
 
 beforeAll(async () => {
-  mongoServer = await MongoMemoryServer.create();
-  await mongoose.connect(mongoServer.getUri());
+  await mongoose.connect(LOCAL_MONGO_URI);
 });
 
 afterAll(async () => {
-  await mongoose.disconnect();
-  await mongoServer.stop();
+  await mongoose.connection.dropDatabase();
+  await mongoose.connection.close(true);
 });
 
 beforeEach(async () => {

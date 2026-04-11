@@ -3,4 +3,5 @@ module.exports = {
   transform: {},
   testMatch: ['**/tests/**/*.test.js'],
   forceExit: true,
+  runInBand: true,
 };
