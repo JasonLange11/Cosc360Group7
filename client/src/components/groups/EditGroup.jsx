@@ -204,24 +204,20 @@ export default function EditGroup() {
                   disabled={saving || tags.length >= 10}
                   maxLength="30"
                 />
+
                 {tags.length > 0 && (
-                  <div className="tags-container">
+                  <div className="create-event-tags">
                     {tags.map((tag) => (
-                      <div key={tag} className="tag-badge">
-                        <span className="tag-text">#{tag}</span>
-                        <button
-                          type="button"
-                          className="tag-remove-button"
-                          onClick={() => handleRemoveTag(tag)}
-                          disabled={saving}
-                          title="Remove tag"
-                        >
-                          ✕
+                      <span key={tag} className="create-event-tag">
+                        {tag}
+                        <button type="button" onClick={() => handleRemoveTag(tag)} disabled={saving}>
+                          x
                         </button>
-                      </div>
+                      </span>
                     ))}
                   </div>
                 )}
+
                 <span className="char-count">{tags.length}/10 tags</span>
               </div>
 
@@ -253,21 +249,11 @@ export default function EditGroup() {
                 />
               </div>
 
-              <button
-                type="submit"
-                className="form-submit-button"
-                disabled={saving || !groupName.trim()}
-              >
-                {saving ? 'Saving...' : 'Save Changes'}
+              <button type="submit" className="form-submit-button" disabled={saving || !groupName.trim()}>
+                  {saving ? 'Saving...' : 'Save Changes'}
               </button>
-
-              <button
-                type="button"
-                className="form-cancel-button"
-                onClick={handleCancel}
-                disabled={saving}
-              >
-                Cancel
+              <button type="button" className="form-cancel-button" onClick={handleCancel} disabled={saving}>
+                  Cancel
               </button>
             </form>
           )}
