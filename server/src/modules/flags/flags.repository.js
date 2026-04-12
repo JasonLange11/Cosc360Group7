@@ -13,7 +13,7 @@ export function findFlagByReporterAndTarget({ targetType, targetId, reporterUser
 }
 
 export function updateFlagById(flagId, updateData) {
-  return Flag.findByIdAndUpdate(flagId, updateData, { new: true, runValidators: true }).lean();
+  return Flag.findByIdAndUpdate(flagId, updateData, { returnDocument: 'after', runValidators: true }).lean();
 }
 
 export function listFlags(filter = {}) {

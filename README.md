@@ -26,5 +26,5 @@ This starts the app and local MongoDB together. The server now runs the seed com
 - docker compose exec server npm run seed
 
 ## Testing
-- In the server or client folder
+- In the root folder
 - npm test

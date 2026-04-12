@@ -17,7 +17,7 @@ export async function getGroupsByMemberId(userId) {
 }
 
 export async function updateGroupById(groupId, updateData) {
-  return Group.findByIdAndUpdate(groupId, updateData, {new: true, runValidators: true, });
+  return Group.findByIdAndUpdate(groupId, updateData, { returnDocument: 'after', runValidators: true });
 }
 
 export async function deleteGroupById(groupId) {

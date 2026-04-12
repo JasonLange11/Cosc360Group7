@@ -28,7 +28,7 @@ export async function updateCommentContentById(commentId, content) {
   return Comment.findByIdAndUpdate(
     commentId,
     { content },
-    { new: true, runValidators: true }
+    { returnDocument: 'after', runValidators: true }
   );
 }
 

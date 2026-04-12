@@ -3,7 +3,10 @@
   "private": true,
   "scripts": {
     "postinstall": "npm install --prefix client && npm install --prefix server",
-    "start": "npx concurrently \"npm run dev --prefix client\" \"npm run dev --prefix server\""
+    "start": "npx concurrently \"npm run dev --prefix client\" \"npm run dev --prefix server\"",
+    "test": "npm run test:server && npm run test:client",
+    "test:server": "npm --prefix server test --",
+    "test:client": "npm --prefix client test --"
   },
   "dependencies": {
     "jest": "^30.3.0",

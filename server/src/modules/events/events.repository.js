@@ -21,7 +21,7 @@ export async function getEventsByAttendeeId(userId) {
 }
 
 export async function updateEventById(eventId, updateData) {
-  return Event.findByIdAndUpdate(eventId, updateData, {new: true, runValidators: true, });
+  return Event.findByIdAndUpdate(eventId, updateData, { returnDocument: 'after', runValidators: true });
 }
 
 export async function deleteEventById(eventId) {
@@ -32,7 +32,7 @@ export async function addTagToEvent(eventId, tag) {
   return Event.findByIdAndUpdate(
     eventId,
     { $addToSet: { tags: tag } },
-    { new: true }
+    { returnDocument: 'after' }
   );
 }
 
@@ -40,6 +40,6 @@ export async function removeTagFromEvent(eventId, tag) {
   return Event.findByIdAndUpdate(
     eventId,
     { $pull: { tags: tag } },
-    { new: true }
+    { returnDocument: 'after' }
   );
 }
