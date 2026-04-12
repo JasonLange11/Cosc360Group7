@@ -27,4 +27,5 @@ This starts the app and local MongoDB together. The server now runs the seed com
 
 ## Testing
 - In the root folder
+- npm install
 - npm test
